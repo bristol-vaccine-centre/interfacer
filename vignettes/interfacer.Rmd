@@ -1,0 +1,97 @@
+---
+title: "interfacer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{interfacer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all()
+library(interfacer)
+```
+
+```{r}
+.iface = iface(
+  id = integer ~ "an integer ID",
+  test = logical ~ "the test result"
+)
+```
+
+```{r}
+.iface_missing = iface(
+  .iface,
+  missing = character ~ "a missing value"
+)
+```
+
+```{r}
+print(.iface)
+```
+
+```{r}
+example_fn = function(
+  parm,
+  mydata = .iface,
+  another = "value",
+  ...
+) {
+  mydata = ivalidate(mydata, ...)
+  return(mydata)
+}
+```
+
+```{r}
+example_fn(
+  "a",
+  tibble::tibble(
+    id=c(1,2,3),
+    test_rename = c(TRUE,FALSE,TRUE)
+  ), .imap = imap(test=test_rename) )
+```
+
+
+
+```{r}
+example_fn2 = function(
+    parm,
+    mydata = .iface_missing,
+    another = "value",
+    ...
+) {
+  mydata = ivalidate(mydata, ..., prune = TRUE)
+  return(mydata)
+}
+```
+
+```{r}
+cat(idocument(example_fn2, mydata))
+```
+
+```{r}
+example_fn2(
+  "a",
+  tibble::tibble(
+    id=c(1,2,3),
+    test_rename = c(TRUE,FALSE,TRUE)
+  ), .imap = imap(test=test_rename,missing="fixed") )
+```
+
+```{r}
+try(
+  example_fn2(
+  "a",
+  tibble::tibble(
+    id=c(1,2,3),
+    test_rename = c(TRUE,FALSE,TRUE)
+  ), .imap = imap(test=test_rename) )
+)
+```
