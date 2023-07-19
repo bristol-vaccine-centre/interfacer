@@ -32,7 +32,7 @@
     
     <a class="navbar-brand me-2" href="index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,63 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="interfacer">interfacer<a class="anchor" aria-label="anchor" href="#interfacer"></a>
 </h1></div>
-<p>Specify and enforce contracts for R dataframes</p>
+<!-- badges: start -->
+
+<p>Interfacer provides a framework for specifying the structure of dataframes as parameters for user functions and checking that user supplied dataframes conform to expectations. Missing columns or incorrectly typed columns can be identified and useful error messages returned. Specifying structure is part of the function definition and can be automatically included in Roxygen documentation.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>This package is hosted in the <a href="https://https://bristol-vaccine-centre.r-universe.dev/" class="external-link">Bristol Vaccine Centre r-universe</a>. Installation from there is as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"bristol-vaccine-centre"</span> <span class="op">=</span> <span class="st">'https://https://bristol-vaccine-centre.r-universe.dev/'</span>,</span>
+<span>  CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Download and install interfacer in R</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"interfacer"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the development version of interfacer from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"bristol-vaccine-centre/interfacer"</span><span class="op">)</span></span></code></pre></div>
+<p>More likely though you will be including this in another package via a DESCRIPTION file:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">...</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">Imports: </span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">    tidyverse,</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">    interfacer</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">Remotes: interfacer=github::bristol-vaccine-centre/interfacer</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">Suggests: </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">    knitr,</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">    rmarkdown</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">...</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p><code>interfacer</code> is used then within a function definition in a new package to</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' An example function</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param mydata `r interfacer::idocument(example_fn, mydata)`</span></span>
+<span><span class="co">#' @param another an example   </span></span>
+<span><span class="co">#' @param ... not used</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @return ... something not yet defined ...</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="va">example_fn</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>  </span>
+<span>  <span class="co"># this parameter will be a dataframe with id and test columns</span></span>
+<span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu">interfacer</span><span class="fu">::</span><span class="fu"><a href="reference/iface.html">iface</a></span><span class="op">(</span></span>
+<span>    id <span class="op">=</span> <span class="va">integer</span> <span class="op">~</span> <span class="st">"an integer ID"</span>,</span>
+<span>    test <span class="op">=</span> <span class="va">logical</span> <span class="op">~</span> <span class="st">"the test result"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  </span>
+<span>  <span class="va">another</span> <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu">interfacer</span><span class="fu">::</span><span class="fu"><a href="reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  <span class="co"># rest of function body ...</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
@@ -87,7 +143,14 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://zenodo.org/badge/latestdoi/667791472" class="external-link"><img src="https://zenodo.org/badge/667791472.svg" alt="DOI"></a></li>
+<li><a href="https://bristol-vaccine-centre.r-universe.dev" class="external-link"><img src="https://bristol-vaccine-centre.r-universe.dev/badges/interfacer" alt="tableone status badge"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

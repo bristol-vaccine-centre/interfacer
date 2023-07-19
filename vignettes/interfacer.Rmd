@@ -19,6 +19,11 @@ devtools::load_all()
 library(interfacer)
 ```
 
+# Defining an interface
+
+An interface defines the structure of acceptable dataframes. It is a list
+of column names, plus types and some documentation about the column.
+
 ```{r}
 .iface = iface(
   id = integer ~ "an integer ID",
@@ -26,20 +31,28 @@ library(interfacer)
 )
 ```
 
-```{r}
-.iface_missing = iface(
-  .iface,
-  missing = character ~ "a missing value"
-)
-```
+Printing an interface specification shows the structure.
 
 ```{r}
 print(.iface)
 ```
 
+An interface specification can be used as the default value for a function. This
+is a dummy default value but when combined with `ivalidate` in the function body
+a passed parameter can be validated to ensure the dataframe is of the right
+shape. We can use `idocument` in the Roxygen skeleton to document the dataframe
+constraints.
+
 ```{r}
+#' An example function
+#'
+#' @param mydata `r idocument(example_fn, mydata)`
+#' @param another an example   
+#' @param ... not used
+#'
+#' @return the conformant dataframe
+#' @export
 example_fn = function(
-  parm,
   mydata = .iface,
   another = "value",
   ...
@@ -49,49 +62,128 @@ example_fn = function(
 }
 ```
 
+In this case when we later call the function the data is checked
+
 ```{r}
-example_fn(
-  "a",
-  tibble::tibble(
+example_data = tibble::tibble(
     id=c(1,2,3),
-    test_rename = c(TRUE,FALSE,TRUE)
-  ), .imap = imap(test=test_rename) )
+    test = c(TRUE,FALSE,TRUE)
+  )
+
+# this returns the qualifying data
+example_fn(
+  example_data, 
+  "value for another"
+)
 ```
 
-
+If we pass non-conformant data `ivalidate` throws an error:
 
 ```{r}
+example_data_2 = tibble::tibble(
+    id=c(1,2,3),
+    wrong_test = c(TRUE,FALSE,TRUE)
+  )
+
+# this causes an error as example_data_2$wrong_test is wrongly named
+try(example_fn(
+  example_data_2, 
+  "value for another"
+))
+```
+
+We can recover from this error by including a mapping which is applied before the
+validation using an `imap` (this is essentially used for a `dplyr::mutate` call)
+
+```{r}
+example_fn(
+  example_data_2, 
+  "value for another",
+  .imap = imap(test = wrong_test)
+)
+
+```
+
+interface specifications can be extended:
+
+```{r}
+.iface2 = iface(
+  .iface,
+  extra = character ~ "a new value"
+)
+```
+
+and then used in another function. 
+
+```{r}
+
 example_fn2 = function(
-    parm,
-    mydata = .iface_missing,
-    another = "value",
+    mydata = .iface2,
     ...
 ) {
-  mydata = ivalidate(mydata, ..., prune = TRUE)
+  mydata = ivalidate(mydata, ..., .prune = TRUE)
   return(mydata)
 }
 ```
+
+In this case the `ivalidate` call prunes 
+unneeded data from the dataframe.
+
+```{r}
+example_data_3 = tibble::tibble(
+    id=c(1,2,3),
+    test = c(TRUE,FALSE,TRUE),
+    extra = c("a","b","c"),
+    unneeded = c("x","y","z")
+  )
+
+example_fn2(example_data_3)
+```
+The documentation for this second interface is as follows:
 
 ```{r}
 cat(idocument(example_fn2, mydata))
 ```
 
-```{r}
-example_fn2(
-  "a",
-  tibble::tibble(
-    id=c(1,2,3),
-    test_rename = c(TRUE,FALSE,TRUE)
-  ), .imap = imap(test=test_rename,missing="fixed") )
-```
+Missing columns can be inserted with `imap`
 
 ```{r}
-try(
-  example_fn2(
-  "a",
+example_fn2(
   tibble::tibble(
     id=c(1,2,3),
-    test_rename = c(TRUE,FALSE,TRUE)
-  ), .imap = imap(test=test_rename) )
-)
+    test = c(TRUE,FALSE,TRUE)
+  ), .imap = imap(extra="fixed") )
+```
+
+Incorrect data types are picked up and rejected. In this case the data supplied
+for `id` cannot be cast to integer without loss. Similar behaviour is seen if
+logical data is anything other than 0 or 1 for example.
+
+```{r}
+try(example_fn(
+  tibble::tibble(
+    id= c(1.1,2,3),
+    test = c(TRUE,FALSE,TRUE)
+  )))
+```
+
+Factors might have allowable levels as well. For this we define them as an
+`enum` which accepts a list of values, which the relevel the factor. If
+`.drop = TRUE` is specified then values which don't match the levels will be
+cast to `NA` rather than causing failure.
+
+```{r}
+
+if (rlang::is_installed("ggplot2")) {
+  
+  i_diamonds = iface( 
+    color = enum(D,E,F,G,H,I,J,extra) ~ "the colour",
+    cut = enum(Ideal, Premium, .drop=TRUE) ~ "the cut",
+    price = integer ~ "the price"
+  )
+  
+  # itest(ggplot2::diamonds, i_diamonds)
+  iconvert(ggplot2::diamonds, i_diamonds,.prune = TRUE)
+  
+}
 ```

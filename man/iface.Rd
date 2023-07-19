@@ -7,15 +7,18 @@
 iface(...)
 }
 \arguments{
-\item{...}{The specification of the interface (see details)}
+\item{...}{The specification of the interface (see details), or an unnamed
+\code{iface} object to extend, or both.}
 }
 \value{
 the definition of an interface as a \code{iface} object
 }
 \description{
-This is the default value for a dataframe.
-The specificiation is in the form of a named list of formulae with
-the structure \code{name = type ~ "documentation"}
+This defines the structure of a dataframe.
+The specification is in the form of a named list of formulae with
+the structure \code{name = type ~ "documentation"}. \code{type} can be one of
+'integer','double','numeric','date','logical','factor','character','primary_key' or \code{enum(level1,level2,...)} or
+anything that resolves to a function e.g. \code{as.ordered}
 }
 \examples{
 my_iface = iface(col1 = integer ~ "an integer column" )

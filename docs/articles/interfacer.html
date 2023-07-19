@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,24 +71,39 @@
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">interfacer</span></span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">interfacer</span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="defining-an-interface">Defining an interface<a class="anchor" aria-label="anchor" href="#defining-an-interface"></a>
+</h2>
+<p>An interface defines the structure of acceptable dataframes. It is a
+list of column names, plus types and some documentation about the
+column.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">.iface</span> <span class="op">=</span> <span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="va">integer</span> <span class="op">~</span> <span class="st">"an integer ID"</span>,</span>
 <span>  test <span class="op">=</span> <span class="va">logical</span> <span class="op">~</span> <span class="st">"the test result"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>Printing an interface specification shows the structure.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">.iface_missing</span> <span class="op">=</span> <span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
-<span>  <span class="va">.iface</span>,</span>
-<span>  missing <span class="op">=</span> <span class="va">character</span> <span class="op">~</span> <span class="st">"a missing value"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">.iface</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
-<span><span class="co">#&gt; * id (integer} - an integer ID</span></span>
-<span><span class="co">#&gt; * test (logical} - the test result</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">example_fn</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span></span>
-<span>  <span class="va">parm</span>,</span>
+<span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
+<span><span class="co">#&gt; * test (logical) - the test result</span></span></code></pre></div>
+<p>An interface specification can be used as the default value for a
+function. This is a dummy default value but when combined with
+<code>ivalidate</code> in the function body a passed parameter can be
+validated to ensure the dataframe is of the right shape. We can use
+<code>idocument</code> in the Roxygen skeleton to document the dataframe
+constraints.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' An example function</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param mydata `r idocument(example_fn, mydata)`</span></span>
+<span><span class="co">#' @param another an example   </span></span>
+<span><span class="co">#' @param ... not used</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @return the conformant dataframe</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="va">example_fn</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>  <span class="va">mydata</span> <span class="op">=</span> <span class="va">.iface</span>,</span>
 <span>  <span class="va">another</span> <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -96,61 +111,157 @@
 <span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu"><a href="../reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">...</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">example_fn</span><span class="op">(</span></span>
-<span>  <span class="st">"a"</span>,</span>
-<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<p>In this case when we later call the function the data is checked</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">example_data</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>    test_rename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>test<span class="op">=</span><span class="va">test_rename</span><span class="op">)</span> <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;      id test_rename test </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 TRUE        TRUE </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 FALSE       FALSE</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 TRUE        TRUE</span></span></code></pre></div>
+<span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># this returns the qualifying data</span></span>
+<span><span class="fu">example_fn</span><span class="op">(</span></span>
+<span>  <span class="va">example_data</span>, </span>
+<span>  <span class="st">"value for another"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;      id test </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 TRUE </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 FALSE</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 TRUE</span></span></code></pre></div>
+<p>If we pass non-conformant data <code>ivalidate</code> throws an
+error:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">example_data_2</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>    wrong_test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># this causes an error as example_data_2$wrong_test is wrongly named</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn</span><span class="op">(</span></span>
+<span>  <span class="va">example_data_2</span>, </span>
+<span>  <span class="st">"value for another"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in iconvert(df, spec, .imap, dname, .get_fn_name(fn), .has_dots,  : </span></span>
+<span><span class="co">#&gt;   1 missing columns in parameter `mydata` in call to example_fn(...)</span></span>
+<span><span class="co">#&gt; consider renaming to create `test` columns</span></span>
+<span><span class="co">#&gt; or by adding `.imap = interfacer::imap(`test` = ???)` to your function call.</span></span></code></pre></div>
+<p>We can recover from this error by including a mapping which is
+applied before the validation using an <code>imap</code> (this is
+essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate</a></code> call)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">example_fn2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span></span>
-<span>    <span class="va">parm</span>,</span>
-<span>    <span class="va">mydata</span> <span class="op">=</span> <span class="va">.iface_missing</span>,</span>
-<span>    <span class="va">another</span> <span class="op">=</span> <span class="st">"value"</span>,</span>
+<code class="sourceCode R"><span><span class="fu">example_fn</span><span class="op">(</span></span>
+<span>  <span class="va">example_data_2</span>, </span>
+<span>  <span class="st">"value for another"</span>,</span>
+<span>  .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>test <span class="op">=</span> <span class="va">wrong_test</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;      id wrong_test test </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 TRUE       TRUE </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 FALSE      FALSE</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 TRUE       TRUE</span></span></code></pre></div>
+<p>interface specifications can be extended:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">.iface2</span> <span class="op">=</span> <span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
+<span>  <span class="va">.iface</span>,</span>
+<span>  extra <span class="op">=</span> <span class="va">character</span> <span class="op">~</span> <span class="st">"a new value"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>and then used in another function.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">example_fn2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">mydata</span> <span class="op">=</span> <span class="va">.iface2</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu"><a href="../reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">...</span>, prune <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu"><a href="../reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">...</span>, .prune <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>In this case the <code>ivalidate</code> call prunes unneeded data
+from the dataframe.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">example_data_3</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span>,</span>
+<span>    unneeded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span>,<span class="st">"z"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">example_data_3</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   extra    id test </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> a         1 TRUE </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> b         2 FALSE</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> c         3 TRUE</span></span></code></pre></div>
+<p>The documentation for this second interface is as follows:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span>, <span class="va">mydata</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
-<span><span class="co">#&gt; * id (integer} - an integer ID</span></span>
-<span><span class="co">#&gt; * missing (character} - a missing value</span></span>
-<span><span class="co">#&gt; * test (logical} - the test result</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; * extra (character) - a new value</span></span>
+<span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
+<span><span class="co">#&gt; * test (logical) - the test result</span></span></code></pre></div>
+<p>Missing columns can be inserted with <code>imap</code></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">example_fn2</span><span class="op">(</span></span>
-<span>  <span class="st">"a"</span>,</span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>    test_rename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>test<span class="op">=</span><span class="va">test_rename</span>,missing<span class="op">=</span><span class="st">"fixed"</span><span class="op">)</span> <span class="op">)</span></span>
+<span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>extra<span class="op">=</span><span class="st">"fixed"</span><span class="op">)</span> <span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;      id missing test </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 fixed   TRUE </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 fixed   FALSE</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 fixed   TRUE</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span></span>
-<span>  <span class="fu">example_fn2</span><span class="op">(</span></span>
-<span>  <span class="st">"a"</span>,</span>
+<span><span class="co">#&gt;   extra    id test </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> fixed     1 TRUE </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> fixed     2 FALSE</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> fixed     3 TRUE</span></span></code></pre></div>
+<p>Incorrect data types are picked up and rejected. In this case the
+data supplied for <code>id</code> cannot be cast to integer without
+loss. Similar behaviour is seen if logical data is anything other than 0
+or 1 for example.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn</span><span class="op">(</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>    test_rename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>test<span class="op">=</span><span class="va">test_rename</span><span class="op">)</span> <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in ivalidate(mydata, ..., prune = TRUE) : </span></span>
-<span><span class="co">#&gt;   1 missing columns in parameter `mydata` in call to example_fn2(...)</span></span>
-<span><span class="co">#&gt; consider renaming to create `missing` columns</span></span>
-<span><span class="co">#&gt; or by adding `.imap = interfacer::imap(`missing` = ???)` to your function call.</span></span></code></pre></div>
+<span>    id<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in pmap(.l, .f, ..., .progress = .progress) : </span></span>
+<span><span class="co">#&gt;   <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `value[[3L]]()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> id cannot be coerced to a integer</span></span></code></pre></div>
+<p>Factors might have allowable levels as well. For this we define them
+as an <code>enum</code> which accepts a list of values, which the
+relevel the factor. If <code>.drop = TRUE</code> is specified then
+values which don’t match the levels will be cast to <code>NA</code>
+rather than causing failure.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">is_installed</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">i_diamonds</span> <span class="op">=</span> <span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span> </span>
+<span>    color <span class="op">=</span> <span class="fu"><a href="../reference/enum.html">enum</a></span><span class="op">(</span><span class="va">D</span>,<span class="va">E</span>,<span class="cn">F</span>,<span class="va">G</span>,<span class="va">H</span>,<span class="va">I</span>,<span class="va">J</span>,<span class="va">extra</span><span class="op">)</span> <span class="op">~</span> <span class="st">"the colour"</span>,</span>
+<span>    cut <span class="op">=</span> <span class="fu"><a href="../reference/enum.html">enum</a></span><span class="op">(</span><span class="va">Ideal</span>, <span class="va">Premium</span>, .drop<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">~</span> <span class="st">"the cut"</span>,</span>
+<span>    price <span class="op">=</span> <span class="va">integer</span> <span class="op">~</span> <span class="st">"the price"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># itest(ggplot2::diamonds, i_diamonds)</span></span>
+<span>  <span class="fu"><a href="../reference/iconvert.html">iconvert</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span>, <span class="va">i_diamonds</span>,.prune <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 53,940 × 3</span></span></span>
+<span><span class="co">#&gt;    color cut     price</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E     Ideal     326</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E     Premium   326</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E     <span style="color: #BB0000;">NA</span>        327</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> I     Premium   334</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> J     <span style="color: #BB0000;">NA</span>        335</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> J     <span style="color: #BB0000;">NA</span>        336</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> I     <span style="color: #BB0000;">NA</span>        336</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> H     <span style="color: #BB0000;">NA</span>        337</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E     <span style="color: #BB0000;">NA</span>        337</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> H     <span style="color: #BB0000;">NA</span>        338</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 53,930 more rows</span></span></span></code></pre></div>
+</div>
   </main>
 </div>
 

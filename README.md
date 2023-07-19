@@ -2,12 +2,32 @@
 # interfacer
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://zenodo.org/badge/667791472.svg)](https://zenodo.org/badge/latestdoi/667791472)
+[![tableone status
+badge](https://bristol-vaccine-centre.r-universe.dev/badges/interfacer)](https://bristol-vaccine-centre.r-universe.dev)
 <!-- badges: end -->
 
-The goal of interfacer is to ...
+Interfacer provides a framework for specifying the structure of dataframes as
+parameters for user functions and checking that user supplied dataframes conform
+to expectations. Missing columns or incorrectly typed columns can be identified 
+and useful error messages returned. Specifying structure is part of the function
+definition and can be automatically included in Roxygen documentation.
 
 ## Installation
+
+This package is hosted in the [Bristol Vaccine Centre
+r-universe](https://https://bristol-vaccine-centre.r-universe.dev/).
+Installation from there is as follows:
+
+``` r
+options(repos = c(
+  "bristol-vaccine-centre" = 'https://https://bristol-vaccine-centre.r-universe.dev/',
+  CRAN = 'https://cloud.r-project.org'))
+
+# Download and install interfacer in R
+install.packages("interfacer")
+```
 
 You can install the development version of interfacer from [GitHub](https://github.com/) with:
 
@@ -16,12 +36,47 @@ You can install the development version of interfacer from [GitHub](https://gith
 devtools::install_github("bristol-vaccine-centre/interfacer")
 ```
 
+More likely though you will be including this in another package via a
+DESCRIPTION file:
+
+```yaml
+...
+Imports: 
+    tidyverse,
+    interfacer
+Remotes: interfacer=github::bristol-vaccine-centre/interfacer
+Suggests: 
+    knitr,
+    rmarkdown
+...
+```
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+`interfacer` is used then within a function definition in a new package to 
 
-``` r
-library(interfacer)
-## basic example code
+```r
+#' An example function
+#'
+#' @param mydata `r interfacer::idocument(example_fn, mydata)`
+#' @param another an example   
+#' @param ... not used
+#'
+#' @return ... something not yet defined ...
+#' @export
+example_fn = function(
+  
+  # this parameter will be a dataframe with id and test columns
+  mydata = interfacer::iface(
+    id = integer ~ "an integer ID",
+    test = logical ~ "the test result"
+  ),
+  
+  another = "value",
+  ...
+) {
+  mydata = interfacer::ivalidate(mydata, ...)
+  # rest of function body ...
+}
 ```
 

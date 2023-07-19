@@ -4,7 +4,7 @@
 \alias{ivalidate}
 \title{Perform interface checks on dataframe by looking at enclosing function}
 \usage{
-ivalidate(df, ..., .imap = imap(), prune = FALSE)
+ivalidate(df, ..., .imap = imap(), .prune = FALSE)
 }
 \arguments{
 \item{df}{a dataframe}
@@ -13,7 +13,7 @@ ivalidate(df, ..., .imap = imap(), prune = FALSE)
 
 \item{.imap}{a set of mappings as an \code{imap} object}
 
-\item{prune}{get rid of excess columns that are not in the spec}
+\item{.prune}{get rid of excess columns that are not in the spec}
 }
 \value{
 a dataframe based on df with
