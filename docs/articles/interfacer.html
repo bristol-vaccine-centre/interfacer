@@ -87,7 +87,8 @@ column.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">.iface</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
-<span><span class="co">#&gt; * test (logical) - the test result</span></span></code></pre></div>
+<span><span class="co">#&gt; * test (logical) - the test result</span></span>
+<span><span class="co">#&gt; Grouping undefined</span></span></code></pre></div>
 <p>An interface specification can be used as the default value for a
 function. This is a dummy default value but when combined with
 <code>ivalidate</code> in the function body a passed parameter can be
@@ -161,12 +162,20 @@ essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/muta
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 TRUE       TRUE </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 FALSE      FALSE</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 TRUE       TRUE</span></span></code></pre></div>
-<p>interface specifications can be extended:</p>
+<p>interface specifications can be extended. :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">.iface2</span> <span class="op">=</span> <span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
 <span>  <span class="va">.iface</span>,</span>
-<span>  extra <span class="op">=</span> <span class="va">character</span> <span class="op">~</span> <span class="st">"a new value"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span>  extra <span class="op">=</span> <span class="va">character</span> <span class="op">~</span> <span class="st">"a new value"</span>,</span>
+<span>  .groups <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">.iface2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
+<span><span class="co">#&gt; * extra (character) - a new value</span></span>
+<span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
+<span><span class="co">#&gt; * test (logical) - the test result</span></span>
+<span><span class="co">#&gt; Grouped by: &lt;none&gt;</span></span></code></pre></div>
 <p>and then used in another function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -178,16 +187,22 @@ essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/muta
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>In this case the <code>ivalidate</code> call prunes unneeded data
-from the dataframe.</p>
+from the dataframe, and also ensures that there is no grouping.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">example_data_3</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
 <span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span>,</span>
 <span>    unneeded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span>,<span class="st">"z"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">example_data_3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div>
+<p>This is rejected because the grouping is incorrect</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">example_data_3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in iconvert(df, spec, .imap, dname, .get_fn_name(fn), .has_dots,  : </span></span>
+<span><span class="co">#&gt;   specified dataframe grouping (&lt;none&gt;) does not match actual grouping (id)</span></span></code></pre></div>
+<p>But this validates fine</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">example_data_3</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;   extra    id test </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
@@ -195,14 +210,15 @@ from the dataframe.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> b         2 FALSE</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> c         3 TRUE</span></span></code></pre></div>
 <p>The documentation for this second interface is as follows:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span>, <span class="va">mydata</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
 <span><span class="co">#&gt; * extra (character) - a new value</span></span>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
-<span><span class="co">#&gt; * test (logical) - the test result</span></span></code></pre></div>
+<span><span class="co">#&gt; * test (logical) - the test result</span></span>
+<span><span class="co">#&gt; Grouped by: &lt;none&gt;</span></span></code></pre></div>
 <p>Missing columns can be inserted with <code>imap</code></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">example_fn2</span><span class="op">(</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
@@ -218,7 +234,7 @@ from the dataframe.</p>
 data supplied for <code>id</code> cannot be cast to integer without
 loss. Similar behaviour is seen if logical data is anything other than 0
 or 1 for example.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn</span><span class="op">(</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
@@ -233,7 +249,7 @@ as an <code>enum</code> which accepts a list of values, which the
 relevel the factor. If <code>.drop = TRUE</code> is specified then
 values which don’t match the levels will be cast to <code>NA</code>
 rather than causing failure.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">is_installed</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>

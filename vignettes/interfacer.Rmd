@@ -104,13 +104,16 @@ example_fn(
 
 ```
 
-interface specifications can be extended:
+interface specifications can be extended. :
 
 ```{r}
 .iface2 = iface(
   .iface,
-  extra = character ~ "a new value"
+  extra = character ~ "a new value",
+  .groups = FALSE
 )
+
+print(.iface2)
 ```
 
 and then used in another function. 
@@ -127,7 +130,7 @@ example_fn2 = function(
 ```
 
 In this case the `ivalidate` call prunes 
-unneeded data from the dataframe.
+unneeded data from the dataframe, and also ensures that there is no grouping.
 
 ```{r}
 example_data_3 = tibble::tibble(
@@ -135,9 +138,19 @@ example_data_3 = tibble::tibble(
     test = c(TRUE,FALSE,TRUE),
     extra = c("a","b","c"),
     unneeded = c("x","y","z")
-  )
+  ) %>% dplyr::group_by(id)
+```
 
-example_fn2(example_data_3)
+This is rejected because the grouping is incorrect
+
+```{r}
+try(example_fn2(example_data_3))
+```
+
+But this validates fine
+
+```{r}
+example_fn2(example_data_3 %>% dplyr::ungroup())
 ```
 The documentation for this second interface is as follows:
 
@@ -187,3 +200,4 @@ if (rlang::is_installed("ggplot2")) {
   
 }
 ```
+

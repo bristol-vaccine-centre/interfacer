@@ -8,12 +8,15 @@
 #'
 #' @param ... The specification of the interface (see details), or an unnamed
 #'   `iface` object to extend, or both.
+#' @param .groups either FALSE for no groups or a formula of the form `~ var1 +
+#'   var2 + ...` which defines what columns must be grouped in the dataframe
+#'   (and in which order). If NULL (the default) then grouping is not validated.
 #'
 #' @return the definition of an interface as a `iface` object
 #' @export
 #'
 #' @examples
-#' my_iface = iface(col1 = integer ~ "an integer column" )
+#' my_iface = iface( col1 = integer ~ "an integer column" )
 #' print(my_iface)
 #' 
 #' x = function(df = my_iface, ...) {
@@ -23,9 +26,9 @@
 #' 
 #' x(tibble::tibble(col1 = c(1,2,3)))
 #' 
-#' my_iface2 = iface(my_iface, col2 = character ~ "another col")
+#' my_iface2 = iface(my_iface, col2 = character ~ "another col", .groups = ~ col1 + col2)
 #' print(my_iface2)
-iface = function(...) {
+iface = function(..., .groups = NULL) {
   dots = rlang::list2(...)
   inh = dplyr::bind_rows(dots[sapply(dots, inherits, "iface")])
   dots = dots[names(dots) != ""]
@@ -34,18 +37,34 @@ iface = function(...) {
     type = unname(lapply(dots,FUN = rlang::f_lhs) %>% as.character),
     doc = unname(sapply(dots,FUN = rlang::f_rhs))
   )
+  
+  if (is.null(.groups)) 
+    grps = NULL
+  else if (isFALSE(.groups)) 
+    grps = character() 
+  else 
+    grps = all.vars(rlang::f_rhs(.groups))
+  
   spec = dplyr::bind_rows(inh,spec) %>%
     dplyr::group_by(name, type) %>% 
-    dplyr::summarise(doc = paste0(doc,collapse="; "),.groups = "drop")
-  return(structure(spec,class=c("iface",class(spec))))
+    dplyr::summarise(doc = .none(doc,collapse="; ",none = "<undefined>"), .groups = "drop")
+  return(
+    structure(spec,
+              groups = grps,
+              class=c("iface",class(spec))))
 }
 
 #' @inherit base::format
 #' @export
 format.iface = function(x, ...) {
+  grps = attributes(x)$groups
+  if (is.null(grps)) g = "Grouping undefined"
+  else g = sprintf("Grouped by: %s",.none(grps,collapse = " + ", "<none>"))
   paste0(c(
     "A dataframe containing the following columns: ",
-    glue::glue_data(x, "* {name} ({type}) - {doc}"),""),collapse="\n")
+    glue::glue_data(x, "* {name} ({type}) - {doc}"),
+    g
+    ),collapse="\n")
 }
 
 #' @inherit base::print
@@ -151,6 +170,11 @@ idocument = function(fn, param) {
   return(format(spec))
 }
 
+.none = function(x, collapse = ", ", none = "<none>") {
+  if (is.null(x)) return(none)
+  if (length(x) == 0) return(none)
+  return(paste0(x, collapse = collapse))
+}
 
 #' Convert a dataframe to a format compatible with an interface specification
 #' 
@@ -179,7 +203,22 @@ iconvert = function(df, iface, .imap = interfacer::imap(), .dname="<unknown>", .
   dots = .imap
   spec = iface
   dots = dots[names(dots) %in% spec$name]
-  out = df %>% dplyr::mutate(df, !!!dots)
+  out = df %>% dplyr::mutate(!!!dots)
+  
+  grps = attributes(iface)$groups
+  if (!is.null(grps)) {
+    if(!identical(dplyr::group_vars(out),grps)) {
+      stop(
+        "specified dataframe grouping (",
+        .none(grps, collapse = " + "),
+        ") does not match actual grouping (",
+        .none(dplyr::group_vars(out), collapse = " + "),
+        ")"
+      )
+    }
+    
+  }
+  
   missing = dplyr::setdiff(spec$name,colnames(out))
   if (length(missing) > 0) stop(
     length(missing), " missing columns in parameter `",.dname,"` in call to ",.fname,"(...)\n",

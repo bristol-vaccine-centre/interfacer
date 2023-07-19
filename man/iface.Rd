@@ -4,11 +4,14 @@
 \alias{iface}
 \title{Define an interface}
 \usage{
-iface(...)
+iface(..., .groups = NULL)
 }
 \arguments{
 \item{...}{The specification of the interface (see details), or an unnamed
 \code{iface} object to extend, or both.}
+
+\item{.groups}{either FALSE for no groups or a formula of the form \code{~ var1 + var2 + ...} which defines what columns must be grouped in the dataframe
+(and in which order). If NULL (the default) then grouping is not validated.}
 }
 \value{
 the definition of an interface as a \code{iface} object
@@ -21,7 +24,7 @@ the structure \code{name = type ~ "documentation"}. \code{type} can be one of
 anything that resolves to a function e.g. \code{as.ordered}
 }
 \examples{
-my_iface = iface(col1 = integer ~ "an integer column" )
+my_iface = iface( col1 = integer ~ "an integer column" )
 print(my_iface)
 
 x = function(df = my_iface, ...) {
@@ -31,6 +34,6 @@ x = function(df = my_iface, ...) {
 
 x(tibble::tibble(col1 = c(1,2,3)))
 
-my_iface2 = iface(my_iface, col2 = character ~ "another col")
+my_iface2 = iface(my_iface, col2 = character ~ "another col", .groups = ~ col1 + col2)
 print(my_iface2)
 }
