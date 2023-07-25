@@ -38,6 +38,8 @@ iface = function(..., .groups = NULL) {
     doc = unname(sapply(dots,FUN = rlang::f_rhs))
   )
   
+  # TODO: default values. Could be an additional term in formula?
+  
   if (is.null(.groups)) 
     grps = NULL
   else if (isFALSE(.groups)) 
@@ -75,27 +77,38 @@ print.iface = function(x,...) {
 
 #' Perform interface checks on dataframe by looking at enclosing function
 #'
-#' @param df a dataframe
-#' @param ... not used
-#' @param .imap  a set of mappings as an `imap` object
-#' @param .prune get rid of excess columns that are not in the spec
+#' This is intended to be used within a function to check the validity of a data
+#' frame parameter (usually the first parameter) against an `ispec`.
 #'
-#' @return a dataframe based on df with 
+#' @param df a dataframe - if missing then the first parameter of the calling
+#'   function is assumed to be a dataframe.
+#' @param ... not used but `ivalidate` should be included in call to inherit
+#'   `.imap` from the caller function.
+#' @param .imap  a set of mappings as an `imap` object.
+#' @param .prune get rid of excess columns that are not in the spec.
+#'
+#' @return a dataframe based on df with validity checks passed and `.imap`
+#'   mappings applied if present
 #' @export
 #'
 #' @examples
 #' x = function(df = iface(col1 = integer ~ "an integer column" ), ...) {
-#'   df = ivalidate(df,...)
+#'   df = ivalidate(...)
 #'   return(df)
 #' }
-#' input=tibble::tibble(col1 = c(1,2,3)) 
+#' input=tibble::tibble(col1 = c(1,2,3))
 #' x(input)
-#' 
+#'
 #' # This fails because col1 is not coercable to integer
-#' input2=tibble::tibble(col1 = c(1.5,2,3)) 
+#' input2=tibble::tibble(col1 = c(1.5,2,3))
 #' try(x(input2))
-ivalidate = function(df, ..., .imap=imap(), .prune=FALSE) {
-  dname = rlang::as_label(rlang::ensym(df))
+ivalidate = function(df = NULL, ..., .imap=imap(), .prune=FALSE) {
+  dname = tryCatch(rlang::as_label(rlang::ensym(df)), error = function(e) return(NA))
+  if (is.na(dname)) {
+    df = .get_first_param_value()
+    dname = .get_first_param_name()
+  }
+  
   fn = rlang::caller_fn()
   .has_dots = "..." %in% names(formals(fn))
   # TODO: warn if spec names collides with formals.
@@ -147,14 +160,15 @@ imap = function(...) {
   return("<unknown>")
 }
 
-#' Document an interface contract for inserting in to Roxygen 
+#' Document an interface contract for inserting in to Roxygen
 #'
-#' This function is expected to be called within the documentation of a 
-#' function as inline code in the parameter documentation of the function. It
-#' details the expected columns that the input dataframe should possess.
+#' This function is expected to be called within the documentation of a function
+#' as inline code in the parameter documentation of the function. It details the
+#' expected columns that the input dataframe should possess.
 #'
 #' @param fn the function that you are documenting
-#' @param param the parameter you are documenting
+#' @param param the parameter you are documenting (optional. if missing defaults
+#'   to the first argument of the function)
 #'
 #' @return a markdown snippet
 #' @export
@@ -162,18 +176,21 @@ imap = function(...) {
 #' @examples
 #' #' @param df `r idocument(x, df)`
 #' x = function(df = iface( col1 = integer ~ "an integer column" )) {}
-#' 
+#'
 #' cat(idocument(x, df))
-idocument = function(fn, param) {
-  dname = rlang::as_label(rlang::ensym(param))
+idocument = function(fn, param = NULL) {
+  dname = tryCatch(rlang::as_label(rlang::ensym(param)), error = function(e) NA)
+  if (is.na(dname)) {
+    dname = names(formals(fn))[[1]]
+  }
   spec = .get_spec(fn,dname)
   return(format(spec))
 }
 
-.none = function(x, collapse = ", ", none = "<none>") {
+.none = function(x, collapse = ", ", none = "<none>", fmt = "%s") {
   if (is.null(x)) return(none)
   if (length(x) == 0) return(none)
-  return(paste0(x, collapse = collapse))
+  return(sprintf(fmt,paste0(x, collapse = collapse)))
 }
 
 #' Convert a dataframe to a format compatible with an interface specification
@@ -208,15 +225,28 @@ iconvert = function(df, iface, .imap = interfacer::imap(), .dname="<unknown>", .
   grps = attributes(iface)$groups
   if (!is.null(grps)) {
     if(!identical(dplyr::group_vars(out),grps)) {
-      stop(
-        "specified dataframe grouping (",
-        .none(grps, collapse = " + "),
-        ") does not match actual grouping (",
-        .none(dplyr::group_vars(out), collapse = " + "),
-        ")"
+      expect = .none(grps, collapse = " + ")
+      obs = .none(dplyr::group_vars(out), collapse = " + ")
+      exp_grp = .none(grps, collapse = ",", none = "%>% ungroup()", fmt = "%%>%% group_by(%s)")
+      diff = dplyr::setdiff(dplyr::group_vars(out), grps)
+      diff_grp = .none(diff, collapse = ",", none = "%>% ungroup()", fmt = "%%>%% group_by(%s)")
+      exp_grp_2 = .none(grps, collapse = ",", none = "", fmt = " %%>%% group_by(%s)")
+      if(identical(dplyr::group_vars(out),diff)) diff_grp_2 = ""
+      else diff_grp_2 = .none(diff, collapse = ",", none = "", fmt = " %%>%% group_by(%s)")
+      messages = c(
+        sprintf("the specified dataframe grouping (%s) does not match actual grouping (%s)\n", expect, obs),
+        sprintf("consider regrouping your data before calling function `%s`, e.g.:\n",.fname),
+        sprintf("`df %s %%>%% %s(...)`\n", exp_grp, .fname)
       )
+      if (length(diff) > 0) {
+        messages = c(
+          messages,
+          sprintf("or calling function `%s` using a group_modify, e.g.:\n",.fname),
+          sprintf("`df%s %%>%% group_modify(function(d,g,...) {%s(%s=d%s, ...)})`", diff_grp_2, .fname, .dname, exp_grp_2)
+        )
+      }
+      stop(messages)
     }
-    
   }
   
   missing = dplyr::setdiff(spec$name,colnames(out))
@@ -233,18 +263,22 @@ iconvert = function(df, iface, .imap = interfacer::imap(), .dname="<unknown>", .
     out[[name]] <<- tryCatch({
       do.call(asfn, args = list(out[[name]]))
     },
-    warning = function(e) stop(name," cannot be coerced to a ",type),
-    error = function(e) stop(name," cannot be coerced to a ",type))
+    warning = function(e) stop(name," cannot be coerced ", e$message), #name," cannot be coerced to a ",type),
+    error = function(e) stop(name," cannot be coerced ", e$message) #name," cannot be coerced to a ",type))
+    )
   })
   return(out)
 }
 
-#' Test dataframe conformance to an interface specification
+#' Test dataframe conformance to an interface specification.
 #' 
 #' `ivalidate` throws errors deliberately however sometimes dealing with invalid
-#' input may be possible. 
+#' input may be desirable. `itest` is generally designed to be used within a function which
+#' specifies the expected input using `iface`, and allows the function to test if
+#' its given input is conformant to the interface.
 #'
-#' @param df a dataframe to test
+#' @param df a dataframe to test. If missing the first parameter of the calling
+#'   function is assumed to be the dataframe to test.
 #' @param iface an interface specification produced by `iface()`. If missing
 #'   this will be inferred from the current function signature.
 #' @param .imap an optional mapping specification produced by `imap()`
@@ -253,23 +287,58 @@ iconvert = function(df, iface, .imap = interfacer::imap(), .dname="<unknown>", .
 #' @export
 #'
 #' @examples
-#' i_diamonds = iface( 
-#'   color = enum(D,E,F,G,H,I,J,extra) ~ "the colour", 
-#'   price = integer ~ "the price"
-#' )
-#' itest(ggplot2::diamonds, i_diamonds)
-itest = function(df, iface = NULL, .imap = imap()) {
-  if (is.null(iface)) iface = .get_spec( rlang::caller_fn(), rlang::as_label(rlang::ensym(df)) )
+#' if (rlang::is_installed("ggplot2")) {
+#'   i_diamonds = iface( 
+#'     color = enum(D,E,F,G,H,I,J,extra) ~ "the colour", 
+#'     price = integer ~ "the price"
+#'   )
+#'   
+#'   # Ad hoc testing
+#'   itest(ggplot2::diamonds, i_diamonds)
+#'   
+#'   # Use within function:
+#'   x = function(df = i_diamonds) {
+#'     if(itest()) message("PASS!")
+#'   }
+#'   
+#'   x(ggplot2::diamonds)
+#' }
+itest = function(df = NULL, iface = NULL, .imap = imap()) {
+  
+  if (is.null(iface)) {
+    dname = tryCatch(rlang::as_label(rlang::ensym(df)), error = function(e) return(NA))
+    if (is.na(dname)) {
+      df = .get_first_param_value()
+      dname = .get_first_param_name()
+    }
+    iface = .get_spec( rlang::caller_fn(), dname )
+  }
+  
+  df = force(df)
   conv = tryCatch(
     iconvert(df, iface, .imap),
     error = function(e) NULL)
   return(!is.null(conv))
 }
 
+# only works for itest and ivalidate, anything else will be wrong depth
+.get_first_param_name = function() {
+  names(formals(sys.function(-2)))[[1]]
+}
+
+# only works for itest and ivalidate, anything else will be wrong depth
+.get_first_param_value = function() {
+  first_name = names(formals(sys.function(-2)))[[1]]
+  value = sys.frame(-2)[[first_name]]
+  return(value)
+}
+
+
 ## Converters ----
 
 # f = .get_conv("enum(x,y,z)")
 # f(c("x","y"))
+# parses the type and returns a function that can validate the input.
 .get_conv = function(type) {
   if (is.function(type)) {
     f = type
@@ -295,8 +364,8 @@ itest = function(df, iface = NULL, .imap = imap()) {
   }
   return(function(x) tryCatch(
     f(x),
-    warning = function(e) stop(name," cannot be coerced to a ",type,": ",e$message),
-    error = function(e) stop(name," cannot be coerced to a ",type,": ",e$message)
+    warning = function(e) stop("to a ",type,": ",e$message),
+    error = function(e) stop("to a ",type,": ",e$message)
   ))
 }
 

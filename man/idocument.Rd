@@ -4,20 +4,21 @@
 \alias{idocument}
 \title{Document an interface contract for inserting in to Roxygen}
 \usage{
-idocument(fn, param)
+idocument(fn, param = NULL)
 }
 \arguments{
 \item{fn}{the function that you are documenting}
 
-\item{param}{the parameter you are documenting}
+\item{param}{the parameter you are documenting (optional. if missing defaults
+to the first argument of the function)}
 }
 \value{
 a markdown snippet
 }
 \description{
-This function is expected to be called within the documentation of a
-function as inline code in the parameter documentation of the function. It
-details the expected columns that the input dataframe should possess.
+This function is expected to be called within the documentation of a function
+as inline code in the parameter documentation of the function. It details the
+expected columns that the input dataframe should possess.
 }
 \examples{
 #' @param df `r idocument(x, df)`

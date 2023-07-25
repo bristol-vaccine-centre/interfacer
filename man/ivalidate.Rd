@@ -4,32 +4,36 @@
 \alias{ivalidate}
 \title{Perform interface checks on dataframe by looking at enclosing function}
 \usage{
-ivalidate(df, ..., .imap = imap(), .prune = FALSE)
+ivalidate(df = NULL, ..., .imap = imap(), .prune = FALSE)
 }
 \arguments{
-\item{df}{a dataframe}
+\item{df}{a dataframe - if missing then the first parameter of the calling
+function is assumed to be a dataframe.}
 
-\item{...}{not used}
+\item{...}{not used but \code{ivalidate} should be included in call to inherit
+\code{.imap} from the caller function.}
 
-\item{.imap}{a set of mappings as an \code{imap} object}
+\item{.imap}{a set of mappings as an \code{imap} object.}
 
-\item{.prune}{get rid of excess columns that are not in the spec}
+\item{.prune}{get rid of excess columns that are not in the spec.}
 }
 \value{
-a dataframe based on df with
+a dataframe based on df with validity checks passed and \code{.imap}
+mappings applied if present
 }
 \description{
-Perform interface checks on dataframe by looking at enclosing function
+This is intended to be used within a function to check the validity of a data
+frame parameter (usually the first parameter) against an \code{ispec}.
 }
 \examples{
 x = function(df = iface(col1 = integer ~ "an integer column" ), ...) {
-  df = ivalidate(df,...)
+  df = ivalidate(...)
   return(df)
 }
-input=tibble::tibble(col1 = c(1,2,3)) 
+input=tibble::tibble(col1 = c(1,2,3))
 x(input)
 
 # This fails because col1 is not coercable to integer
-input2=tibble::tibble(col1 = c(1.5,2,3)) 
+input2=tibble::tibble(col1 = c(1.5,2,3))
 try(x(input2))
 }

@@ -57,7 +57,7 @@ example_fn = function(
   another = "value",
   ...
 ) {
-  mydata = ivalidate(mydata, ...)
+  mydata = ivalidate(...)
   return(mydata)
 }
 ```
@@ -130,7 +130,7 @@ example_fn2 = function(
 ```
 
 In this case the `ivalidate` call prunes 
-unneeded data from the dataframe, and also ensures that there is no grouping.
+unneeded data from the dataframe, and also ensures that there is the correct grouping.
 
 ```{r}
 example_data_3 = tibble::tibble(
@@ -147,7 +147,7 @@ This is rejected because the grouping is incorrect
 try(example_fn2(example_data_3))
 ```
 
-But this validates fine
+Following the error message makes this validate fine
 
 ```{r}
 example_fn2(example_data_3 %>% dplyr::ungroup())
@@ -155,15 +155,16 @@ example_fn2(example_data_3 %>% dplyr::ungroup())
 The documentation for this second interface is as follows:
 
 ```{r}
-cat(idocument(example_fn2, mydata))
+cat(idocument(example_fn2))
 ```
 
-Missing columns can be inserted with `imap`
+Missing columns can be inserted with `imap`. Types are coerced to the expected
+type if this is possible with no warnings.
 
 ```{r}
 example_fn2(
   tibble::tibble(
-    id=c(1,2,3),
+    id=c("1","2","3"),
     test = c(TRUE,FALSE,TRUE)
   ), .imap = imap(extra="fixed") )
 ```
@@ -175,15 +176,16 @@ logical data is anything other than 0 or 1 for example.
 ```{r}
 try(example_fn(
   tibble::tibble(
-    id= c(1.1,2,3),
+    id= c("1.1","2","3"),
     test = c(TRUE,FALSE,TRUE)
   )))
 ```
 
 Factors might have allowable levels as well. For this we define them as an
-`enum` which accepts a list of values, which the relevel the factor. If
+`enum` which accepts a list of values, which then relevel the factor. If
 `.drop = TRUE` is specified then values which don't match the levels will be
-cast to `NA` rather than causing failure.
+cast to `NA` rather than causing failure to allow conformance to a subset of factor
+values.
 
 ```{r}
 
@@ -196,7 +198,7 @@ if (rlang::is_installed("ggplot2")) {
   )
   
   # itest(ggplot2::diamonds, i_diamonds)
-  iconvert(ggplot2::diamonds, i_diamonds,.prune = TRUE)
+  iconvert(ggplot2::diamonds, i_diamonds, .prune = TRUE)
   
 }
 ```

@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,7 +109,7 @@ constraints.</p>
 <span>  <span class="va">another</span> <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu"><a href="../reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  <span class="va">mydata</span> <span class="op">=</span> <span class="fu"><a href="../reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>In this case when we later call the function the data is checked</p>
@@ -187,7 +187,8 @@ essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/muta
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>In this case the <code>ivalidate</code> call prunes unneeded data
-from the dataframe, and also ensures that there is no grouping.</p>
+from the dataframe, and also ensures that there is the correct
+grouping.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">example_data_3</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
@@ -199,8 +200,12 @@ from the dataframe, and also ensures that there is no grouping.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">example_data_3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in iconvert(df, spec, .imap, dname, .get_fn_name(fn), .has_dots,  : </span></span>
-<span><span class="co">#&gt;   specified dataframe grouping (&lt;none&gt;) does not match actual grouping (id)</span></span></code></pre></div>
-<p>But this validates fine</p>
+<span><span class="co">#&gt;   the specified dataframe grouping (&lt;none&gt;) does not match actual grouping (id)</span></span>
+<span><span class="co">#&gt; consider regrouping your data before calling function `example_fn2`, e.g.:</span></span>
+<span><span class="co">#&gt; `df %&gt;% ungroup() %&gt;% example_fn2(...)`</span></span>
+<span><span class="co">#&gt; or calling function `example_fn2` using a group_modify, e.g.:</span></span>
+<span><span class="co">#&gt; `df %&gt;% group_modify(function(d,g,...) {example_fn2(mydata=d, ...)})`</span></span></code></pre></div>
+<p>Following the error message makes this validate fine</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">example_data_3</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
@@ -211,17 +216,18 @@ from the dataframe, and also ensures that there is no grouping.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> c         3 TRUE</span></span></code></pre></div>
 <p>The documentation for this second interface is as follows:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span>, <span class="va">mydata</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
 <span><span class="co">#&gt; * extra (character) - a new value</span></span>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
 <span><span class="co">#&gt; * test (logical) - the test result</span></span>
 <span><span class="co">#&gt; Grouped by: &lt;none&gt;</span></span></code></pre></div>
-<p>Missing columns can be inserted with <code>imap</code></p>
+<p>Missing columns can be inserted with <code>imap</code>. Types are
+coerced to the expected type if this is possible with no warnings.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">example_fn2</span><span class="op">(</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span><span class="op">)</span>,</span>
 <span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>extra<span class="op">=</span><span class="st">"fixed"</span><span class="op">)</span> <span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
@@ -237,18 +243,19 @@ or 1 for example.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn</span><span class="op">(</span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>    id<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>    id<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1.1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span><span class="op">)</span>,</span>
 <span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in pmap(.l, .f, ..., .progress = .progress) : </span></span>
 <span><span class="co">#&gt;   <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `value[[3L]]()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> id cannot be coerced to a integer</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> id cannot be coerced to a integer: not a true integer input</span></span></code></pre></div>
 <p>Factors might have allowable levels as well. For this we define them
-as an <code>enum</code> which accepts a list of values, which the
+as an <code>enum</code> which accepts a list of values, which then
 relevel the factor. If <code>.drop = TRUE</code> is specified then
 values which don’t match the levels will be cast to <code>NA</code>
-rather than causing failure.</p>
+rather than causing failure to allow conformance to a subset of factor
+values.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">is_installed</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -260,7 +267,7 @@ rather than causing failure.</p>
 <span>  <span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co"># itest(ggplot2::diamonds, i_diamonds)</span></span>
-<span>  <span class="fu"><a href="../reference/iconvert.html">iconvert</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span>, <span class="va">i_diamonds</span>,.prune <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/iconvert.html">iconvert</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span>, <span class="va">i_diamonds</span>, .prune <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 53,940 × 3</span></span></span>

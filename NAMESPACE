@@ -3,6 +3,7 @@
 S3method(format,iface)
 S3method(print,iface)
 export("%>%")
+export(as_vars)
 export(enum)
 export(iconvert)
 export(idocument)
