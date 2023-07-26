@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -249,7 +249,7 @@ or 1 for example.</p>
 <span><span class="co">#&gt; Error in pmap(.l, .f, ..., .progress = .progress) : </span></span>
 <span><span class="co">#&gt;   <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `value[[3L]]()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> id cannot be coerced to a integer: not a true integer input</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> input column `id` in function parameter `example_fn(mydata = ?)` cannot be coerced to a integer: not a true integer input</span></span></code></pre></div>
 <p>Factors might have allowable levels as well. For this we define them
 as an <code>enum</code> which accepts a list of values, which then
 relevel the factor. If <code>.drop = TRUE</code> is specified then

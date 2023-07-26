@@ -31,6 +31,9 @@
     <loc>/reference/format.iface.html</loc>
   </url>
   <url>
+    <loc>/reference/iclip.html</loc>
+  </url>
+  <url>
     <loc>/reference/iconvert.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ireturn.html</loc>
   </url>
   <url>
     <loc>/reference/itest.html</loc>

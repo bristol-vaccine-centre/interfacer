@@ -118,6 +118,71 @@ ivalidate = function(df = NULL, ..., .imap=imap(), .prune=FALSE) {
   return(out)
 }
 
+#' Perform interface checks on dataframe by looking at enclosing function
+#'
+#' This is intended to be used within a function to check the validity of a data
+#' frame parameter (usually the first parameter) against an `ispec`.
+#'
+#' @param df a dataframe - if missing then the first parameter of the calling
+#'   function is assumed to be a dataframe.
+#' @param iface the interface specification that `df` should conform to.
+#' @param .prune get rid of excess columns that are not in the spec.
+#'
+#' @return a dataframe based on df with validity checks passed and `.imap`
+#'   mappings applied if present
+#' @export
+#'
+#' @examples
+#' input = iface(col_in = integer ~ "an integer column" )
+#' output = iface(col_out = integer ~ "an integer column" )
+#' x = function(df = input, ...) {
+#'   df = ivalidate(...)
+#'   tmp = df %>% dplyr::rename(col_out = col_in)
+#'   ireturn(tmp, output)
+#' }
+#' x(tibble::tibble(col_in = c(1,2,3)))
+#' output
+ireturn = function(df, iface, .prune=FALSE) {
+  spec = iface
+  fn = rlang::caller_fn()
+  .fname = .get_fn_name(fn)
+  out = df
+  grps = attributes(spec)$groups
+  if (!is.null(grps)) {
+    if(!identical(dplyr::group_vars(out),grps)) {
+      expect = .none(grps, collapse = " + ")
+      obs = .none(dplyr::group_vars(out), collapse = " + ")
+      warning(
+        sprintf("%s(...): output dataframe grouping (%s) does not match expectations (%s)\n", .fname, obs, expect)
+      )
+      out = out  %>% dplyr::group_by(dplyr::across(tidyselect::all_of(grps)))
+    }
+  }
+  
+  missing = dplyr::setdiff(spec$name,colnames(out))
+  if (length(missing) > 0) stop(
+    sprintf("missing columns (%s) in return value of %s(..)", .none(missing,","),.fname)
+  )
+  if (.prune) {
+    out = out %>% dplyr::select(tidyselect::all_of(unique(c(spec$name,grps))))
+  }
+  spec %>% purrr::pwalk(.f = function(name,type,doc,...) { 
+    asfn = .get_conv(type)
+    out[[name]] <<- tryCatch({
+      do.call(asfn, args = list(out[[name]]))
+    },
+    warning = function(e) stop(
+      sprintf("output column `%s` in function `%s(...)` cannot be coerced ",name,.fname),
+      e$message), 
+    error = function(e) stop(
+      sprintf("output column `%s` in function `%s(...)` cannot be coerced ",name,.fname),
+      e$message) 
+    )
+  })
+  return(out)
+}
+  
+
 #' Specify mappings that can make dataframes compatible with an interface
 #' 
 #' This function is expected to be used only in a `.imap = imap(...)` context
@@ -222,7 +287,7 @@ iconvert = function(df, iface, .imap = interfacer::imap(), .dname="<unknown>", .
   dots = dots[names(dots) %in% spec$name]
   out = df %>% dplyr::mutate(!!!dots)
   
-  grps = attributes(iface)$groups
+  grps = attributes(spec)$groups
   if (!is.null(grps)) {
     if(!identical(dplyr::group_vars(out),grps)) {
       expect = .none(grps, collapse = " + ")
@@ -256,15 +321,19 @@ iconvert = function(df, iface, .imap = interfacer::imap(), .dname="<unknown>", .
     if (.has_dots) sprintf("or by adding `.imap = interfacer::imap(%s)` to your function call.\n", paste0("`",missing,"` = ???",collapse = ", ")) else ""
   )
   if (.prune) {
-    out = out %>% dplyr::select(tidyselect::all_of(spec$name))
+    out = out %>% dplyr::select(tidyselect::all_of(unique(c(spec$name),grps)))
   }
   spec %>% purrr::pwalk(.f = function(name,type,doc,...) { 
     asfn = .get_conv(type)
     out[[name]] <<- tryCatch({
       do.call(asfn, args = list(out[[name]]))
     },
-    warning = function(e) stop(name," cannot be coerced ", e$message), #name," cannot be coerced to a ",type),
-    error = function(e) stop(name," cannot be coerced ", e$message) #name," cannot be coerced to a ",type))
+    warning = function(e) stop(
+      sprintf("input column `%s` in function parameter `%s(%s = ?)` cannot be coerced ",name,.fname,.dname),
+      e$message), 
+    error = function(e) stop(
+      sprintf("input column `%s` in function parameter `%s(%s = ?)` cannot be coerced ",name,.fname,.dname),
+      e$message) 
     )
   })
   return(out)
