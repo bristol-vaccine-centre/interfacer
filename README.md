@@ -4,7 +4,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://zenodo.org/badge/667791472.svg)](https://zenodo.org/badge/latestdoi/667791472)
-[![tableone status
+[![interfacer status
 badge](https://bristol-vaccine-centre.r-universe.dev/badges/interfacer)](https://bristol-vaccine-centre.r-universe.dev)
 <!-- badges: end -->
 

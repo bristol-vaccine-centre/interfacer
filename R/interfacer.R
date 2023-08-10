@@ -75,6 +75,21 @@ print.iface = function(x,...) {
   cat(format.iface(x))
 }
 
+#' @importFrom knitr knit_print
+#' @inherit knitr::knit_print
+#' @export
+knit_print.iface = function(x,...) {
+  grps = attributes(x)$groups
+  if (is.null(grps)) g = "Grouping undefined"
+  else g = sprintf("Grouped by: %s",.none(grps,collapse = " + ", "<none>"))
+  tmp = paste0(c(
+    "A dataframe containing the following columns: \n",
+    glue::glue_data(x, "- {name} ({type}) - {doc}"),
+    g
+  ),collapse="\n")
+  return(structure(tmp,class="knit_asis"))
+}
+
 #' Perform interface checks on dataframe by looking at enclosing function
 #'
 #' This is intended to be used within a function to check the validity of a data
