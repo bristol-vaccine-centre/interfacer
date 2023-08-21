@@ -61,6 +61,7 @@ iface = function(..., .groups = NULL) {
 format.iface = function(x, ...) {
   grps = attributes(x)$groups
   if (is.null(grps)) g = "Grouping undefined"
+  else if (length(grps)==0) g = "Ungrouped"
   else g = sprintf("Grouped by: %s",.none(grps,collapse = " + ", "<none>"))
   paste0(c(
     "A dataframe containing the following columns: ",
@@ -80,8 +81,9 @@ print.iface = function(x,...) {
 #' @export
 knit_print.iface = function(x,...) {
   grps = attributes(x)$groups
-  if (is.null(grps)) g = "Grouping undefined"
-  else g = sprintf("Grouped by: %s",.none(grps,collapse = " + ", "<none>"))
+  if (is.null(grps)) g = "\nGrouping undefined"
+  else if (length(grps)==0) g = "\nUngrouped"
+  else g = sprintf("\nGrouped by: %s",.none(grps,collapse = " + ", "none"))
   tmp = paste0(c(
     "A dataframe containing the following columns: \n",
     glue::glue_data(x, "- {name} ({type}) - {doc}"),
@@ -264,7 +266,7 @@ idocument = function(fn, param = NULL) {
     dname = names(formals(fn))[[1]]
   }
   spec = .get_spec(fn,dname)
-  return(format(spec))
+  return(knit_print.iface(spec))
 }
 
 .none = function(x, collapse = ", ", none = "<none>", fmt = "%s") {

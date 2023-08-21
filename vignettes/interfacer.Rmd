@@ -34,7 +34,7 @@ of column names, plus types and some documentation about the column.
 Printing an interface specification shows the structure.
 
 ```{r}
-print(.iface)
+.iface
 ```
 
 An interface specification can be used as the default value for a function. This

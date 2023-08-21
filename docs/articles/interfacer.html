@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,11 +84,13 @@ column.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Printing an interface specification shows the structure.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">.iface</span><span class="op">)</span></span>
-<span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
-<span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
-<span><span class="co">#&gt; * test (logical) - the test result</span></span>
-<span><span class="co">#&gt; Grouping undefined</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">.iface</span></span></code></pre></div>
+<p>A dataframe containing the following columns:</p>
+<ul>
+<li>id (integer) - an integer ID</li>
+<li>test (logical) - the test result</li>
+</ul>
+<p>Grouping undefined</p>
 <p>An interface specification can be used as the default value for a
 function. This is a dummy default value but when combined with
 <code>ivalidate</code> in the function body a passed parameter can be
@@ -175,7 +177,7 @@ essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/muta
 <span><span class="co">#&gt; * extra (character) - a new value</span></span>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
 <span><span class="co">#&gt; * test (logical) - the test result</span></span>
-<span><span class="co">#&gt; Grouped by: &lt;none&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; Ungrouped</span></span></code></pre></div>
 <p>and then used in another function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -218,10 +220,12 @@ grouping.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
-<span><span class="co">#&gt; * extra (character) - a new value</span></span>
-<span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
-<span><span class="co">#&gt; * test (logical) - the test result</span></span>
-<span><span class="co">#&gt; Grouped by: &lt;none&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - extra (character) - a new value</span></span>
+<span><span class="co">#&gt; - id (integer) - an integer ID</span></span>
+<span><span class="co">#&gt; - test (logical) - the test result</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Ungrouped</span></span></code></pre></div>
 <p>Missing columns can be inserted with <code>imap</code>. Types are
 coerced to the expected type if this is possible with no warnings.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
