@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,7 +85,7 @@ column.</p>
 <p>Printing an interface specification shows the structure.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">.iface</span></span></code></pre></div>
-<p>A dataframe containing the following columns:</p>
+<p>Required dataframe containing the following columns:</p>
 <ul>
 <li>id (integer) - an integer ID</li>
 <li>test (logical) - the test result</li>
@@ -148,7 +148,7 @@ error:</p>
 <span><span class="co">#&gt; Error in iconvert(df, spec, .imap, dname, .get_fn_name(fn), .has_dots,  : </span></span>
 <span><span class="co">#&gt;   1 missing columns in parameter `mydata` in call to example_fn(...)</span></span>
 <span><span class="co">#&gt; consider renaming to create `test` columns</span></span>
-<span><span class="co">#&gt; or by adding `.imap = interfacer::imap(`test` = ???)` to your function call.</span></span></code></pre></div>
+<span><span class="co">#&gt; or by adding `.imap = interfacer::imapper(`test` = ???)` to your function call.</span></span></code></pre></div>
 <p>We can recover from this error by including a mapping which is
 applied before the validation using an <code>imap</code> (this is
 essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate</a></code> call)</p>
@@ -156,7 +156,7 @@ essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/muta
 <code class="sourceCode R"><span><span class="fu">example_fn</span><span class="op">(</span></span>
 <span>  <span class="va">example_data_2</span>, </span>
 <span>  <span class="st">"value for another"</span>,</span>
-<span>  .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>test <span class="op">=</span> <span class="va">wrong_test</span><span class="op">)</span></span>
+<span>  .imap <span class="op">=</span> <span class="fu">interfacer</span><span class="fu">::</span><span class="fu"><a href="../reference/imapper.html">imapper</a></span><span class="op">(</span>test <span class="op">=</span> <span class="va">wrong_test</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;      id wrong_test test </span></span>
@@ -173,7 +173,7 @@ essentially used for a <code><a href="https://dplyr.tidyverse.org/reference/muta
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">.iface2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
+<span><span class="co">#&gt; Required dataframe containing the following columns: </span></span>
 <span><span class="co">#&gt; * extra (character) - a new value</span></span>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
 <span><span class="co">#&gt; * test (logical) - the test result</span></span>
@@ -219,7 +219,7 @@ grouping.</p>
 <p>The documentation for this second interface is as follows:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
+<span><span class="co">#&gt; Required dataframe containing the following columns: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - extra (character) - a new value</span></span>
 <span><span class="co">#&gt; - id (integer) - an integer ID</span></span>
@@ -233,7 +233,7 @@ coerced to the expected type if this is possible with no warnings.</p>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    id<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span><span class="op">)</span>,</span>
 <span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imap.html">imap</a></span><span class="op">(</span>extra<span class="op">=</span><span class="st">"fixed"</span><span class="op">)</span> <span class="op">)</span></span>
+<span>  <span class="op">)</span>, .imap <span class="op">=</span> <span class="fu"><a href="../reference/imapper.html">imapper</a></span><span class="op">(</span>extra<span class="op">=</span><span class="st">"fixed"</span><span class="op">)</span> <span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;   extra    id test </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
@@ -252,11 +252,11 @@ or 1 for example.</p>
 <span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in pmap(.l, .f, ..., .progress = .progress) : </span></span>
 <span><span class="co">#&gt;   <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `value[[3L]]()`:</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> input column `id` in function parameter `example_fn(mydata = ?)` cannot be coerced to a integer: not a true integer input</span></span></code></pre></div>
 <p>Factors might have allowable levels as well. For this we define them
 as an <code>enum</code> which accepts a list of values, which then
-relevel the factor. If <code>.drop = TRUE</code> is specified then
+re-level the factor. If <code>.drop = TRUE</code> is specified then
 values which don’t match the levels will be cast to <code>NA</code>
 rather than causing failure to allow conformance to a subset of factor
 values.</p>

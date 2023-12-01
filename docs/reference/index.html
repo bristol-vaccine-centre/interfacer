@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="interface-specification">Interface specification<a class="anchor" aria-label="anchor" href="#interface-specification"></a></h2>
       
       
 
@@ -50,34 +50,14 @@
 
       <dl><dt>
           
-          <code><a href="as_vars.html">as_vars()</a></code> 
-        </dt>
-        <dd>Reuse tidy-select syntax outside of a tidy-select function</dd>
-      </dl><dl><dt>
-          
-          <code><a href="enum.html">enum()</a></code> 
-        </dt>
-        <dd>Define a factor with specific levels.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="format.iface.html">format(<i>&lt;iface&gt;</i>)</a></code> 
-        </dt>
-        <dd>Encode in a Common Format</dd>
-      </dl><dl><dt>
-          
-          <code><a href="iclip.html">iclip()</a></code> 
-        </dt>
-        <dd>Create an <code>iface</code> interface from an example dataframe</dd>
-      </dl><dl><dt>
-          
           <code><a href="iconvert.html">iconvert()</a></code> 
         </dt>
         <dd>Convert a dataframe to a format compatible with an interface specification</dd>
       </dl><dl><dt>
           
-          <code><a href="idocument.html">idocument()</a></code> 
+          <code><a href="idispatch.html">idispatch()</a></code> 
         </dt>
-        <dd>Document an interface contract for inserting in to Roxygen</dd>
+        <dd>Dispatch to a named function based on the characteristics of a dataframe</dd>
       </dl><dl><dt>
           
           <code><a href="iface.html">iface()</a></code> 
@@ -85,14 +65,24 @@
         <dd>Define an interface</dd>
       </dl><dl><dt>
           
-          <code><a href="imap.html">imap()</a></code> 
+          <code><a href="imapper.html">imapper()</a></code> 
         </dt>
         <dd>Specify mappings that can make dataframes compatible with an interface</dd>
       </dl><dl><dt>
           
+          <code><a href="iproto.html">iproto()</a></code> 
+        </dt>
+        <dd>Generate a zero length tibble conforming to a spec</dd>
+      </dl><dl><dt>
+          
           <code><a href="ireturn.html">ireturn()</a></code> 
         </dt>
-        <dd>Perform interface checks on dataframe by looking at enclosing function</dd>
+        <dd>Check a return parameter from a function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="is.iface.html">is.iface()</a></code> 
+        </dt>
+        <dd>Check if an object is an interface spec</dd>
       </dl><dl><dt>
           
           <code><a href="itest.html">itest()</a></code> 
@@ -102,7 +92,65 @@
           
           <code><a href="ivalidate.html">ivalidate()</a></code> 
         </dt>
-        <dd>Perform interface checks on dataframe by looking at enclosing function</dd>
+        <dd>Perform interface checks on dataframe by looking at enclosing function formals</dd>
+      </dl></div><div class="section level2">
+      <h2 id="rules">Rules<a class="anchor" aria-label="anchor" href="#rules"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="enum.html">enum()</a></code> 
+        </dt>
+        <dd>Define a conformance rule to match a factor with specific levels.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="in_range.html">in_range()</a></code> 
+        </dt>
+        <dd>Define a conformance rule to confirm that a numeric is in a set range</dd>
+      </dl></div><div class="section level2">
+      <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="iclip.html">iclip()</a></code> 
+        </dt>
+        <dd>Create an <code>iface</code> interface from an example dataframe</dd>
+      </dl><dl><dt>
+          
+          <code><a href="idocument.html">idocument()</a></code> 
+        </dt>
+        <dd>Document an interface contract for inserting into <code>roxygen</code></dd>
+      </dl></div><div class="section level2">
+      <h2 id="others">Others<a class="anchor" aria-label="anchor" href="#others"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="format.iface.html">format(<i>&lt;iface&gt;</i>)</a></code> 
+        </dt>
+        <dd>Encode in a Common Format</dd>
       </dl><dl><dt>
           
           <code><a href="knit_print.iface.html">knit_print(<i>&lt;iface&gt;</i>)</a></code> 
@@ -114,7 +162,8 @@
         </dt>
         <dd>Print Values</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

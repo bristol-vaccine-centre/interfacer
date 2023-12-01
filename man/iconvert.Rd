@@ -7,7 +7,7 @@
 iconvert(
   df,
   iface,
-  .imap = interfacer::imap(),
+  .imap = interfacer::imapper(),
   .dname = "<unknown>",
   .fname = "<unknown>",
   .has_dots = TRUE,
@@ -19,7 +19,7 @@ iconvert(
 
 \item{iface}{the interface spec as an \code{iface}}
 
-\item{.imap}{an optional \code{imap} mapping}
+\item{.imap}{an optional \code{imapper} mapping}
 
 \item{.dname}{the name of the parameter value (optional).}
 
@@ -27,7 +27,7 @@ iconvert(
 
 \item{.has_dots}{internal library use only. Changes the nature of the error message.}
 
-\item{.prune}{do you want to remove}
+\item{.prune}{do you want to remove non matching columns?}
 }
 \value{
 the conformant dataframe
@@ -44,3 +44,4 @@ i_diamonds = iface(
 )
 iconvert(ggplot2::diamonds, i_diamonds,.prune = TRUE)
 }
+\concept{interface}

@@ -99,7 +99,7 @@ validation using an `imap` (this is essentially used for a `dplyr::mutate` call)
 example_fn(
   example_data_2, 
   "value for another",
-  .imap = imap(test = wrong_test)
+  .imap = interfacer::imapper(test = wrong_test)
 )
 
 ```
@@ -166,7 +166,7 @@ example_fn2(
   tibble::tibble(
     id=c("1","2","3"),
     test = c(TRUE,FALSE,TRUE)
-  ), .imap = imap(extra="fixed") )
+  ), .imap = imapper(extra="fixed") )
 ```
 
 Incorrect data types are picked up and rejected. In this case the data supplied
@@ -182,7 +182,7 @@ try(example_fn(
 ```
 
 Factors might have allowable levels as well. For this we define them as an
-`enum` which accepts a list of values, which then relevel the factor. If
+`enum` which accepts a list of values, which then re-level the factor. If
 `.drop = TRUE` is specified then values which don't match the levels will be
 cast to `NA` rather than causing failure to allow conformance to a subset of factor
 values.

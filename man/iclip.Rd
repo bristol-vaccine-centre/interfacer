@@ -13,8 +13,9 @@ iclip(df)
 nothing
 }
 \description{
-Copies to the clipboard
+Copies the \code{iface} to the clipboard
 }
 \examples{
 if(FALSE) iclip(iris)
 }
+\concept{document}

@@ -2,9 +2,9 @@
 % Please edit documentation in R/interfacer.R
 \name{ivalidate}
 \alias{ivalidate}
-\title{Perform interface checks on dataframe by looking at enclosing function}
+\title{Perform interface checks on dataframe by looking at enclosing function formals}
 \usage{
-ivalidate(df = NULL, ..., .imap = imap(), .prune = FALSE)
+ivalidate(df = NULL, ..., .imap = imapper(), .prune = FALSE, .default = NULL)
 }
 \arguments{
 \item{df}{a dataframe - if missing then the first parameter of the calling
@@ -13,17 +13,21 @@ function is assumed to be a dataframe.}
 \item{...}{not used but \code{ivalidate} should be included in call to inherit
 \code{.imap} from the caller function.}
 
-\item{.imap}{a set of mappings as an \code{imap} object.}
+\item{.imap}{a set of mappings as an \code{imapper} object.}
 
 \item{.prune}{get rid of excess columns that are not in the spec.}
+
+\item{.default}{a default dataframe conforming to the specification. This
+overrides any defaults defined in the interface specification}
 }
 \value{
 a dataframe based on df with validity checks passed and \code{.imap}
 mappings applied if present
 }
 \description{
-This is intended to be used within a function to check the validity of a data
-frame parameter (usually the first parameter) against an \code{ispec}.
+\code{ivalidate(...)} is intended to be used within a function to check the validity of a data
+frame parameter (usually the first parameter) against an \code{ispec} which is
+given as a default value of a formal parameter.
 }
 \examples{
 x = function(df = iface(col1 = integer ~ "an integer column" ), ...) {
@@ -37,3 +41,4 @@ x(input)
 input2=tibble::tibble(col1 = c(1.5,2,3))
 try(x(input2))
 }
+\concept{interface}

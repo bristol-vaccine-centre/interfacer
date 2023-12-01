@@ -4,7 +4,7 @@
 \alias{iface}
 \title{Define an interface}
 \usage{
-iface(..., .groups = NULL)
+iface(..., .groups = NULL, .default = NULL)
 }
 \arguments{
 \item{...}{The specification of the interface (see details), or an unnamed
@@ -12,28 +12,67 @@ iface(..., .groups = NULL)
 
 \item{.groups}{either FALSE for no groups or a formula of the form \code{~ var1 + var2 + ...} which defines what columns must be grouped in the dataframe
 (and in which order). If NULL (the default) then grouping is not validated.}
+
+\item{.default}{a default value to supply if there is nothing given in a
+function parameter using the \code{iface} as a formal. This is either \code{NULL} in
+which case there is no default, \code{TRUE} in which case the default is a zero
+row tibble conforming to the spec, or a provided dataframe, which is checked to
+conform, and used as the default.}
 }
 \value{
 the definition of an interface as a \code{iface} object
 }
 \description{
-This defines the structure of a dataframe.
+The \code{iface} function allows us to define the structure of a dataframe in
+terms of the columns and column types. An \code{iface} specification is used to
+define the type of a formal parameter in a function, by being assigned as its
+default value. This definition is picked up by \code{ivalidate(...)} within that
+function to ensure the input is correctly formatted. An interface spec may
+also be used in \code{ireturn(...)} to enforce that the output of a function is
+correct
+}
+\details{
+\code{iface} definitions can be printed and included in \code{roxygen} documentation
+and help us to document input dataframe parameters and dataframe return values
+in a standardised way.
+
 The specification is in the form of a named list of formulae with
 the structure \code{name = type ~ "documentation"}. \code{type} can be one of
-'integer','double','numeric','date','logical','factor','character','primary_key' or \code{enum(level1,level2,...)} or
-anything that resolves to a function e.g. \code{as.ordered}
+'anything','integer','positive_integer','double','proportion','positive_double','numeric','date','logical','factor','character','group_unique','complete' or 'enum(level1,level2,...)',
+'in_range(min,max)' or anything that resolves to a function e.g. 'as.ordered'.
+If a function it must take a single vector parameter and return a single
+vector of the same size. The function must return a zero length vector of an
+appropriate type if passed \code{NULL}. \code{type} can also be a concatenation of
+rules
 }
 \examples{
-my_iface = iface( col1 = integer ~ "an integer column" )
+my_iface = iface( 
+  col1 = integer + group_unique ~ "an integer column",
+  .default = tibble::tibble(col1 = 1:10)
+)
+
 print(my_iface)
 
+# the function x defines a formal `df` with default value of `my_iface`
 x = function(df = my_iface, ...) {
   df = ivalidate(df,...)
   return(df)
 }
 
+# this works
 x(tibble::tibble(col1 = c(1,2,3)))
+
+# this fails as x is of the wrong type
+try(x(tibble::tibble(col1 = c("a","b","c"))))
+
+# this fails as x has duplicates
+try(x(tibble::tibble(col1 = c(1,2,3,3))))
+
+# this gives the default value
+x()
+
 
 my_iface2 = iface(my_iface, col2 = character ~ "another col", .groups = ~ col1 + col2)
 print(my_iface2)
 }
+\concept{interface}

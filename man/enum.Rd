@@ -2,7 +2,7 @@
 % Please edit documentation in R/interfacer.R
 \name{enum}
 \alias{enum}
-\title{Define a factor with specific levels.}
+\title{Define a conformance rule to match a factor with specific levels.}
 \usage{
 enum(..., .drop = FALSE)
 }
@@ -17,10 +17,11 @@ a function that can check and convert input into the factor with specified
 levels. This will re-level factors with matching levels but in a different order.
 }
 \description{
-Define a factor with specific levels.
+Define a conformance rule to match a factor with specific levels.
 }
 \examples{
 f = enum(one,two,three)
 f(c("three","two","one"))
 f(factor(rep(1:3,5), labels = c("one","two","three")))
 }
+\concept{rules}

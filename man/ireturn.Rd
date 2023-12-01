@@ -2,7 +2,7 @@
 % Please edit documentation in R/interfacer.R
 \name{ireturn}
 \alias{ireturn}
-\title{Perform interface checks on dataframe by looking at enclosing function}
+\title{Check a return parameter from a function}
 \usage{
 ireturn(df, iface, .prune = FALSE)
 }
@@ -20,7 +20,7 @@ mappings applied if present
 }
 \description{
 This is intended to be used within a function to check the validity of a data
-frame parameter (usually the first parameter) against an \code{ispec}.
+frame being returned from a function against an \code{ispec} which is provided.
 }
 \examples{
 input = iface(col_in = integer ~ "an integer column" )
@@ -33,3 +33,4 @@ x = function(df = input, ...) {
 x(tibble::tibble(col_in = c(1,2,3)))
 output
 }
+\concept{interface}

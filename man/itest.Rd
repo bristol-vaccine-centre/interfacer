@@ -4,7 +4,7 @@
 \alias{itest}
 \title{Test dataframe conformance to an interface specification.}
 \usage{
-itest(df = NULL, iface = NULL, .imap = imap())
+itest(df = NULL, iface = NULL, .imap = imapper())
 }
 \arguments{
 \item{df}{a dataframe to test. If missing the first parameter of the calling
@@ -13,7 +13,7 @@ function is assumed to be the dataframe to test.}
 \item{iface}{an interface specification produced by \code{iface()}. If missing
 this will be inferred from the current function signature.}
 
-\item{.imap}{an optional mapping specification produced by \code{imap()}}
+\item{.imap}{an optional mapping specification produced by \code{imapper()}}
 }
 \value{
 TRUE if the dataframe is conformant, FALSE otherwise
@@ -42,3 +42,4 @@ if (rlang::is_installed("ggplot2")) {
   x(ggplot2::diamonds)
 }
 }
+\concept{interface}

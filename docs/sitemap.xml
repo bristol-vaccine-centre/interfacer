@@ -37,6 +37,9 @@
     <loc>/reference/iconvert.html</loc>
   </url>
   <url>
+    <loc>/reference/idispatch.html</loc>
+  </url>
+  <url>
     <loc>/reference/idocument.html</loc>
   </url>
   <url>
@@ -46,10 +49,22 @@
     <loc>/reference/imap.html</loc>
   </url>
   <url>
+    <loc>/reference/imapper.html</loc>
+  </url>
+  <url>
+    <loc>/reference/in_range.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/iproto.html</loc>
+  </url>
+  <url>
     <loc>/reference/ireturn.html</loc>
+  </url>
+  <url>
+    <loc>/reference/is.iface.html</loc>
   </url>
   <url>
     <loc>/reference/itest.html</loc>

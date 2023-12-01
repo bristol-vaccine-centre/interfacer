@@ -1,3 +1,3 @@
 utils::globalVariables(c(
-  "name","type","doc"
+  "name","type","doc",":="
 ))

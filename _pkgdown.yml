@@ -1,4 +1,16 @@
 url: ~
 template:
   bootstrap: 5
-
+reference:
+- title: Interface specification
+- contents:
+  - has_concept("interface")
+- title: Rules
+- contents:
+  - has_concept("rules")
+- title: Documentation
+- contents:
+  - has_concept("document")
+- title: Others
+- contents:
+  - lacks_concepts(c("rules","interface","document"))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/interfacer.R
 \name{idocument}
 \alias{idocument}
-\title{Document an interface contract for inserting in to Roxygen}
+\title{Document an interface contract for inserting into \code{roxygen}}
 \usage{
 idocument(fn, param = NULL)
 }
@@ -26,3 +26,4 @@ x = function(df = iface( col1 = integer ~ "an integer column" )) {}
 
 cat(idocument(x, df))
 }
+\concept{document}
