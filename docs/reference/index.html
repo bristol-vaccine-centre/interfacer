@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,14 +106,84 @@
 
       <dl><dt>
           
-          <code><a href="enum.html">enum()</a></code> 
+          <code><a href="type.anything.html">type.anything()</a></code> 
+        </dt>
+        <dd>Coerce a unspecified type</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.character.html">type.character()</a></code> 
+        </dt>
+        <dd>Coerce to a character.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.complete.html">type.complete()</a></code> 
+        </dt>
+        <dd>Coerce to a complete set of values.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.date.html">type.date()</a></code> 
+        </dt>
+        <dd>Coerce to a Date.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.default.html">type.default()</a></code> 
+        </dt>
+        <dd>Set a default value for a column</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.double.html">type.double()</a></code> 
+        </dt>
+        <dd>Coerce to a double.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.enum.html">type.enum()</a></code> 
         </dt>
         <dd>Define a conformance rule to match a factor with specific levels.</dd>
       </dl><dl><dt>
           
-          <code><a href="in_range.html">in_range()</a></code> 
+          <code><a href="type.factor.html">type.factor()</a></code> 
+        </dt>
+        <dd>Coerce to a factor.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.group_unique.html">type.group_unique()</a></code> 
+        </dt>
+        <dd>Coerce to a unique value.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.in_range.html">type.in_range()</a></code> 
         </dt>
         <dd>Define a conformance rule to confirm that a numeric is in a set range</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.integer.html">type.integer()</a></code> 
+        </dt>
+        <dd>Coerce to integer</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.logical.html">type.logical()</a></code> 
+        </dt>
+        <dd>Coerce to a logical</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.numeric.html">type.numeric()</a></code> 
+        </dt>
+        <dd>Coerce to a numeric.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.positive_double.html">type.positive_double()</a></code> 
+        </dt>
+        <dd>Coerce to a positive double.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.positive_integer.html">type.positive_integer()</a></code> 
+        </dt>
+        <dd>Coerce to a positive integer.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="type.proportion.html">type.proportion()</a></code> 
+        </dt>
+        <dd>Coerce to a number between 0 and 1</dd>
       </dl></div><div class="section level2">
       <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a></h2>
       
@@ -135,6 +205,16 @@
           <code><a href="idocument.html">idocument()</a></code> 
         </dt>
         <dd>Document an interface contract for inserting into <code>roxygen</code></dd>
+      </dl><dl><dt>
+          
+          <code><a href="use_dataframe.html">use_dataframe()</a></code> 
+        </dt>
+        <dd>Use a dataframe in a package including structure based documentation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="use_iface.html">use_iface()</a></code> 
+        </dt>
+        <dd>Generate interfacer code for a dataframe</dd>
       </dl></div><div class="section level2">
       <h2 id="others">Others<a class="anchor" aria-label="anchor" href="#others"></a></h2>
       
@@ -148,19 +228,29 @@
 
       <dl><dt>
           
+          <code><a href="as.list.iface.html">as.list(<i>&lt;iface&gt;</i>)</a></code> 
+        </dt>
+        <dd>Cast an <code>iface</code> to a plain list.</dd>
+      </dl><dl><dt>
+          
           <code><a href="format.iface.html">format(<i>&lt;iface&gt;</i>)</a></code> 
         </dt>
-        <dd>Encode in a Common Format</dd>
+        <dd>Format an <code>iface</code> specification for printing</dd>
       </dl><dl><dt>
           
-          <code><a href="knit_print.iface.html">knit_print(<i>&lt;iface&gt;</i>)</a></code> 
+          <code><a href="if_col_present.html">if_col_present()</a></code> 
         </dt>
-        <dd>A custom printing function</dd>
+        <dd>Execute a function or return a value if a column in present in a dataframe</dd>
       </dl><dl><dt>
           
-          <code><a href="print.iface.html">print(<i>&lt;iface&gt;</i>)</a></code> 
+          <code><a href="is_col_present.html">is_col_present()</a></code> 
         </dt>
-        <dd>Print Values</dd>
+        <dd>Check for existence of a set of columns in a dataframe</dd>
+      </dl><dl><dt>
+          
+          <code><a href="switch_pipeline.html">switch_pipeline()</a></code> 
+        </dt>
+        <dd>Branch a <code>dplyr</code> pipeline based on a set of conditions</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

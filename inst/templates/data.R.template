@@ -1,0 +1,20 @@
+## {{name}} definition ----
+## Generated code. remove this line to prevent manual changes being overwritten
+
+#' The {{name}} dataset
+#'
+#' @usage data({{name}})
+#'
+#' @format
+{{#md}}
+#' {{.}}
+{{/md}}
+#' 
+#' {{nrow}} rows and {{ncol}} columns
+#'
+#' @docType data
+#' @keywords datasets
+#' @name {{name}}
+NULL
+
+## {{name}} definition ends

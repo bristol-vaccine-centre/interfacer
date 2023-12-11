@@ -25,19 +25,19 @@ An interface defines the structure of acceptable dataframes. It is a list
 of column names, plus types and some documentation about the column.
 
 ```{r}
-.iface = iface(
+i_test = iface(
   id = integer ~ "an integer ID",
   test = logical ~ "the test result"
 )
 ```
 
-Printing an interface specification shows the structure.
+Printing an interface specification shows the structure that the `iface` defines.
 
-```{r}
-.iface
+```{r, results='markup'}
+cat(print(i_test))
 ```
 
-An interface specification can be used as the default value for a function. This
+An interface specification is enforced as the default value for a function. This
 is a dummy default value but when combined with `ivalidate` in the function body
 a passed parameter can be validated to ensure the dataframe is of the right
 shape. We can use `idocument` in the Roxygen skeleton to document the dataframe
@@ -53,16 +53,17 @@ constraints.
 #' @return the conformant dataframe
 #' @export
 example_fn = function(
-  mydata = .iface,
+  mydata = i_test,
   another = "value",
   ...
 ) {
-  mydata = ivalidate(...)
+  mydata = ivalidate(mydata, ...)
   return(mydata)
 }
 ```
 
-In this case when we later call the function the data is checked
+In this case when we later call `example_fn` the data is checked against the 
+requirements by `ivalidate`, and if acceptable passed on to the rest of the function body (in this case the result is returned).
 
 ```{r}
 example_data = tibble::tibble(
@@ -74,104 +75,131 @@ example_data = tibble::tibble(
 example_fn(
   example_data, 
   "value for another"
-)
+) %>% dplyr::glimpse()
 ```
 
-If we pass non-conformant data `ivalidate` throws an error:
+If we pass non-conformant data `ivalidate` throws an informative error about what is wrond with the data. In this case the `test` column is missing:
 
 ```{r}
-example_data_2 = tibble::tibble(
+bad_example_data = tibble::tibble(
     id=c(1,2,3),
-    wrong_test = c(TRUE,FALSE,TRUE)
+    wrong_name = c(TRUE,FALSE,TRUE)
   )
 
 # this causes an error as example_data_2$wrong_test is wrongly named
 try(example_fn(
-  example_data_2, 
+  bad_example_data, 
   "value for another"
 ))
 ```
 
-We can recover from this error by including a mapping which is applied before the
-validation using an `imap` (this is essentially used for a `dplyr::mutate` call)
+We can recover from this error by renaming the columns before passing `bad_example_data` to `example_fn()`. Alternatively we can use the dynamic dots to pass a mapping to `ivalidate` which is applied before the
+validation. This parameter is called `.imap`, and its contents is a `imapper()`  that holds an set of expressions used for a `dplyr::mutate` call).
 
 ```{r}
 example_fn(
-  example_data_2, 
+  bad_example_data, 
   "value for another",
-  .imap = interfacer::imapper(test = wrong_test)
-)
+  .imap = interfacer::imapper(test = wrong_name)
+) %>% dplyr::glimpse()
 
 ```
 
-interface specifications can be extended. :
+
+# Extension and composition
+
+To be useful interface specifications can be composed and extended. In this case a subtype of the `iface` specification can be created:
 
 ```{r}
-.iface2 = iface(
-  .iface,
+i_test_extn = iface(
+  i_test,
   extra = character ~ "a new value",
   .groups = FALSE
 )
 
-print(.iface2)
+print(i_test_extn)
 ```
 
-and then used in another function. 
+and then this extended `iface` used to constrain the input of another function by specifying it as the default value. We can also constrain the output of the function to be conformant to another specification usng `ireturn`. Examples of documenting the input parameter and the output parameter are provided here:
 
 ```{r}
 
+#' Another example function 
+#' 
+#' @param mydata `r idocument(example_fn2, mydata)`
+#' @param another an example   
+#' @param ... not used
+#'
+#' @return `r i_test`
+#' @export
 example_fn2 = function(
-    mydata = .iface2,
+    mydata = i_test_extn,
     ...
 ) {
   mydata = ivalidate(mydata, ..., .prune = TRUE)
-  return(mydata)
+  mydata = mydata %>% dplyr::select(-extra)
+  # check the return value conforms to a new specification
+  ireturn(mydata, i_test)
 }
 ```
 
 In this case the `ivalidate` call prunes 
-unneeded data from the dataframe, and also ensures that there is the correct grouping.
+unneeded data from the dataframe, removing any extra columns, and also ensures that the input is not grouped in any way. Grouping
 
 ```{r}
-example_data_3 = tibble::tibble(
-    id=c(1,2,3),
+grouped_example_data = tibble::tibble(
+    id = c(1,2,3),
     test = c(TRUE,FALSE,TRUE),
     extra = c("a","b","c"),
     unneeded = c("x","y","z")
   ) %>% dplyr::group_by(id)
 ```
 
-This is rejected because the grouping is incorrect
+This is rejected because the grouping is incorrect. An inforative error message is provided:
 
 ```{r}
-try(example_fn2(example_data_3))
+try(example_fn2(grouped_example_data))
 ```
 
-Following the error message makes this validate fine
+Following the instructions in the error message makes this previously failing data validate against `i_test_extn`:
 
 ```{r}
-example_fn2(example_data_3 %>% dplyr::ungroup())
+grouped_example_data %>% 
+  dplyr::ungroup() %>% 
+  example_fn2() %>% 
+  dplyr::glimpse()
 ```
-The documentation for this second interface is as follows:
+
+# Documentation
+
+The roxygen block of documentation for this second interface is determined by the `#' @param` block and the function `idocument` which takes a function name and optionally a parameter name and writes an informative block about the dataframe
+expected by the function:
 
 ```{r}
 cat(idocument(example_fn2))
 ```
 
-Missing columns can be inserted with `imap`. Types are coerced to the expected
-type if this is possible with no warnings.
+# Type coercion
+
+`interfacer` does not implement a rigid type system, but rather a permissve one. 
+If the provided data can be coerced to the specified type without major loss then 
+this is automatically done, as long as it can proceed with no warnings. In this 
+example `id` (an int) is provided as a `character` and `extra` (a character) is
+coerced from the provided numeric.
 
 ```{r}
 example_fn2(
   tibble::tibble(
     id=c("1","2","3"),
-    test = c(TRUE,FALSE,TRUE)
-  ), .imap = imapper(extra="fixed") )
+    test = c(TRUE,FALSE,TRUE),
+    extra = 1.1
+  )) %>% dplyr::glimpse()
 ```
 
-Incorrect data types are picked up and rejected. In this case the data supplied
-for `id` cannot be cast to integer without loss. Similar behaviour is seen if
-logical data is anything other than 0 or 1 for example.
+Completely incorrect data types on the other hans are picked up and rejected. In
+this case the data supplied for `id` cannot be cast to integer without loss.
+Similar behaviour is seen if logical data is anything other than 0 or 1 for
+example.
 
 ```{r}
 try(example_fn(
@@ -182,7 +210,9 @@ try(example_fn(
 ```
 
 Factors might have allowable levels as well. For this we define them as an
-`enum` which accepts a list of values, which then re-level the factor. If
+`enum` which accepts a list of values, which then must be matched by the levels 
+of a provided factor. The order of the levels will be taken from the `iface` spec
+and relveleving of inputs is taken to ensure the factor levels match the spec. If
 `.drop = TRUE` is specified then values which don't match the levels will be
 cast to `NA` rather than causing failure to allow conformance to a subset of factor
 values.
@@ -199,7 +229,244 @@ if (rlang::is_installed("ggplot2")) {
   
   # itest(ggplot2::diamonds, i_diamonds)
   iconvert(ggplot2::diamonds, i_diamonds, .prune = TRUE)
-  
+   
+} %>% dplyr::glimpse()
+```
+
+# Dispatch
+
+Dispatching to one of a number of functions based on the nature of a dataframe input
+is enabled by `idispatch(...)`. This emulates the behaviour of `S3` classes but for
+dataframes. An example is the following:
+
+```{r}
+
+disp_example = function(x, ...) {
+  idispatch(x,
+    disp_example.extn = i_test_extn,
+    disp_example.no_extn = i_test
+  )
+}
+
+disp_example.extn = function(x = i_test_extn, ...) {
+  # idispatch has already validated x so we don;t need to here
+  message("extended data")
+  return(colnames(x))
+}
+
+disp_example.no_extn = function(x = i_test, ...) {
+  # in this toy example we do the same thing in both possilbilities.
+  message("not extended data")
+  return(colnames(x))
 }
 ```
 
+If we call `disp_example()` with data that matches the `i_test_extn` specification
+we get one type of behaviour:
+
+```{r}
+
+tmp = tibble::tibble(
+    id=c("1","2","3"),
+    test = c(TRUE,FALSE,TRUE),
+    extra = 1.1
+)
+
+tmp %>% disp_example()
+```
+
+But if we call `disp_example()` with data that only matches the `i_test` specification
+we get different behaviour:
+
+```{r}
+# this matches the i_test_extn specifciation:
+tmp2 = tibble::tibble(
+    id=c("1","2","3"),
+    test = c(TRUE,FALSE,TRUE)
+)
+
+tmp2 %>% disp_example()
+```
+
+
+## Recursive dispatch
+
+In this example we note that the order of the rules is important with the more detailed
+being matched first. We can leverage this to create a recursive functional pattern of 
+dataframe extension that allows multiple inputs to converge on a single output, this
+also demonstrates the use of `itest()` which simply checks an input is of a set type:
+
+```{r}
+
+i_input_1 = iface(
+  x = integer ~ "the positives",
+  n = default(100) + integer ~ "the total"
+)
+
+i_input_2 = iface(
+  p = proportion ~ "the proportion",
+  n = default(100) + integer ~ "the total"
+)
+
+i_interim = iface(
+  i_input_1,
+  i_input_2
+)
+
+i_final = iface(
+  i_interim,
+  lower = double ~ "wilson lower CI",
+  upper = double ~ "wilson lower CI",
+  mean = double ~ "wilson mean"
+)
+
+i_target = iface(
+  i_final,
+  label = character ~ "a printable label"
+)
+
+process.input_1 = function(x = i_input_1,...) {
+  return(x %>% dplyr::mutate(p = x/n))
+}
+
+process.input_2 = function(x = i_input_1,...) {
+  return(x %>% dplyr::mutate(x = floor(p*n)))
+}
+
+process.interim = function(x) {
+  return(x %>% dplyr::mutate(binom::binom.wilson(x,n)))
+}
+
+process.final = function(x) {
+  return(x %>% dplyr::mutate(label = sprintf("%1.1f%% [%1.1f%% - %1.1f%%] (%d/%d)", 
+    mean*100, lower*100, upper*100, x, n)))
+}
+
+process = function(x,...) {
+  # this test must be at the front to prevent infinite recursion
+  if (itest(x, i_target)) return(x)
+  out = idispatch(x,
+    process.final = i_final,
+    process.interim = i_interim,
+    process.input_2 = i_input_2,
+    process.input_1 = i_input_1
+  )
+  return(process(out))
+}
+
+```
+
+
+Processing an input of type 1 results in one path through the data pipeline:
+
+```{r}
+# tibble::tibble(x=c(10,30), n=c(NA,50)) %>% itest(i_input_1)
+process(tibble::tibble(x=c(10,30), n=c(NA,50))) %>% dplyr::glimpse()
+```
+
+Processing an input of type 2, results in a different path through the data pipeline, but 
+the same outcome:
+
+```{r}
+# tibble::tibble(p=0.15,n=1000) %>% itest(i_input_2)
+process(tibble::tibble(p=0.15,n=1000)) %>% dplyr::glimpse()
+```
+
+# Complex rules & composition
+
+In the section above we used the pseudo-function `default(100) + integer` to 
+specify the input column `x`. We also talked about the use of `enum(...)` as a 
+rule to match factors. A range of other possible modifiers are possible such as
+`group_unique` or `complete` which enforce uniqueness and completeness.
+
+# Grouping
+
+an `iface` spec can 
+TBD
+
+```{r}
+
+i_diamonds = interfacer::iface(
+	carat = numeric ~ "the carat column",
+	cut = enum(`Fair`,`Good`,`Very Good`,`Premium`,`Ideal`, .ordered=TRUE) ~ "the cut column",
+	color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
+	clarity = enum(`I1`,`SI2`,`SI1`,`VS2`,`VS1`,`VVS2`,`VVS1`,`IF`, .ordered=TRUE) ~ "the clarity column",
+	depth = numeric ~ "the depth column",
+	table = numeric ~ "the table column",
+	price = integer ~ "the price column",
+	x = numeric ~ "the x column",
+	y = numeric ~ "the y column",
+	z = numeric ~ "the z column",
+	.groups = ~ . + carat + cut
+)
+
+# permissive grouping with the `~ . + carat + cut` groups rule
+ggplot2::diamonds %>% 
+  dplyr::group_by(color, carat, cut) %>% 
+  iconvert(i_diamonds) %>% 
+  dplyr::glimpse()
+
+```
+
+# Default values
+
+```{r}
+
+i_iris = interfacer::iface(
+	Sepal.Length = numeric ~ "the Sepal.Length column",
+	Sepal.Width = numeric ~ "the Sepal.Width column",
+	Petal.Length = numeric ~ "the Petal.Length column",
+	Petal.Width = numeric ~ "the Petal.Width column",
+	Species = enum(`setosa`,`versicolor`,`virginica`) ~ "the Species column",
+	.groups = NULL,
+  .default = TRUE
+)
+
+test_fn = function(i = i_iris, ...) {
+  i = ivalidate(i,...)
+  return(i)
+}
+
+# Outputs a zero length data frame
+test_fn() %>% dplyr::glimpse()
+
+```
+
+
+# Developer tools
+
+TBD: 
+
+* `iclip(diamonds)`
+* `use_dataframe(iris)`
+* `use_iface(diamonds)`
+
+# Nesting & list columns
+
+```{r}
+
+i_diamonds_cat = interfacer::iface(
+  cut = enum(`Fair`,`Good`,`Very Good`,`Premium`,`Ideal`, .ordered=TRUE) ~ "the cut column",
+  color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
+  clarity = enum(`I1`,`SI2`,`SI1`,`VS2`,`VS1`,`VVS2`,`VVS1`,`IF`, .ordered=TRUE) ~ "the clarity column",
+  data = list(i_diamonds_data) ~ "A nested data column must be specified as a list",
+  .groups = FALSE
+)
+
+i_diamonds_data = interfacer::iface(
+  carat = numeric ~ "the carat column",
+  depth = numeric ~ "the depth column",
+  table = numeric ~ "the table column",
+  price = integer ~ "the price column",
+  x = numeric ~ "the x column",
+  y = numeric ~ "the y column",
+  z = numeric ~ "the z column",
+  .groups = FALSE
+)
+
+nested_diamonds = ggplot2::diamonds %>%
+  tidyr::nest(data = c(-cut,-color,-clarity))
+
+nested_diamonds %>% iconvert(i_diamonds_cat) %>% dplyr::glimpse()
+
+```

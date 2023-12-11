@@ -16,7 +16,7 @@ its given input is conformant to the interface."><!-- mathjax --><script src="ht
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ this will be inferred from the current function signature.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">is_installed</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">i_diamonds</span> <span class="op">=</span> <span class="fu"><a href="iface.html">iface</a></span><span class="op">(</span> </span></span>
-<span class="r-in"><span>    color <span class="op">=</span> <span class="fu"><a href="enum.html">enum</a></span><span class="op">(</span><span class="va">D</span>,<span class="va">E</span>,<span class="cn">F</span>,<span class="va">G</span>,<span class="va">H</span>,<span class="va">I</span>,<span class="va">J</span>,<span class="va">extra</span><span class="op">)</span> <span class="op">~</span> <span class="st">"the colour"</span>, </span></span>
+<span class="r-in"><span>    color <span class="op">=</span> <span class="fu">enum</span><span class="op">(</span><span class="va">D</span>,<span class="va">E</span>,<span class="cn">F</span>,<span class="va">G</span>,<span class="va">H</span>,<span class="va">I</span>,<span class="va">J</span>,<span class="va">extra</span><span class="op">)</span> <span class="op">~</span> <span class="st">"the colour"</span>, </span></span>
 <span class="r-in"><span>    price <span class="op">=</span> <span class="va">integer</span> <span class="op">~</span> <span class="st">"the price"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span>  </span></span>

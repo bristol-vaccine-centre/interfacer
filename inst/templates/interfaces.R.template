@@ -1,0 +1,14 @@
+## {{name}} definition ----
+## Generated code. remove this line to prevent manual changes being overwritten
+
+#' The {{name}} dataframe structure specification
+#'
+#' @format
+#' `r i_{{name}}`
+#'
+#' @docType data
+#' @keywords interfaces
+#' @name {{name}}
+i_{{name}} = {{&code}}
+
+## {{name}} definition ends

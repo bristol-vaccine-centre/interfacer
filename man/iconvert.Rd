@@ -11,7 +11,8 @@ iconvert(
   .dname = "<unknown>",
   .fname = "<unknown>",
   .has_dots = TRUE,
-  .prune = FALSE
+  .prune = FALSE,
+  .env = rlang::current_env()
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ iconvert(
 \item{.has_dots}{internal library use only. Changes the nature of the error message.}
 
 \item{.prune}{do you want to remove non matching columns?}
+
+\item{.env}{internal use only}
 }
 \value{
 the conformant dataframe
@@ -35,7 +38,7 @@ the conformant dataframe
 \description{
 This function is called by \code{ivalidate} and is not generally intended to be
 used directly by the end user. It may be helpful in debugging during package
-development to know what is being used.
+development to interactive test a \code{iface} spec.
 }
 \examples{
 i_diamonds = iface( 

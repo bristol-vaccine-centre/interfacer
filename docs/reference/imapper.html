@@ -12,7 +12,7 @@ to overcome some mapping issues"><!-- mathjax --><script src="https://cdnjs.clou
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,10 +73,10 @@ a dataframe will rename or otherwise fix missing columns</p></dd>
 <span class="r-in"><span><span class="va">input</span><span class="op">=</span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>col2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> </span></span>
 <span class="r-in"><span><span class="co"># This fails because col1 is missing</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">x</span><span class="op">(</span><span class="va">input</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in iconvert(df, spec, .imap, dname, .get_fn_name(fn), .has_dots,  : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1 missing columns in parameter `df` in call to x(...)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> consider renaming to create `col1` columns</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> or by adding `.imap = interfacer::imapper(`col1` = ???)` to your function call.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : missing columns in the `df` parameter of x(..).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> missing: col1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> consider renaming / creating missing columns before calling `x`(...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> or by adding `.imap = interfacer::imapper(`col1`=...)` to your function call.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># This fixes it for this input</span></span></span>
 <span class="r-in"><span><span class="fu">x</span><span class="op">(</span><span class="va">input</span>, .imap<span class="op">=</span><span class="fu">imapper</span><span class="op">(</span>col1 <span class="op">=</span> <span class="va">col2</span><span class="op">)</span><span class="op">)</span></span></span>

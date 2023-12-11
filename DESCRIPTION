@@ -1,6 +1,6 @@
 Package: interfacer
 Title: Define and Enforce Interface Contracts for Dataframes
-Version: 0.0.7
+Version: 0.1.0
 Authors@R: 
     person("Rob", "Challen", , "rob.challen@bristol.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5504-7768"))
@@ -22,11 +22,21 @@ Imports:
     tidyselect,
     stringr,
     forcats,
-    clipr,
-    knitr,
-    tidyr
+    knitr
 Suggests: 
     rmarkdown,
     devtools,
-    ggplot2
+    ggplot2,
+    testthat (>= 3.0.0),
+    fs,
+    readr,
+    usethis,
+    whisker,
+    clipr,
+    tidyr,
+    binom
 VignetteBuilder: knitr
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
