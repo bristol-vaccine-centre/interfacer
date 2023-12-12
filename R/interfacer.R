@@ -245,6 +245,8 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
     out = out %>% dplyr::select(tidyselect::all_of(unique(c(allowed_grps,exp_cols))))
   }
   
+  # TODO: propagate .prune to nested dataframes...
+  
   out = out %>% .coerce(spec,.fname,.dname, .env)
   return(out)
 }

@@ -400,6 +400,36 @@ type.default = function(value) {
   })
 }
 
+#' Check for missing values
+#' 
+#' Any NA values will cause failure of validation. 
+#'
+#' @param x any vector, factor or numeric
+#' @return `x` if no missing values detected
+#' @export
+#'
+#' @concept rules
+type.not_missing = function(x) {
+  if (is.null(x)) return(character())
+  if (any(is.na(x))) stop("missing values where none allowed")
+  return(x)
+}
+
+#' Check for missing values
+#' 
+#' Any non finite values will cause failure of validation. 
+#'
+#' @param x any vector that can be coerced to numeric
+#' @return the numeric value of `x` if all finite values detected
+#' @export
+#'
+#' @concept rules
+type.finite = function(x) {
+  if (is.null(x)) return(numeric())
+  x = as.numeric(x)
+  if (any(!is.finite(x))) stop("non-finite values where none allowed")
+  return(x)
+}
 
 # The smallest interval in a vector
 .step = function(x) {

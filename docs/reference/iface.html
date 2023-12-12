@@ -22,7 +22,7 @@ function is correct."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,7 +102,7 @@ and help us to document input dataframe parameters and dataframe return
 values in a standardised way.</p>
 <p>The specification is in the form of a named list of formulae with the
 structure <code>name = type ~ "documentation"</code>.</p>
-<p><code>type</code> can be one of <code>anything</code>, <code>character</code>, <code>complete</code>, <code>date</code>, <code>default</code>, <code>double</code>, <code>enum</code>, <code>factor</code>, <code>group_unique</code>, <code>in_range</code>, <code>integer</code>, <code>logical</code>, <code>numeric</code>, <code>positive_double</code>, <code>positive_integer</code>, <code>proportion</code> (e.g. <code>enum(level1,level2,...)</code>,
+<p><code>type</code> can be one of <code>anything</code>, <code>character</code>, <code>complete</code>, <code>date</code>, <code>default</code>, <code>double</code>, <code>enum</code>, <code>factor</code>, <code>finite</code>, <code>group_unique</code>, <code>in_range</code>, <code>integer</code>, <code>logical</code>, <code>not_missing</code>, <code>numeric</code>, <code>positive_double</code>, <code>positive_integer</code>, <code>proportion</code> (e.g. <code>enum(level1,level2,...)</code>,
 <code>in_range(min,max)</code>) or anything that resolves to a function e.g.
 <code>as.ordered</code>.</p>
 <p>If <code>type</code> is a function name, then the function must take a single vector

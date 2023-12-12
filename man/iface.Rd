@@ -42,7 +42,7 @@ values in a standardised way.
 The specification is in the form of a named list of formulae with the
 structure \code{name = type ~ "documentation"}.
 
-\code{type} can be one of \code{anything}, \code{character}, \code{complete}, \code{date}, \code{default}, \code{double}, \code{enum}, \code{factor}, \code{group_unique}, \code{in_range}, \code{integer}, \code{logical}, \code{numeric}, \code{positive_double}, \code{positive_integer}, \code{proportion} (e.g. \code{enum(level1,level2,...)},
+\code{type} can be one of \code{anything}, \code{character}, \code{complete}, \code{date}, \code{default}, \code{double}, \code{enum}, \code{factor}, \code{finite}, \code{group_unique}, \code{in_range}, \code{integer}, \code{logical}, \code{not_missing}, \code{numeric}, \code{positive_double}, \code{positive_integer}, \code{proportion} (e.g. \code{enum(level1,level2,...)},
 \code{in_range(min,max)}) or anything that resolves to a function e.g.
 \code{as.ordered}.
 

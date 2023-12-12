@@ -52,6 +52,9 @@
     <loc>/reference/iface.html</loc>
   </url>
   <url>
+    <loc>/reference/igroup_process.html</loc>
+  </url>
+  <url>
     <loc>/reference/imap.html</loc>
   </url>
   <url>
@@ -118,6 +121,9 @@
     <loc>/reference/type.factor.html</loc>
   </url>
   <url>
+    <loc>/reference/type.finite.html</loc>
+  </url>
+  <url>
     <loc>/reference/type.group_unique.html</loc>
   </url>
   <url>
@@ -128,6 +134,9 @@
   </url>
   <url>
     <loc>/reference/type.logical.html</loc>
+  </url>
+  <url>
+    <loc>/reference/type.not_missing.html</loc>
   </url>
   <url>
     <loc>/reference/type.numeric.html</loc>

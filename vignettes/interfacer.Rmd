@@ -233,11 +233,48 @@ if (rlang::is_installed("ggplot2")) {
 } %>% dplyr::glimpse()
 ```
 
+
+# Grouping
+
+an `iface` spec can permissive or dogmatic about the grouping of the input. If
+the .groups option in an iface spec is NULL (e.g. `iface(..., .groups=NULL)`)
+then any grouping is allowed. If it is FALSE then no grouping is allowd. The
+third option is to supply a one sided formula. In this case the variables in the
+formula define the grouping that must be present, e.g. `~ grp1 + grp2`, but if
+it also includes a `.`, then additional grouping is also permitted (e.g. 
+`~ . + grp1 + grp2`) allows a grouping such as `df %>% group_by(anything, grp1, grp2)`.
+N.B. ordering of grouping mostly is as expected but is a work in progress, it makes
+most sense for mandatory groups to be the right most / most granular groups.
+
+```{r}
+
+i_diamonds = interfacer::iface(
+	carat = numeric ~ "the carat column",
+	color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
+	x = numeric ~ "the x column",
+	y = numeric ~ "the y column",
+	z = numeric ~ "the z column",
+	.groups = ~ . + carat + cut
+)
+
+# permissive grouping with the `~ . + carat + cut` groups rule
+ggplot2::diamonds %>% 
+  dplyr::group_by(color, carat, cut) %>% 
+  iconvert(i_diamonds, .prune = TRUE) %>% 
+  dplyr::glimpse()
+
+```
+
+If a group column is specified it must be present, regardless of the rest of the
+`iface` spec. So in this example `cut` is required by the `i_diamonds` contract
+but it can be any format.
+
 # Dispatch
 
-Dispatching to one of a number of functions based on the nature of a dataframe input
-is enabled by `idispatch(...)`. This emulates the behaviour of `S3` classes but for
-dataframes. An example is the following:
+Dispatching to one of a number of functions based on the nature of a dataframe
+input is enabled by `idispatch(...)`. This emulates the behaviour of `S3`
+classes but for dataframes, based on their columns and also their grouping. An
+example is the following:
 
 ```{r}
 
@@ -249,13 +286,13 @@ disp_example = function(x, ...) {
 }
 
 disp_example.extn = function(x = i_test_extn, ...) {
-  # idispatch has already validated x so we don;t need to here
+  # idispatch has already validated x so we don't need to do it again here
   message("extended data")
   return(colnames(x))
 }
 
 disp_example.no_extn = function(x = i_test, ...) {
-  # in this toy example we do the same thing in both possilbilities.
+  # in this toy example the function content is very similar.
   message("not extended data")
   return(colnames(x))
 }
@@ -291,10 +328,11 @@ tmp2 %>% disp_example()
 
 ## Recursive dispatch
 
-In this example we note that the order of the rules is important with the more detailed
-being matched first. We can leverage this to create a recursive functional pattern of 
-dataframe extension that allows multiple inputs to converge on a single output, this
-also demonstrates the use of `itest()` which simply checks an input is of a set type:
+The order of the rules is important with in general the more detailed needing to 
+de provided first. We can leverage this to create a recursive functional pattern of 
+dataframe processing that allows multiple inputs to converge on a single output, this
+also demonstrates the use of `itest()` which simply checks an input conforms to 
+an `iface` spec:
 
 ```{r}
 
@@ -364,49 +402,98 @@ Processing an input of type 1 results in one path through the data pipeline:
 process(tibble::tibble(x=c(10,30), n=c(NA,50))) %>% dplyr::glimpse()
 ```
 
-Processing an input of type 2, results in a different path through the data pipeline, but 
-the same outcome:
+Processing an input of type 2, results in a different path through the data
+pipeline, but the same outcome:
 
 ```{r}
 # tibble::tibble(p=0.15,n=1000) %>% itest(i_input_2)
 process(tibble::tibble(p=0.15,n=1000)) %>% dplyr::glimpse()
 ```
+Care must be taken though in this pattern, particularly if you are re-using
+column names,as datatype coercion could result in some column types being
+switched backwards and forwards, and other infinite loop problems.
+
+## Grouping based dispatch
+
+It is often useful to have a function that can expects a specific grouping but
+can handle additional groups. One way of handling these is to use `purrr` and
+nest columns extensively. Nesting data in the unexpected groups and repeatedly
+applying the function you want. An alternative `dplyr` solution is to use a
+`group_modify`. `interfacer` leverages this second option to automatically
+determine a grouping necessary for a pipeline function from the stated grouping
+requirements and automatically handle them without additional coding in the
+package.
+
+For example if we have the following `iface` the input for a function must be 
+grouped only by the `color` column:
+
+```{r}
+i_diamond_price = interfacer::iface(
+  color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
+  price = integer ~ "the price column",
+  .groups = ~ color
+)
+```
+
+A package developer writing a pipeline function may use this fact to handle 
+possible additional grouping by using a `igroup_process(df, ...)` 
+
+```{r}
+ # exported function in package
+ # at param can use `r idocument(ex_mean, df)` for documentation
+ ex_mean = function(df = i_diamond_price, extra_param = ".") {
+
+   # dispatch based on groupings:
+   igroup_process(df,
+
+     # the real work of this function is provided as an anonymous inner
+     # function (but can be any other function e.g. package private function)
+     # or a purrr style lambda.
+
+     function(df, extra_param) {
+       message(extra_param, appendLF = FALSE)
+       return(df %>% dplyr::summarise(mean_price = mean(price)))
+     }
+
+   )
+ }
+```
+
+If we pass this to correctly grouped data conforming to `i_diamond_price` the
+inner function is executed once transparently, after the input has been validated:
+
+```{r}
+# The correctly grouped dataframe
+ggplot2::diamonds %>%
+  dplyr::group_by(color) %>%
+  ex_mean(extra_param = "without additional groups...") %>%
+  dplyr::glimpse()
+```
+
+If on the other hand additional groups are present the inner function is 
+executed once for each of the additional groups. Data validation happens once
+per group.
+
+```{r}
+# The incorrectly grouped dataframe
+ggplot2::diamonds %>%
+  dplyr::group_by(cut, color, clarity) %>%
+  ex_mean() %>%
+  dplyr::glimpse()
+
+```
+
+The output of this is actually grouped by `cut` then `clarity` as
+`color` column is consumed by the nested function in `igroup_process`.
 
 # Complex rules & composition
 
 In the section above we used the pseudo-function `default(100) + integer` to 
 specify the input column `x`. We also talked about the use of `enum(...)` as a 
 rule to match factors. A range of other possible modifiers are possible such as
-`group_unique` or `complete` which enforce uniqueness and completeness.
+`group_unique` or `complete` which enforce uniqueness and completeness of factors
+or natural numeric sequences.
 
-# Grouping
-
-an `iface` spec can 
-TBD
-
-```{r}
-
-i_diamonds = interfacer::iface(
-	carat = numeric ~ "the carat column",
-	cut = enum(`Fair`,`Good`,`Very Good`,`Premium`,`Ideal`, .ordered=TRUE) ~ "the cut column",
-	color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
-	clarity = enum(`I1`,`SI2`,`SI1`,`VS2`,`VS1`,`VVS2`,`VVS1`,`IF`, .ordered=TRUE) ~ "the clarity column",
-	depth = numeric ~ "the depth column",
-	table = numeric ~ "the table column",
-	price = integer ~ "the price column",
-	x = numeric ~ "the x column",
-	y = numeric ~ "the y column",
-	z = numeric ~ "the z column",
-	.groups = ~ . + carat + cut
-)
-
-# permissive grouping with the `~ . + carat + cut` groups rule
-ggplot2::diamonds %>% 
-  dplyr::group_by(color, carat, cut) %>% 
-  iconvert(i_diamonds) %>% 
-  dplyr::glimpse()
-
-```
 
 # Default values
 
@@ -432,14 +519,6 @@ test_fn() %>% dplyr::glimpse()
 
 ```
 
-
-# Developer tools
-
-TBD: 
-
-* `iclip(diamonds)`
-* `use_dataframe(iris)`
-* `use_iface(diamonds)`
 
 # Nesting & list columns
 
@@ -470,3 +549,13 @@ nested_diamonds = ggplot2::diamonds %>%
 nested_diamonds %>% iconvert(i_diamonds_cat) %>% dplyr::glimpse()
 
 ```
+
+
+# Developer tools
+
+TBD: 
+
+* `iclip(diamonds)`
+* `use_dataframe(iris)`
+* `use_iface(diamonds)`
+
