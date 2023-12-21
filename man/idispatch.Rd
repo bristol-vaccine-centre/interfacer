@@ -59,5 +59,7 @@ extract_mean(test, uplift = 50)
 test2 = tibble::tibble( col1 = 1:10 )
 extract_mean(test2, uplift = 50)
 
+test3 = tibble::tibble( wrong_col = 1:10 )
+try(extract_mean(test3, uplift = 50))
 }
 \concept{interface}

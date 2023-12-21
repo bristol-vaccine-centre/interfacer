@@ -77,22 +77,68 @@
 #' x()
 #' 
 #' 
-#' my_iface2 = iface(my_iface, col2 = character ~ "another col", .groups = ~ col1 + col2)
+#' my_iface2 = iface(
+#'   first_col = numeric ~ "column order example",
+#'   my_iface, 
+#'   last_col = character ~ "another col", .groups = ~ first_col + col1
+#' )
 #' print(my_iface2)
+#' 
+#' 
+#' 
+#' my_iface_3 = iface( 
+#'   col1 = integer + group_unique ~ "an integer column",
+#'   .default = test_df_2
+#' )
+#' x = function(d = my_iface_3) {ivalidate(d)}
+#' 
+#' # Doesn't work as test_df_2 hasn't been defined
+#' try(x())
+#' 
+#' test_df_2 = tibble::tibble(
+#'   grp = c(rep("a",10),rep("b",10)), 
+#'   col1 = c(1:10,1:10)
+#' ) %>% dplyr::group_by(grp)
+#' 
+#' # now it works as has been defined
+#' x()
+#' 
+#' # it still works as default has been cached.
+#' rm(test_df_2)
+#' x()
 iface = function(..., .groups = NULL, .default = NULL) {
-  dots = rlang::list2(...)
-  inh = dplyr::bind_rows(dots[sapply(dots, inherits, "iface")])
-  dots = dots[names(dots) != ""]
-  if (length(dots) == 0) spec = tibble::tibble()
-  else
-    spec = tibble::tibble(
-      name = names(dots),
-      type = unname(lapply(dots,FUN = rlang::f_lhs) %>% as.character),
-      doc = unname(sapply(dots,FUN = rlang::f_rhs))
-    )
   
-  # TODO: Allow ordering to be done by interleaving iface and formulae
-  # using a loop.
+  dots = rlang::list2(...)
+  if (length(dots) == 0) {
+    spec2 = tibble::tibble(name=character(), type=character(), doc=character())
+  } else {
+    specs = purrr::imap(dots, function(x,i) {
+      if (inherits(x,"iface")) return(x)
+      if (i != "") {
+        return(tibble::tibble(
+          name = i,
+          type = format(rlang::f_lhs(x)),
+          doc = rlang::f_rhs(x)
+        ))
+      }
+    })
+    spec2 = dplyr::bind_rows(specs) %>%
+      dplyr::mutate(i = dplyr::row_number()) %>%
+      dplyr::group_by(name, type) %>% 
+      dplyr::summarise(
+        doc = .none(unique(doc),collapse="; ",none = "<undefined>"), 
+        i = min(i),
+        .groups = "drop") %>%
+      dplyr::arrange(i) %>%
+      dplyr::select(-i)
+  }
+  
+  if (any(duplicated(spec2$name))) stop(
+    "Multiple definitions for the same column(s) found:\n",
+    .none( spec2$name[duplicated(spec2$name)], collapse="; ", none="<none>"),
+    "\nthis usually means you have a naming collision in your interface specification."
+  )
+  
   
   if (is.null(.groups)) {
     grps = character() 
@@ -106,38 +152,41 @@ iface = function(..., .groups = NULL, .default = NULL) {
     grps=setdiff(grps,".")
   }
   
-  spec2 = dplyr::bind_rows(inh,spec) %>%
-    dplyr::mutate(i = dplyr::row_number()) %>%
-    dplyr::group_by(name, type) %>% 
-    dplyr::summarise(
-      doc = .none(doc,collapse="; ",none = "<undefined>"), 
-      i = min(i),
-      .groups = "drop") %>%
-    dplyr::arrange(i) %>%
-    dplyr::select(-i)
-  
-  
-  sc = unique(c("iface",class(spec)))
   
   tmp = structure(spec2,
                   groups = grps,
                   allow_other = allw_other,
-                  default = NULL)
+                  default = NULL,
+                  class = unique(c("iface",class(spec2))))
   
   # weird C stack usage error here if as.list.iface does not handle
   # making a list of a dataframe properly
-  class(tmp)=sc
+  .default = rlang::enexpr(.default)
+  
   
   if (!is.null(.default)) {
-    if (isTRUE(.default)) {
+    dtmp = try(eval(.default),silent = TRUE)
+    if (inherits(dtmp,"try-error")) {
+      tmp2 = .deferred(.default, tmp)
+    } else if (isTRUE(dtmp)) {
       tmp2 = iproto(iface = tmp)
     } else {
-      tmp2 = iconvert(.default,iface = tmp)
+      tmp2 = iconvert(dtmp,iface = tmp)
     }
     attr(tmp,"default") = tmp2
   }
   
   return(tmp)
+}
+
+.deferred = function(ex, iface) {
+  ev = NULL
+  return(function() {
+    if (is.null(ev)) {
+      ev <<- iconvert(eval(ex, rlang::global_env()),iface = iface)
+    }
+    return(ev)
+  })
 }
 
 #' Check if an object is an interface spec
@@ -228,6 +277,15 @@ as.list.iface = function(x, ..., flatten=FALSE) {
 # and evaluating it in the environment of the function
 .get_spec = function(fn, param) {
   icall = formals(fn)[[param]]
+  if (is.null(icall)) {
+    rlang::warn(message=c(
+      "Enclosing function does not define an interface for `",param,"`\n",
+      "This may be because you have tried to validate the inner function in an igroup_modify."),
+      .frequency = "once",
+      .frequency_id = digest::digest(list(fn,param))
+    )
+    icall = iface()
+  }
   spec = eval(icall,envir = rlang::fn_env(fn))
   return(spec)
 }
@@ -242,7 +300,10 @@ as.list.iface = function(x, ..., flatten=FALSE) {
 # if a provided value check it is compliant
 .spec_default = function(spec, .default=NULL) {
   if (!is.null(.default)) return(iconvert(.default,spec))
-  return(attr(spec,"default"))
+  ifce = attr(spec,"default")
+  # a deferred function
+  if (rlang::is_function(ifce)) ifce = ifce()
+  return(ifce)
 }
 
 # checks a rule exists for this column

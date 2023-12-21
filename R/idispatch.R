@@ -52,6 +52,8 @@
 #' test2 = tibble::tibble( col1 = 1:10 )
 #' extract_mean(test2, uplift = 50)
 #' 
+#' test3 = tibble::tibble( wrong_col = 1:10 )
+#' try(extract_mean(test3, uplift = 50))
 idispatch = function(x, ..., .default = NULL) {
   
   # have to dispatch using declared params from caller environment
@@ -69,15 +71,16 @@ idispatch = function(x, ..., .default = NULL) {
   dots = rlang::list2(...)
   if (any(names(dots) == "" )) stop("all parameters must be named")
   if (!all(sapply(dots,is.iface))) stop("all `...` parameters must be `iface` specifications")
+  errors = character()
   for (i in seq_along(dots)) {
     fn_name = names(dots)[[i]]
     ifc = dots[[i]]
     if (!exists(fn_name, mode="function",envir = env)) stop("Cannot find dispatch function: ",fn_name)
     
     
-    x2 = tryCatch(iconvert(x, ifc), error = function(e) NULL)
+    x2 = try(iconvert(x, ifc, .dname = "nested"), silent=TRUE)
     
-    if(!is.null(x2)) {
+    if(!inherits(x2,"try-error")) {
       fn = tryCatch(
         get(fn_name, mode="function",envir = env),
         error = function(e) stop("could not find function: ", fn_name)
@@ -85,13 +88,18 @@ idispatch = function(x, ..., .default = NULL) {
       tmp = params
       tmp[[1]] = x2
       return(do.call(fn, tmp, envir = env))
+    } else {
+      errors = c(errors, fn_name, " - ", as.character(x2))
     }
+    
     
   }
   
   if (is.null(.default)) {
     stop(
-      sprintf("the `dataframe` parameter in %s(x,...) does not match any of the expected formats.",.get_fn_name(fn))
+      sprintf("the parameter in %s(...) does not match any of the expected formats.\n", .get_fn_name(fn)),
+      errors,
+      call. = FALSE
     )
   } else {
     .default = rlang::as_function(.default)

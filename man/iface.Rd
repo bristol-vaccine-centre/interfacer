@@ -86,7 +86,34 @@ try(x(tibble::tibble(col1 = c(1,2,3,3))))
 x()
 
 
-my_iface2 = iface(my_iface, col2 = character ~ "another col", .groups = ~ col1 + col2)
+my_iface2 = iface(
+  first_col = numeric ~ "column order example",
+  my_iface, 
+  last_col = character ~ "another col", .groups = ~ first_col + col1
+)
 print(my_iface2)
+
+
+
+my_iface_3 = iface( 
+  col1 = integer + group_unique ~ "an integer column",
+  .default = test_df_2
+)
+x = function(d = my_iface_3) {ivalidate(d)}
+
+# Doesn't work as test_df_2 hasn't been defined
+try(x())
+
+test_df_2 = tibble::tibble(
+  grp = c(rep("a",10),rep("b",10)), 
+  col1 = c(1:10,1:10)
+) \%>\% dplyr::group_by(grp)
+
+# now it works as has been defined
+x()
+
+# it still works as default has been cached.
+rm(test_df_2)
+x()
 }
 \concept{interface}

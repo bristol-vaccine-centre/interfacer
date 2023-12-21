@@ -93,6 +93,9 @@ ivalidate = function(df = NULL, ..., .imap=imapper(), .prune=FALSE, .default = N
 #' x(tibble::tibble(col_in = c(1,2,3)))
 #' output
 ireturn = function(df, iface, .prune=FALSE) {
+  
+  #TODO: bypass checks if the function is run in development
+  
   spec = iface
   fn = rlang::caller_fn()
   fname = .get_fn_name(fn)
@@ -186,6 +189,8 @@ ireturn = function(df, iface, .prune=FALSE) {
 #' )
 #' iconvert(ggplot2::diamonds, i_diamonds,.prune = TRUE)
 iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>", .fname="<unknown>", .has_dots = TRUE, .prune = FALSE, .env = rlang::current_env()) {
+  
+  #TODO cache this?
   
   # apply any imap 
   dots = .imap

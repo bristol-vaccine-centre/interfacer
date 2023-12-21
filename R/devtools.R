@@ -107,7 +107,7 @@ iclip = function(df, df_name=deparse(substitute(df))) {
   if (is.data.frame(x)) return(sprintf("i_%s",name))
   if (is.list(x)) return(sprintf("list(%s)",.infer_type(x[[1]], name)))
   tmp = class(x)[[1]]
-  if (tmp %in% .converter_names()) return(tmp)
+  if (tolower(tmp) %in% .converter_names()) return(tolower(tmp))
   return(paste0("as.",tmp))
 } 
 
@@ -164,11 +164,11 @@ idocument = function(fn, param = NULL) {
 #' @export
 use_dataframe = function(df, name = deparse(substitute(df)), output = "R/data.R", pkg=".") {
   pkg = devtools::as.package(pkg)
-  .write_to_source(df, name, template = "templates/data.R.template", output = output, pkg=pkg)
   tmp = list()
   tmp[[name]] = df
   ex = rlang::expr(usethis::use_data(!!as.symbol(name),overwrite = TRUE))
   suppressMessages(with(tmp, eval(ex)))
+  .write_to_source(df, name, template = "templates/data.R.template", output = output, pkg=pkg)
 }
 
 #' Generate interfacer code for a dataframe

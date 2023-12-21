@@ -16,7 +16,7 @@ process the function."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,6 +120,12 @@ passed if a dataframe can be coerced to the <code>iface</code> specified format.
 <span class="r-msg co"><span class="r-pr">#&gt;</span> using i1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.5</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">test3</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span> wrong_col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span> <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">extract_mean</span><span class="op">(</span><span class="va">test3</span>, uplift <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : the parameter in extract_mean(...) does not match any of the expected formats.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> extract_mean.i1 - Error : missing columns: col1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> extract_mean.i2 - Error : missing columns: col2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
