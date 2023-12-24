@@ -257,10 +257,12 @@ use_iface = function(df, name = deparse(substitute(df)), output = "R/interfaces.
 
 
 .converter_names = function() {
-  ls("package:interfacer",pattern = "type") %>% stringr::str_remove("type.")
+  e = loadNamespace("interfacer")
+  ls(envir = e,pattern = "type") %>% stringr::str_remove("type.")
 }
 
 .converters = function() {
-  ls("package:interfacer",pattern = "type") %>% stringr::str_remove("type.") %>%
+  e = loadNamespace("interfacer")
+  ls(envir=e,pattern = "type") %>% stringr::str_remove("type.") %>%
     .none(fmt_item="`%s`")
 }
