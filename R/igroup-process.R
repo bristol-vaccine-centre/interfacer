@@ -116,7 +116,7 @@ igroup_process = function(df = NULL, fn, ...) {
   if (length(additional_grps) == 0) {
     df = iconvert(df, spec, ...)
     if (!is.null(df)) {
-      params[[1]] = df
+      params[[dname]] = df
       return(do.call(dispatch_fn, params, envir = env))
     }
     stop("Could not validate dataframe input.")
@@ -138,7 +138,7 @@ igroup_process = function(df = NULL, fn, ...) {
         }
       )
       if (!is.null(d)) {
-        params[[1]] = d
+        params[[dname]] = d
         return(do.call(dispatch_fn, params, envir = env))
       }
       stop("Could not validate dataframe input")
