@@ -69,13 +69,13 @@ idispatch = function(x, ..., .default = NULL) {
   }
   
   dots = rlang::list2(...)
-  if (any(names(dots) == "" )) stop("all parameters must be named")
-  if (!all(sapply(dots,is.iface))) stop("all `...` parameters must be `iface` specifications")
+  if (any(names(dots) == "" )) stop("all parameters must be named", call. = FALSE)
+  if (!all(sapply(dots,is.iface))) stop("all `...` parameters must be `iface` specifications", call. = FALSE)
   errors = character()
   for (i in seq_along(dots)) {
     fn_name = names(dots)[[i]]
     ifc = dots[[i]]
-    if (!exists(fn_name, mode="function",envir = env)) stop("Cannot find dispatch function: ",fn_name)
+    if (!exists(fn_name, mode="function",envir = env)) stop("Cannot find dispatch function: ",fn_name, call. = FALSE)
     
     
     x2 = try(iconvert(x, ifc, .dname = "nested"), silent=TRUE)
@@ -83,7 +83,7 @@ idispatch = function(x, ..., .default = NULL) {
     if(!inherits(x2,"try-error")) {
       fn = tryCatch(
         get(fn_name, mode="function",envir = env),
-        error = function(e) stop("could not find function: ", fn_name)
+        error = function(e) stop("could not find function: ", fn_name, call. = FALSE)
       )
       tmp = params
       tmp[[1]] = x2

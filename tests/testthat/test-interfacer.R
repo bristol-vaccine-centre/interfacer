@@ -1,4 +1,5 @@
-
+# defined in helper-data.R
+# print(i_diamonds)
 
 test_that("conversion works", {
   
@@ -24,8 +25,29 @@ test_that("conversion works", {
     regexp = "missing:"
   )
   
+  expect_error(
+    ggplot2::diamonds %>% 
+      dplyr::group_by(carat, price) %>%
+      xfn(),
+    regexp = "additional:"
+  )
+  
 })
 
+
+test_that("multiple errors reported", {
+  
+  xfn = function(df = iface(
+    cut = enum(A,B,C,D) ~ "this is not true",
+    color = enum(X,Y,Z) ~ "neither is this",
+  )) {
+    return(ivalidate(df))
+  }
+  
+  expect_error(xfn(ggplot2::diamonds),regexp = "cannot be coerced to a enum\\(A, B, C, D\\)")
+  expect_error(xfn(ggplot2::diamonds),regexp = "cannot be coerced to a enum\\(X, Y, Z\\)")
+  
+})
 
 
 # TODO: this test works in all situations apart from devtools::check.

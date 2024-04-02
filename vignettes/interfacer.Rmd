@@ -40,13 +40,13 @@ cat(print(i_test))
 An interface specification is enforced as the default value for a function. This
 is a dummy default value but when combined with `ivalidate` in the function body
 a passed parameter can be validated to ensure the dataframe is of the right
-shape. We can use `idocument` in the Roxygen skeleton to document the dataframe
+shape. We can use `iparam` in the Roxygen skeleton to document the dataframe
 constraints.
 
 ```{r}
 #' An example function
 #'
-#' @param mydata `r idocument(example_fn, mydata)`
+#' @iparam mydata a dataframe
 #' @param another an example   
 #' @param ... not used
 #'
@@ -78,7 +78,8 @@ example_fn(
 ) %>% dplyr::glimpse()
 ```
 
-If we pass non-conformant data `ivalidate` throws an informative error about what is wrond with the data. In this case the `test` column is missing:
+If we pass non-conformant data `ivalidate` throws an informative error about
+what is wrond with the data. In this case the `test` column is missing:
 
 ```{r}
 bad_example_data = tibble::tibble(
@@ -93,8 +94,11 @@ try(example_fn(
 ))
 ```
 
-We can recover from this error by renaming the columns before passing `bad_example_data` to `example_fn()`. Alternatively we can use the dynamic dots to pass a mapping to `ivalidate` which is applied before the
-validation. This parameter is called `.imap`, and its contents is a `imapper()`  that holds an set of expressions used for a `dplyr::mutate` call).
+We can recover from this error by renaming the columns before passing
+`bad_example_data` to `example_fn()`. Alternatively we can use the dynamic dots
+to pass a mapping to `ivalidate` which is applied before the validation. This
+parameter is called `.imap`, and its contents is a `imapper()`  that holds an
+set of expressions used for a `dplyr::mutate` call).
 
 ```{r}
 example_fn(
@@ -108,7 +112,8 @@ example_fn(
 
 # Extension and composition
 
-To be useful interface specifications can be composed and extended. In this case a subtype of the `iface` specification can be created:
+To be useful interface specifications can be composed and extended. In this case
+a subtype of the `iface` specification can be created:
 
 ```{r}
 i_test_extn = iface(
@@ -120,7 +125,10 @@ i_test_extn = iface(
 print(i_test_extn)
 ```
 
-and then this extended `iface` used to constrain the input of another function by specifying it as the default value. We can also constrain the output of the function to be conformant to another specification usng `ireturn`. Examples of documenting the input parameter and the output parameter are provided here:
+and then this extended `iface` used to constrain the input of another function
+by specifying it as the default value. We can also constrain the output of the
+function to be conformant to another specification usng `ireturn`. Examples of
+documenting the input parameter and the output parameter are provided here:
 
 ```{r}
 
@@ -143,8 +151,9 @@ example_fn2 = function(
 }
 ```
 
-In this case the `ivalidate` call prunes 
-unneeded data from the dataframe, removing any extra columns, and also ensures that the input is not grouped in any way. Grouping
+In this case the `ivalidate` call prunes unneeded data from the dataframe,
+removing any extra columns, and also ensures that the input is not grouped in
+any way. Grouping
 
 ```{r}
 grouped_example_data = tibble::tibble(
@@ -155,7 +164,8 @@ grouped_example_data = tibble::tibble(
   ) %>% dplyr::group_by(id)
 ```
 
-This is rejected because the grouping is incorrect. An inforative error message is provided:
+This is rejected because the grouping is incorrect. An informative error message
+is provided:
 
 ```{r}
 try(example_fn2(grouped_example_data))
@@ -172,16 +182,22 @@ grouped_example_data %>%
 
 # Documentation
 
-The roxygen block of documentation for this second interface is determined by the `#' @param` block and the function `idocument` which takes a function name and optionally a parameter name and writes an informative block about the dataframe
-expected by the function:
+The roxygen block of documentation for this second interface is determined by
+the `#' @iparam` block and the function `idocument` which takes a function name
+and optionally a parameter name and writes an informative block about the
+dataframe expected by the function:
 
 ```{r}
 cat(idocument(example_fn2))
 ```
 
+It is also possible to use a custom `roxygen2` tag `@iparam <param> <description>`
+which will automatically in-line the description of the structure of the dataframe 
+into the documentation.
+
 # Type coercion
 
-`interfacer` does not implement a rigid type system, but rather a permissve one. 
+`interfacer` does not implement a rigid type system, but rather a permissive one. 
 If the provided data can be coerced to the specified type without major loss then 
 this is automatically done, as long as it can proceed with no warnings. In this 
 example `id` (an int) is provided as a `character` and `extra` (a character) is
@@ -196,7 +212,7 @@ example_fn2(
   )) %>% dplyr::glimpse()
 ```
 
-Completely incorrect data types on the other hans are picked up and rejected. In
+Completely incorrect data types on the other hand are picked up and rejected. In
 this case the data supplied for `id` cannot be cast to integer without loss.
 Similar behaviour is seen if logical data is anything other than 0 or 1 for
 example.
@@ -210,12 +226,12 @@ try(example_fn(
 ```
 
 Factors might have allowable levels as well. For this we define them as an
-`enum` which accepts a list of values, which then must be matched by the levels 
-of a provided factor. The order of the levels will be taken from the `iface` spec
-and relveleving of inputs is taken to ensure the factor levels match the spec. If
-`.drop = TRUE` is specified then values which don't match the levels will be
-cast to `NA` rather than causing failure to allow conformance to a subset of factor
-values.
+`enum` which accepts a list of values, which then must be matched by the levels
+of a provided factor. The order of the levels will be taken from the `iface`
+specification and re-levelling of inputs is taken to ensure the factor levels
+match the specification. If `.drop = TRUE` is specified then values which don't
+match the levels will be cast to `NA` rather than causing failure to allow
+conformance to a subset of factor values.
 
 ```{r}
 
@@ -236,9 +252,9 @@ if (rlang::is_installed("ggplot2")) {
 
 # Grouping
 
-an `iface` spec can permissive or dogmatic about the grouping of the input. If
-the .groups option in an iface spec is NULL (e.g. `iface(..., .groups=NULL)`)
-then any grouping is allowed. If it is FALSE then no grouping is allowd. The
+an `iface` specification can permissive or dogmatic about the grouping of the input. If
+the .groups option in an `iface` specification is NULL (e.g. `iface(..., .groups=NULL)`)
+then any grouping is allowed. If it is FALSE then no grouping is allowed. The
 third option is to supply a one sided formula. In this case the variables in the
 formula define the grouping that must be present, e.g. `~ grp1 + grp2`, but if
 it also includes a `.`, then additional grouping is also permitted (e.g. 
@@ -266,7 +282,7 @@ ggplot2::diamonds %>%
 ```
 
 If a group column is specified it must be present, regardless of the rest of the
-`iface` spec. So in this example `cut` is required by the `i_diamonds` contract
+`iface` specification. So in this example `cut` is required by the `i_diamonds` contract
 but it can be any format.
 
 # Dispatch
@@ -329,7 +345,7 @@ tmp2 %>% disp_example()
 ## Recursive dispatch
 
 The order of the rules is important with in general the more detailed needing to 
-de provided first. We can leverage this to create a recursive functional pattern of 
+be provided first. We can leverage this to create a recursive functional pattern of 
 dataframe processing that allows multiple inputs to converge on a single output, this
 also demonstrates the use of `itest()` which simply checks an input conforms to 
 an `iface` spec:
@@ -395,14 +411,14 @@ process = function(x,...) {
 ```
 
 
-Processing an input of type 1 results in one path through the data pipeline:
+Processing an input of `type 1` results in one path through the data pipeline:
 
 ```{r}
 # tibble::tibble(x=c(10,30), n=c(NA,50)) %>% itest(i_input_1)
 process(tibble::tibble(x=c(10,30), n=c(NA,50))) %>% dplyr::glimpse()
 ```
 
-Processing an input of type 2, results in a different path through the data
+Processing an input of `type 2`, results in a different path through the data
 pipeline, but the same outcome:
 
 ```{r}
@@ -472,7 +488,7 @@ ggplot2::diamonds %>%
 
 If on the other hand additional groups are present the inner function is 
 executed once for each of the additional groups. Data validation happens once
-per group.
+per group, which affects interpretation of uniqueness.
 
 ```{r}
 # The incorrectly grouped dataframe

@@ -144,6 +144,110 @@ idocument = function(fn, param = NULL) {
   return(knit_print.iface(spec))
 }
 
+#' Parser for `@iparam` tags
+#' 
+#' @inheritParams roxygen2::roxy_tag_parse
+#' 
+#' @importFrom roxygen2 roxy_tag_parse
+#' @export
+roxy_tag_parse.roxy_tag_iparam <- function(x) {
+  roxygen2::tag_two_part(x,"param","description")
+}
+
+#' Support for `@iparam` tags
+#' 
+#' @inheritParams roxygen2::roxy_tag_rd
+#' 
+#' @importFrom roxygen2 roxy_tag_rd
+#' @export
+#' 
+#' @examples 
+#' 
+#' text <- "
+#' #' This is a title
+#' #' 
+#' #' This is the description.
+#' #' 
+#' #' @md
+#' #' @iparam df the input
+#' #' @export
+#' f <- function(df = interfacer::iface(
+#'   id = integer ~ \"an integer `ID`\",
+#'   test = logical ~ \"the test result\"
+#' )) {
+#'   ivalidate(df)
+#' }
+#' "
+#' 
+#' # tmp = roxygen2::parse_text(text)
+#' # tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())
+#' 
+roxy_tag_rd.roxy_tag_iparam <- function(x, base_path, env) {
+  
+  dname = x$val$param
+  block = .search_call_stack(.class="roxy_block")
+  fn = block$object$value
+  icall = formals(fn)[[dname]]
+  desc = x$val$description
+  
+  if (rlang::is_missing(icall) || is.null(icall)) {
+    # There is no formal parameter with a default value (or maybe it is given as NULL)
+    # we do not try and include it in the documentation
+    out = desc
+  } else {
+  
+    # There is a formal parameter with a default value. We try and interpret it
+    spec = tryCatch(
+      # try evaluate the call as an iface.
+      eval(icall,envir = rlang::fn_env(fn)),
+      error = function(e) {
+        # just return the raw call
+        as.character(icall)
+      }
+    )
+    
+    if (is.iface(spec)) {
+      grps = attr(spec,"groups")
+      allow_other = attr(spec,"allow_other")
+      default = attr(spec,"default")
+      if (!is.null(default)) opt = "A default value is defined."
+      else  opt = "No default value."
+      
+      
+      if (allow_other) {
+        if (length(grps)==0) g = "No mandatory groupings."
+        else g = sprintf("Must be grouped by: %s (and other groupings allowed).",paste0(grps,collapse = " + "))
+      } else {
+        if (length(grps)==0) g = "Ungrouped."
+        else g = sprintf("Must be grouped by: %s (exactly).",paste0(grps,collapse = " + "))
+      }
+      
+      out = sprintf("%s
+
+A dataframe containing the following columns: 
+\\itemize{
+%s
+}
+
+%s
+
+%s
+",
+        desc,
+        paste0(glue::glue_data(spec, "\\item {name} ({type}) - {doc}"), collapse = "\n"),
+        g,
+        opt
+      )
+    } else {
+      # spec evaluated to something but not an iface spec. We'll 
+      out = sprintf("%s - (defaults to \\code{%s})", desc, deparse(spec))
+    }
+  }
+  names(out) = dname
+  roxygen2::rd_section("param", out)
+}
+
+
 #' Use a dataframe in a package including structure based documentation
 #' 
 #' Using the interfacer framework you can document data during development. 

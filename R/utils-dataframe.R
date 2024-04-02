@@ -90,8 +90,8 @@ if_col_present = function(df, col, if_present, if_missing = ~ .x) {
 #' ) %>% dplyr::glimpse()
 switch_pipeline = function(.x, ...) {
   forms = rlang::list2(...)
-  if (!all(sapply(forms,rlang::is_formula))) stop("all parameters must be formulae")
-  if (any(names(forms) != "")) stop("all parameters must be unnamed")
+  if (!all(sapply(forms,rlang::is_formula))) stop("all parameters must be formulae", call. = FALSE)
+  if (any(names(forms) != "")) stop("all parameters must be unnamed", call. = FALSE)
   for (form in forms) {
     predicate = rlang::f_lhs(form)
     # browser()

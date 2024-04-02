@@ -32,8 +32,8 @@
       x
     },
     # must be this way round otherwise warning is caught twice.
-    error = function(e) stop("to a ",orig,": ",e$message),
-    warning = function(e) stop("to a ",orig,": ",e$message)
+    error = function(e) stop("to a ",orig,": ",e$message, call. = FALSE),
+    warning = function(e) stop("to a ",orig,": ",e$message, call. = FALSE)
   ))
 }
 
@@ -46,7 +46,7 @@
   f = .find_function(type, .fname, .dname, .env)
   return(function(x) {
     if (is.null(x)) return(list())
-    if (!is.list(x)) stop("not a list column")
+    if (!is.list(x)) stop("not a list column", call. = FALSE)
     lapply(x, f)
   })
 }
@@ -68,13 +68,24 @@
             .prune = FALSE,
             .env = .env),
           error = function(e) stop(
-            "nested dataframe problem - ",e$message) #,
+            "nested dataframe problem - ",e$message, call. = FALSE) #,
           #envir = .env
         #)
       )
       return(out)
     }
   )
+}
+
+.stack_eval = function(expr) {
+  g = NULL
+  for (x in sys.frames()) { 
+    f = tryCatch(eval(str2lang(expr),envir = x),error = function(e) NULL)
+    if (!is.null(f) && is.function(f)) return(f)
+    if (is.null(g)) g = f
+  }
+  if (is.null(g)) return(NULL)
+  return(paste0("`",expr,"` must evaluate to a function. it is a ",class(g)[[1]]))
 }
 
 # find a (single) function for a single type spec
@@ -105,7 +116,7 @@
     # to the developer. We are not testing the data at this point, just finding
     # the correct type coercion function. Any issue here should surface in package
     # development
-    if (inherits(f,"try-error")) stop("Couldn't evaluate the type: ",type,"\nBecause of ",attr(f,"condition")$message)
+    if (inherits(f,"try-error")) stop("Couldn't evaluate the type: ",type,"\nBecause of ",attr(f,"condition")$message, call. = FALSE)
     return(f)
   }
   
@@ -126,20 +137,19 @@
   # `as.` as a prefix, and then as-is if neither works we halt and catch fire.
   
   expr2 = sprintf("as.%s",expr)
-  f = try(eval(str2lang(expr2), envir = .env),silent = TRUE)
-  if (!inherits(f,"try-error") && is.function(f)) return(f)
-  mess2 = attr(f,"condition")$message
+  f = .stack_eval(expr2)
+  if (!is.null(f) && is.function(f)) return(f)
   
-  f = try(eval(str2lang(expr), envir = .env),silent = TRUE)
-  if (!inherits(f,"try-error") && is.function(f)) return(f)
-  mess1 = attr(f,"condition")$message
+  f = .stack_eval(expr)
+  if (!is.null(f) && is.function(f)) return(f)
   
-  if (!inherits(f,"try-error")) stop("`",expr,"` must evaluate to a function. it is a ",class(f)[[1]])
+  # Stack eval returns an error message as a character
+  if (!is.null(f)) stop(f)
   
   # the type specification has something odd in it and we cant figure it out
   stop("Couldn't evaluate type specification:\n`",
-       expr,"`: ",mess1,"\n`", 
-       expr2,"`: ",mess2,""
+       expr,"` or `", expr2, 
+       call. = FALSE
   )
   
 }
@@ -176,10 +186,10 @@ type.enum = function(..., .drop = FALSE, .ordered = FALSE) {
       x = as.character(x)
     }
     if (is.character(x) || all(is.na(x))) {
-      if(!all(stats::na.omit(x) %in% lvls) && !.drop) stop("values present not in levels")
+      if(!all(stats::na.omit(x) %in% lvls) && !.drop) stop("values found not in allowed levels", call. = FALSE)
       return(factor(x, lvls, ordered = .ordered))
     }
-    stop("enum not a factor or a character")
+    stop("enum not a factor or a character", call. = FALSE)
   })
 }
 
@@ -203,10 +213,10 @@ type.enum = function(..., .drop = FALSE, .ordered = FALSE) {
 #' try(type.in_range(0,10)(1:99))
 type.in_range = function(min, max) {
   if (!is.numeric(min) || !is.numeric(max) || length(min) != 1 || length(max) != 1 || min >= max )
-    stop("in_range: `min` and `max` must be single numbers and min < max")
+    stop("in_range: `min` and `max` must be single numbers and min < max", call. = FALSE)
   return(function(x) {
     x= as.numeric(x)
-    if (any(stats::na.omit(x<min | x>max))) stop("values not in range: ",min,"-",max)
+    if (any(stats::na.omit(x<min | x>max))) stop("values not in range: ",min,"-",max, call. = FALSE)
     x
   })
 }
@@ -235,7 +245,7 @@ type.anything = function(x) {
 #' @export
 type.integer = function(x) {
     x = as.numeric(x)
-    if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input") 
+    if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input", call. = FALSE) 
     return(as.integer(x))
 }
 
@@ -249,8 +259,8 @@ type.integer = function(x) {
 #' @export
 type.positive_integer = function(x) {
     x = as.numeric(x)
-    if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input") 
-    if (!all(stats::na.omit(x >= 0))) stop("positive integer smaller than zero")
+    if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input", call. = FALSE) 
+    if (!all(stats::na.omit(x >= 0))) stop("positive integer smaller than zero", call. = FALSE)
     return(as.integer(x))
 }
 
@@ -271,7 +281,7 @@ type.double = as.double
 #' @export
 type.proportion = function(x) {
     x = as.double(x)
-    if (!all(stats::na.omit(x >= 0 & x <= 1))) stop("proportion outside of range 0 to 1")
+    if (!all(stats::na.omit(x >= 0 & x <= 1))) stop("proportion outside of range 0 to 1", call. = FALSE)
     return(x)
 }
 
@@ -284,7 +294,7 @@ type.proportion = function(x) {
 #' @export
 type.positive_double = function(x) {
     x = as.double(x)
-    if (!all(stats::na.omit(x >= 0))) stop("positive double smaller than zero")
+    if (!all(stats::na.omit(x >= 0))) stop("positive double smaller than zero", call. = FALSE)
     return(x)
 }
 
@@ -314,7 +324,7 @@ type.date = as.Date
 type.logical = function(x) {
     if(is.null(x)) return(logical())
     x = as.numeric(x)
-    if (!all(stats::na.omit(x) %in% c(0,1))) stop("not a true logical input")
+    if (!all(stats::na.omit(x) %in% c(0,1))) stop("not a true logical input", call. = FALSE)
     return(as.logical(x))
 }
 
@@ -350,7 +360,7 @@ type.character = as.character
 #' @export
 type.group_unique = function(x) {
     if (is.null(x)) return(character())
-    if (!all(!duplicated(stats::na.omit(x)))) stop("non unique values detected")
+    if (!all(!duplicated(stats::na.omit(x)))) stop("values are not unique within each group", call. = FALSE)
     x
 }
 
@@ -360,20 +370,21 @@ type.group_unique = function(x) {
 #'
 #' @return the input, error if not all factor levels are present, of for numerics if
 #'   the sequence from minimum to maximum by the smallest difference are not all
-#'   approximately present.
+#'   approximately present. Empty values or  are ignored.
 #' 
 #' @concept rules
 #' 
 #' @importFrom forcats as_factor
 #' @export
 type.complete = function(x) {
-  if (is.null(x) || all(is.na(x))) stop("empty value cannot be complete")
-  if (is.factor(x) & !(all(levels(x) %in% as.character(x)))) stop("not all factor levels represented")
+  if (is.null(x) || length(x)==0) return(x)
+  if (is.factor(x) & !(all(levels(x) %in% as.character(x)))) stop("not all factor levels represented", call. = FALSE)
+  if (all(is.na(x))) stop("only missing values found when checking for completeness", call. = FALSE)
   if (is.numeric(x)) {
     tmp = sort(unique(as.numeric(x)))
     comp = seq(min(tmp,na.rm = TRUE), max(tmp,na.rm = TRUE), .step(tmp))
-    if (length(tmp) != length(comp)) stop("not all values present")
-    if (any(abs(tmp-comp) > .Machine$double.eps ^ 0.5)) stop("not all values present")
+    if (length(tmp) != length(comp)) stop("full range of numeric values not present", call. = FALSE)
+    if (any(abs(tmp-comp) > .Machine$double.eps ^ 0.5)) stop("full range of numeric values not present", call. = FALSE)
   }
   x    
 }
@@ -392,7 +403,7 @@ type.complete = function(x) {
 #'
 #' @concept rules
 type.default = function(value) {
-  if (length(value) != 1 ) stop("default values must be length 1 (or wrapped in a list)")
+  if (length(value) != 1 ) stop("default values must be length 1 (or wrapped in a list)", call. = FALSE)
   return(function(x) {
     if (is.null(x)) return(utils::head(x,0))
     if (is.factor(x)) return(forcats::fct_na_value_to_level(x, level = as.character(value)))
@@ -411,7 +422,7 @@ type.default = function(value) {
 #' @concept rules
 type.not_missing = function(x) {
   if (is.null(x)) return(character())
-  if (any(is.na(x))) stop("missing values where none allowed")
+  if (any(is.na(x))) stop("missing values where none allowed", call. = FALSE)
   return(x)
 }
 
@@ -427,7 +438,7 @@ type.not_missing = function(x) {
 type.finite = function(x) {
   if (is.null(x)) return(numeric())
   x = as.numeric(x)
-  if (any(!is.finite(x))) stop("non-finite values where none allowed")
+  if (any(!is.finite(x))) stop("non-finite values where none allowed", call. = FALSE)
   return(x)
 }
 

@@ -75,7 +75,7 @@ igroup_process = function(df = NULL, fn, ...) {
   # Get the spec from the enclosing function
   dname = tryCatch(rlang::as_label(rlang::ensym(df)), error = function(e) return(NA))
   fn = rlang::caller_fn()
-  if (is.null(fn)) stop("`igroup_dispatch` must be called from within an enclosing function. did you mean to use `iconvert`?",call. = FALSE)
+  if (is.null(fn)) stop("`igroup_dispatch` must be called from within an enclosing function. did you mean to use `iconvert`?", call. = FALSE)
   if (is.na(dname)) {
     df = .get_first_param_value()
     dname = .get_first_param_name()
@@ -119,7 +119,7 @@ igroup_process = function(df = NULL, fn, ...) {
       params[[dname]] = df
       return(do.call(dispatch_fn, params, envir = env))
     }
-    stop("Could not validate dataframe input.")
+    stop("Could not validate dataframe input.", call. = FALSE)
   } else {
     # wrap the call to fn in a group_modify
     df = df %>% dplyr::group_by(dplyr::across(dplyr::all_of(additional_grps)))
@@ -141,7 +141,7 @@ igroup_process = function(df = NULL, fn, ...) {
         params[[dname]] = d
         return(do.call(dispatch_fn, params, envir = env))
       }
-      stop("Could not validate dataframe input")
+      stop("Could not validate dataframe input", call. = FALSE)
     })
     return(out)
   }

@@ -9,7 +9,7 @@ i_diamonds = interfacer::iface(
   x = numeric ~ "the x column",
   y = numeric ~ "the y column",
   z = numeric ~ "the z column",
-  .groups = NULL
+  .groups = FALSE
 )
 
 i_diamonds_data = interfacer::iface(

@@ -1,6 +1,6 @@
 Package: interfacer
 Title: Define and Enforce Interface Contracts for Dataframes
-Version: 0.1.6
+Version: 0.1.7
 Authors@R: 
     person("Rob", "Challen", , "rob.challen@bristol.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5504-7768"))
@@ -23,7 +23,8 @@ Imports:
     stringr,
     forcats,
     knitr,
-    digest
+    digest,
+    roxygen2
 Suggests: 
     rmarkdown,
     devtools,

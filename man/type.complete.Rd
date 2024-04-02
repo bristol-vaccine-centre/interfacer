@@ -12,7 +12,7 @@ type.complete(x)
 \value{
 the input, error if not all factor levels are present, of for numerics if
 the sequence from minimum to maximum by the smallest difference are not all
-approximately present.
+approximately present. Empty values or  are ignored.
 }
 \description{
 Coerce to a complete set of values.

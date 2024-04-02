@@ -165,7 +165,7 @@ iface = function(..., .groups = NULL, .default = NULL) {
   
   
   if (!is.null(.default)) {
-    dtmp = try(eval(.default),silent = TRUE)
+    dtmp = try(eval(.default,envir = rlang::caller_env()),silent = TRUE)
     if (inherits(dtmp,"try-error")) {
       tmp2 = .deferred(.default, tmp)
     } else if (isTRUE(dtmp)) {
@@ -181,9 +181,9 @@ iface = function(..., .groups = NULL, .default = NULL) {
 
 .deferred = function(ex, iface) {
   ev = NULL
-  return(function() {
+  return(function(env) {
     if (is.null(ev)) {
-      ev <<- iconvert(eval(ex, rlang::global_env()),iface = iface)
+      ev <<- iconvert(eval(ex, env),iface = iface)
     }
     return(ev)
   })
@@ -298,11 +298,11 @@ as.list.iface = function(x, ..., flatten=FALSE) {
 # get the default value of an iface spec of
 # use a provided value
 # if a provided value check it is compliant
-.spec_default = function(spec, .default=NULL) {
+.spec_default = function(spec, .default=NULL, .env) {
   if (!is.null(.default)) return(iconvert(.default,spec))
   ifce = attr(spec,"default")
   # a deferred function
-  if (rlang::is_function(ifce)) ifce = ifce()
+  if (rlang::is_function(ifce)) ifce = ifce( .env )
   return(ifce)
 }
 
@@ -364,7 +364,7 @@ as.list.iface = function(x, ..., flatten=FALSE) {
 .df_spec_grps = function(df, spec, sym=FALSE) {
   dfg = dplyr::group_vars(df)
   spg = .spec_grps(spec, sym=FALSE)
-  if (!identical(utils::tail(dfg,length(spg),spg))) stop("dataframe grouping does not conform.")
+  if (!identical(utils::tail(dfg,length(spg),spg))) stop("dataframe grouping does not conform.", call. = FALSE)
   return(sapply(spg,as.symbol))
 }
 

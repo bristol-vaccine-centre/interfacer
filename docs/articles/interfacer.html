@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,12 +95,12 @@ column.</p>
 function. This is a dummy default value but when combined with
 <code>ivalidate</code> in the function body a passed parameter can be
 validated to ensure the dataframe is of the right shape. We can use
-<code>idocument</code> in the Roxygen skeleton to document the dataframe
+<code>iparam</code> in the Roxygen skeleton to document the dataframe
 constraints.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' An example function</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @param mydata `r idocument(example_fn, mydata)`</span></span>
+<span><span class="co">#' @iparam mydata a dataframe</span></span>
 <span><span class="co">#' @param another an example   </span></span>
 <span><span class="co">#' @param ... not used</span></span>
 <span><span class="co">#'</span></span>
@@ -224,7 +224,7 @@ the input is not grouped in any way. Grouping</p>
 <span>    extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span>,</span>
 <span>    unneeded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span>,<span class="st">"z"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div>
-<p>This is rejected because the grouping is incorrect. An inforative
+<p>This is rejected because the grouping is incorrect. An informative
 error message is provided:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">example_fn2</span><span class="op">(</span><span class="va">grouped_example_data</span><span class="op">)</span><span class="op">)</span></span>
@@ -250,7 +250,7 @@ failing data validate against <code>i_test_extn</code>:</p>
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
 <p>The roxygen block of documentation for this second interface is
-determined by the <code>#' @param</code> block and the function
+determined by the <code>#' @iparam</code> block and the function
 <code>idocument</code> which takes a function name and optionally a
 parameter name and writes an informative block about the dataframe
 expected by the function:</p>
@@ -264,12 +264,16 @@ expected by the function:</p>
 <span><span class="co">#&gt; Ungrouped.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; No default value.</span></span></code></pre></div>
+<p>It is also possible to use a custom <code>roxygen2</code> tag
+<code>@iparam &lt;param&gt; &lt;description&gt;</code> which will
+automatically in-line the description of the structure of the dataframe
+into the documentation.</p>
 </div>
 <div class="section level2">
 <h2 id="type-coercion">Type coercion<a class="anchor" aria-label="anchor" href="#type-coercion"></a>
 </h2>
 <p><code>interfacer</code> does not implement a rigid type system, but
-rather a permissve one. If the provided data can be coerced to the
+rather a permissive one. If the provided data can be coerced to the
 specified type without major loss then this is automatically done, as
 long as it can proceed with no warnings. In this example <code>id</code>
 (an int) is provided as a <code>character</code> and <code>extra</code>
@@ -285,7 +289,7 @@ long as it can proceed with no warnings. In this example <code>id</code>
 <span><span class="co">#&gt; Columns: 2</span></span>
 <span><span class="co">#&gt; $ id   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1, 2, 3</span></span>
 <span><span class="co">#&gt; $ test <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE, FALSE, TRUE</span></span></code></pre></div>
-<p>Completely incorrect data types on the other hans are picked up and
+<p>Completely incorrect data types on the other hand are picked up and
 rejected. In this case the data supplied for <code>id</code> cannot be
 cast to integer without loss. Similar behaviour is seen if logical data
 is anything other than 0 or 1 for example.</p>
@@ -295,18 +299,15 @@ is anything other than 0 or 1 for example.</p>
 <span>    id<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1.1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span><span class="op">)</span>,</span>
 <span>    test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in dplyr::mutate(., `:=`(!!data_col, asfn2(!!data_col))) : </span></span>
-<span><span class="co">#&gt;   <span style="color: #00BBBB;">ℹ</span> In argument: `id = asfn2(id)`.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> input column `id` in function parameter `example_fn(mydata = ?)` cannot be coerced to a integer: not a true integer input</span></span></code></pre></div>
+<span><span class="co">#&gt; Error : input column `id` in function parameter `example_fn(mydata = ?)` cannot be coerced to a integer: not a true integer input</span></span></code></pre></div>
 <p>Factors might have allowable levels as well. For this we define them
 as an <code>enum</code> which accepts a list of values, which then must
 be matched by the levels of a provided factor. The order of the levels
-will be taken from the <code>iface</code> spec and relveleving of inputs
-is taken to ensure the factor levels match the spec. If
-<code>.drop = TRUE</code> is specified then values which don’t match the
-levels will be cast to <code>NA</code> rather than causing failure to
-allow conformance to a subset of factor values.</p>
+will be taken from the <code>iface</code> specification and re-levelling
+of inputs is taken to ensure the factor levels match the specification.
+If <code>.drop = TRUE</code> is specified then values which don’t match
+the levels will be cast to <code>NA</code> rather than causing failure
+to allow conformance to a subset of factor values.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">is_installed</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -330,10 +331,11 @@ allow conformance to a subset of factor values.</p>
 <div class="section level2">
 <h2 id="grouping">Grouping<a class="anchor" aria-label="anchor" href="#grouping"></a>
 </h2>
-<p>an <code>iface</code> spec can permissive or dogmatic about the
-grouping of the input. If the .groups option in an iface spec is NULL
+<p>an <code>iface</code> specification can permissive or dogmatic about
+the grouping of the input. If the .groups option in an
+<code>iface</code> specification is NULL
 (e.g. <code>iface(..., .groups=NULL)</code>) then any grouping is
-allowed. If it is FALSE then no grouping is allowd. The third option is
+allowed. If it is FALSE then no grouping is allowed. The third option is
 to supply a one sided formula. In this case the variables in the formula
 define the grouping that must be present,
 e.g. <code>~ grp1 + grp2</code>, but if it also includes a
@@ -369,9 +371,9 @@ groups.</p>
 <span><span class="co">#&gt; $ y     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.98, 3.84, 4.07, 4.23, 4.35, 3.96, 3.98, 4.11, 3.78, 4.05, 4.28…</span></span>
 <span><span class="co">#&gt; $ z     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.43, 2.31, 2.31, 2.63, 2.75, 2.48, 2.47, 2.53, 2.49, 2.39, 2.73…</span></span></code></pre></div>
 <p>If a group column is specified it must be present, regardless of the
-rest of the <code>iface</code> spec. So in this example <code>cut</code>
-is required by the <code>i_diamonds</code> contract but it can be any
-format.</p>
+rest of the <code>iface</code> specification. So in this example
+<code>cut</code> is required by the <code>i_diamonds</code> contract but
+it can be any format.</p>
 </div>
 <div class="section level2">
 <h2 id="dispatch">Dispatch<a class="anchor" aria-label="anchor" href="#dispatch"></a>
@@ -430,7 +432,7 @@ behaviour:</p>
 <h3 id="recursive-dispatch">Recursive dispatch<a class="anchor" aria-label="anchor" href="#recursive-dispatch"></a>
 </h3>
 <p>The order of the rules is important with in general the more detailed
-needing to de provided first. We can leverage this to create a recursive
+needing to be provided first. We can leverage this to create a recursive
 functional pattern of dataframe processing that allows multiple inputs
 to converge on a single output, this also demonstrates the use of
 <code><a href="../reference/itest.html">itest()</a></code> which simply checks an input conforms to an
@@ -492,8 +494,8 @@ to converge on a single output, this also demonstrates the use of
 <span>  <span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">process</span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Processing an input of type 1 results in one path through the data
-pipeline:</p>
+<p>Processing an input of <code>type 1</code> results in one path
+through the data pipeline:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># tibble::tibble(x=c(10,30), n=c(NA,50)) %&gt;% itest(i_input_1)</span></span>
 <span><span class="fu">process</span><span class="op">(</span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">30</span><span class="op">)</span>, n<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>,<span class="fl">50</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -507,8 +509,8 @@ pipeline:</p>
 <span><span class="co">#&gt; $ lower  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.05522914, 0.46181438</span></span>
 <span><span class="co">#&gt; $ upper  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.1743657, 0.7239161</span></span>
 <span><span class="co">#&gt; $ label  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "10.0% [5.5% - 17.4%] (10/100)", "60.0% [46.2% - 72.4%] (30/50)"</span></span></code></pre></div>
-<p>Processing an input of type 2, results in a different path through
-the data pipeline, but the same outcome:</p>
+<p>Processing an input of <code>type 2</code>, results in a different
+path through the data pipeline, but the same outcome:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># tibble::tibble(p=0.15,n=1000) %&gt;% itest(i_input_2)</span></span>
 <span><span class="fu">process</span><span class="op">(</span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>p<span class="op">=</span><span class="fl">0.15</span>,n<span class="op">=</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -585,7 +587,7 @@ transparently, after the input has been validated:</p>
 <span><span class="co">#&gt; $ mean_price <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3169.954, 3076.752, 3724.886, 3999.136, 4486.669, 5091.875,…</span></span></code></pre></div>
 <p>If on the other hand additional groups are present the inner function
 is executed once for each of the additional groups. Data validation
-happens once per group.</p>
+happens once per group, which affects interpretation of uniqueness.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The incorrectly grouped dataframe</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>

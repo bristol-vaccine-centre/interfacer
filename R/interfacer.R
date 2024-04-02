@@ -51,7 +51,7 @@ ivalidate = function(df = NULL, ..., .imap=imapper(), .prune=FALSE, .default = N
     # a iface spec. This means that no value has been supplied by the user and 
     # the iface has been returned by default.
     # We need to check is there is any ivalidate provided spec provided default?
-    tmp = .spec_default(spec, .default)
+    tmp = .spec_default(spec, .default, .env = rlang::caller_env(n = 2))
     # .spec_default checks validity of the .default parameter
     if (!is.null(tmp)) return(tmp)
     # There was no default
@@ -198,7 +198,7 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
   out = df %>% dplyr::mutate(!!!dots)
   
   spec = iface
-  if (!is.iface(spec)) stop("iface must be a `interfacer::iface(...) specification")
+  if (!is.iface(spec)) stop("iface must be a `interfacer::iface(...) specification", call. = FALSE)
   
   exp_grps = .spec_grps(spec)
   obs_grps = dplyr::group_vars(out)
@@ -305,6 +305,8 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
   
   out = out %>% dplyr::ungroup()
   
+  issues = character()
+  
   for (add_grp in add_grps) {
     # These are additionally grouped columns. Checks on them are 
     # scoped to the ungrouped data frame.
@@ -312,7 +314,12 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
       type = .spec_type_of(spec, rlang::as_label(add_grp))
       asfn = .get_conv(type, .fname, .dname, .env)
       asfn2 = .strict(asfn, rlang::as_label(add_grp), .fname, .dname)
-      out = out %>% dplyr::mutate(!!add_grp := asfn2(!!add_grp))
+      out = tryCatch({
+        out %>% dplyr::mutate(!!add_grp := asfn2(!!add_grp))
+      }, error = function(e) {
+        issues <<- c(issues,e$message)
+        return(out)
+      })
     }
     
     out = out %>% dplyr::group_by(!!add_grp, .add = TRUE)
@@ -320,11 +327,20 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
   
   for (new_grp in exp_grps) {
     
+    # these are the mandatory groups 
+    # checks on these are run in the order the columns are defined
+    # and are scoped to the grouping up to that point.
+    
     if (.spec_has_rule(spec, rlang::as_label(new_grp))) {
       type = .spec_type_of(spec, rlang::as_label(new_grp))
       asfn = .get_conv(type, .fname, .dname, .env)
       asfn2 = .strict(asfn, rlang::as_label(new_grp), .fname, .dname)
-      out = out %>% dplyr::mutate(!!new_grp := asfn2(!!new_grp))
+      out = tryCatch({
+        out %>% dplyr::mutate(!!new_grp := asfn2(!!new_grp))
+      }, error = function(e) {
+        issues <<- c(issues,e$message)
+        return(out)
+      })
     }
     out = out %>% dplyr::group_by(!!new_grp,.add = TRUE)
   }
@@ -334,10 +350,16 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
       type = .spec_type_of(spec, rlang::as_label(data_col))
       asfn = .get_conv(type, .fname, .dname, .env)
       asfn2 = .strict(asfn, rlang::as_label(data_col), .fname, .dname)
-      out = out %>% dplyr::mutate(!!data_col := asfn2(!!data_col))
+      out = tryCatch({
+        out %>% dplyr::mutate(!!data_col := asfn2(!!data_col))
+      }, error = function(e) {
+        issues <<- c(issues, e$parent$message)
+        return(out)
+      })
     }
   }
   
+  if (length(issues) > 0) stop(paste0(issues,collapse="\n"),call. = FALSE)
   return(out)
   
 }
