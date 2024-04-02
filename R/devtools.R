@@ -147,6 +147,7 @@ idocument = function(fn, param = NULL) {
 #' Parser for `@iparam` tags
 #' 
 #' @inheritParams roxygen2::roxy_tag_parse
+#' @concept document
 #' 
 #' @importFrom roxygen2 roxy_tag_parse
 #' @export
@@ -159,6 +160,7 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' @inheritParams roxygen2::roxy_tag_rd
 #' 
 #' @importFrom roxygen2 roxy_tag_rd
+#' @concept document
 #' @export
 #' 
 #' @examples 

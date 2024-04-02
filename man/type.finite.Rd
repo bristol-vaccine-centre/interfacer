@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-coerce.R
 \name{type.finite}
 \alias{type.finite}
-\title{Check for missing values}
+\title{Check for non-finite values}
 \usage{
 type.finite(x)
 }

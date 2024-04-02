@@ -426,7 +426,7 @@ type.not_missing = function(x) {
   return(x)
 }
 
-#' Check for missing values
+#' Check for non-finite values
 #' 
 #' Any non finite values will cause failure of validation. 
 #'
