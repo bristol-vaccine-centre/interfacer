@@ -274,7 +274,12 @@ use_dataframe = function(df, name = deparse(substitute(df)), output = "R/data.R"
   tmp[[name]] = df
   ex = rlang::expr(usethis::use_data(!!as.symbol(name),overwrite = TRUE))
   suppressMessages(with(tmp, eval(ex)))
-  .write_to_source(df, name, template = "templates/data.R.template", output = output, pkg=pkg)
+  tryCatch(
+    .write_to_source(df, name, template = "templates/data.R.template", output = output, pkg=pkg),
+    error = function(e) {
+      warning("An error occurred updating the documentation: ",e$message)
+    }
+  )
 }
 
 #' Generate interfacer code for a dataframe
