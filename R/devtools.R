@@ -186,7 +186,7 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' 
 roxy_tag_rd.roxy_tag_iparam <- function(x, base_path, env) {
   
-  dname = x$val$param
+  dname = x$val$name
   block = .search_call_stack(.class="roxy_block")
   fn = block$object$value
   icall = formals(fn)[[dname]]
