@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,7 @@
 <div class="page-header"><h1 id="interfacer">interfacer<a class="anchor" aria-label="anchor" href="#interfacer"></a>
 </h1></div>
 <!-- badges: start -->
+
 <p><code>Interfacer</code> is primarily aimed at R package developers. It provides a framework for specifying the structure of dataframes as parameters for user functions and checking that user supplied dataframes conform to expectations. Missing columns or incorrectly typed columns can be identified and useful error messages returned. Specifying structure is part of the function definition and can be automatically included in Roxygen documentation.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -74,15 +75,15 @@
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"bristol-vaccine-centre/interfacer"</span><span class="op">)</span></span></code></pre></div>
 <p>More likely though you will be including this in another package via a DESCRIPTION file:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co">...</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="co">Imports: </span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co">    tidyverse,</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co">    interfacer</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co">Remotes: github::bristol-vaccine-centre/interfacer</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co">Suggests: </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">    knitr,</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="co">    rmarkdown</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="co">...</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">...</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">Imports: </span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">    tidyverse,</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">    interfacer</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">Remotes: github::bristol-vaccine-centre/interfacer</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">Suggests: </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">    knitr,</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">    rmarkdown</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">...</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
