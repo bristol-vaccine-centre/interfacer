@@ -4,12 +4,16 @@
 \alias{type.in_range}
 \title{Define a conformance rule to confirm that a numeric is in a set range}
 \usage{
-type.in_range(min, max)
+type.in_range(min, max, include.min = TRUE, include.max = TRUE)
 }
 \arguments{
-\item{min}{the lower limit (inclusive)}
+\item{min}{the lower limit}
 
-\item{max}{the upper limit (inclusive)}
+\item{max}{the upper limit}
+
+\item{include.min}{is lower limit open (default TRUE)}
+
+\item{include.max}{is upper limit open (default TRUE)}
 }
 \value{
 a function which checks the values and returns them if OK or throws
@@ -22,7 +26,12 @@ This is anticipated to be part of a \code{iface} rule e.g.
 \code{iface(test_col = integer + in_range(-10,10) ~ "An integer from -10 to 10")}
 }
 \examples{
-type.in_range(0,100)(1:99)
+type.in_range(0,10,TRUE,TRUE)(0:10)
+try(type.in_range(0,10,TRUE,FALSE)(0:10))
+try(type.in_range(0,10,FALSE)(0:10))
+type.in_range(0,10,FALSE,TRUE)(1:10)
+type.in_range(0,10,TRUE,FALSE)(0:9)
+type.in_range(0,Inf,FALSE,FALSE)(1:9)
 try(type.in_range(0,10)(1:99))
 }
 \concept{rules}

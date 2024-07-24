@@ -2,7 +2,7 @@
 % Please edit documentation in R/iface-class.R
 \name{iface}
 \alias{iface}
-\title{Define an interface}
+\title{Construct an interface specification}
 \usage{
 iface(..., .groups = NULL, .default = NULL)
 }
@@ -26,24 +26,30 @@ conform, and used as the default.}
 the definition of an interface as a \code{iface} object
 }
 \description{
-The \code{iface} function allows us to define the structure of a dataframe in
-terms of the columns and column types. An \code{iface} specification is used to
-define the type of a formal parameter in a function, by being the parameters
-default value. This definition is picked up by \code{ivalidate(...)} when used
-within that function to ensure the input is correctly formatted. An interface
-spec may also be used in \code{ireturn(...)} to enforce that the output of a
-function is correct.
+An \code{iface} specification defines the expected structure of a dataframe, in
+terms of the column names, column types, grouping structure and uniqueness
+constraints that the dataframe must conform to. A dataframe can be tested
+for conformance to an \code{iface} specification using \code{iconvert}.
 }
 \details{
+An \code{iface} specification is designed to be used to define the type of a
+parameter in a function. This is done by using the \code{iface} specification as
+the default value of the parameter in the function definition. The definition
+can then be validated at runtime by a call to \code{ivalidate(...)} inside the
+function.
+
+When developing a function output an \code{iface} specification may also be used
+in \code{ireturn(...)} to enforce that the output of a function is correct.
+
 \code{iface} definitions can be printed and included in \code{roxygen} documentation
 and help us to document input dataframe parameters and dataframe return
-values in a standardised way.
+values in a standardised way by using the \verb{@iparam} roxygen tag.
 
-The specification is in the form of a named list of formulae with the
-structure \code{name = type ~ "documentation"}.
+\code{iface} specifications are defined in the form of a named list of formulae with the
+structure \code{column_name = type ~ "documentation"}.
 
-\code{type} can be one of \code{anything}, \code{character}, \code{complete}, \code{date}, \code{default}, \code{double}, \code{enum}, \code{factor}, \code{finite}, \code{group_unique}, \code{in_range}, \code{integer}, \code{logical}, \code{not_missing}, \code{numeric}, \code{positive_double}, \code{positive_integer}, \code{proportion} (e.g. \code{enum(level1,level2,...)},
-\code{in_range(min,max)}) or anything that resolves to a function e.g.
+\code{type} can be one of \code{anything}, \code{character}, \code{complete}, \code{date}, \code{default}, \code{double}, \code{enum}, \code{factor}, \code{finite}, \code{group_unique}, \code{in_range}, \code{integer}, \code{logical}, \code{not_missing}, \code{numeric}, \code{of_type}, \code{positive_double}, \code{positive_integer}, \code{proportion} (e.g. \code{enum(level1,level2,...)},
+\code{in_range(min,max)}) or alternatively anything that resolves to a function e.g.
 \code{as.ordered}.
 
 If \code{type} is a function name, then the function must take a single vector
@@ -68,6 +74,8 @@ my_iface = iface(
 print(my_iface)
 
 # the function x defines a formal `df` with default value of `my_iface`
+# this default value is used to validate the structure of the user supplied
+# value when the function is called.
 x = function(df = my_iface, ...) {
   df = ivalidate(df,...)
   return(df)

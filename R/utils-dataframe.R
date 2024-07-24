@@ -7,7 +7,7 @@
 }
 
 
-# like rlang::as_function but only interprets functions or forumulae
+# like rlang::as_function but only interprets functions or formulae
 # and ignores primitives and characters.
 .lax_as_function = function(fn) {
   try(if (is.function(fn)) return(fn), silent = TRUE)

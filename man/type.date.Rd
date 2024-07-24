@@ -9,9 +9,7 @@ type.date(x, ...)
 \arguments{
 \item{x}{an object to be converted.}
 
-\item{...}{further arguments to be passed from or to other methods,
-    including \code{format} for \code{as.character} and \code{as.Date}
-    methods.}
+\item{...}{further arguments to be passed from or to other methods.}
 }
 \description{
 Coerce to a Date.

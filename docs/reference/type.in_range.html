@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,10 +24,27 @@
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/devtools.html">Tools to work with `interfacer`</a>
+    <a class="dropdown-item" href="../articles/dispatch.html">Multiple dispatch based on dataframes</a>
+    <a class="dropdown-item" href="../articles/nesting.html">Nested dataframes and `purrr` style list columns</a>
+  </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/bristol-vaccine-centre/interfacer/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -35,7 +52,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Define a conformance rule to confirm that a numeric is in a set range</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/bristol-vaccine-centre/interfacer/blob/HEAD/R/type-coerce.R" class="external-link"><code>R/type-coerce.R</code></a></small>
       <div class="d-none name"><code>type.in_range.Rd</code></div>
     </div>
 
@@ -45,17 +62,25 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">type.in_range</span><span class="op">(</span><span class="va">min</span>, <span class="va">max</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">type.in_range</span><span class="op">(</span><span class="va">min</span>, <span class="va">max</span>, include.min <span class="op">=</span> <span class="cn">TRUE</span>, include.max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>min</dt>
-<dd><p>the lower limit (inclusive)</p></dd>
+<dd><p>the lower limit</p></dd>
 
 
 <dt>max</dt>
-<dd><p>the upper limit (inclusive)</p></dd>
+<dd><p>the upper limit</p></dd>
+
+
+<dt>include.min</dt>
+<dd><p>is lower limit open (default TRUE)</p></dd>
+
+
+<dt>include.max</dt>
+<dd><p>is upper limit open (default TRUE)</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -72,13 +97,20 @@ an error if not</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">99</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [51] 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [76] 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,<span class="cn">TRUE</span>,<span class="cn">TRUE</span><span class="op">)</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0  1  2  3  4  5  6  7  8  9 10</span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,<span class="cn">TRUE</span>,<span class="cn">FALSE</span><span class="op">)</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : values not in range: 0 ≤ x &lt; 10</span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,<span class="cn">FALSE</span><span class="op">)</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : values not in range: 0 &lt; x ≤ 10</span>
+<span class="r-in"><span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,<span class="cn">FALSE</span>,<span class="cn">TRUE</span><span class="op">)</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  1  2  3  4  5  6  7  8  9 10</span>
+<span class="r-in"><span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,<span class="cn">TRUE</span>,<span class="cn">FALSE</span><span class="op">)</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 1 2 3 4 5 6 7 8 9</span>
+<span class="r-in"><span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="cn">Inf</span>,<span class="cn">FALSE</span>,<span class="cn">FALSE</span><span class="op">)</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 2 3 4 5 6 7 8 9</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">type.in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">99</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error : values not in range: 0-10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : values not in range: 0 ≤ x ≤ 10</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

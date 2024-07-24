@@ -76,15 +76,17 @@ ivalidate = function(df = NULL, ..., .imap=imapper(), .prune=FALSE, .default = N
 #' @param iface the interface specification that `df` should conform to.
 #' @param .prune get rid of excess columns that are not in the spec.
 #'
-#' @return a dataframe based on df with validity checks passed and `.imap`
-#'   mappings applied if present
+#' @return a dataframe based on df with validity checks passed,
+#'   datatypes coerced, and correct grouping applied to conform to `iface`
 #' @export
 #' 
 #' @concept interface 
 #'
 #' @examples
+#' 
 #' input = iface(col_in = integer ~ "an integer column" )
 #' output = iface(col_out = integer ~ "an integer column" )
+#' 
 #' x = function(df = input, ...) {
 #'   df = ivalidate(...)
 #'   tmp = df %>% dplyr::rename(col_out = col_in)
@@ -92,6 +94,7 @@ ivalidate = function(df = NULL, ..., .imap=imapper(), .prune=FALSE, .default = N
 #' }
 #' x(tibble::tibble(col_in = c(1,2,3)))
 #' output
+#' 
 ireturn = function(df, iface, .prune=FALSE) {
   
   #TODO: bypass checks if the function is run in development
@@ -166,7 +169,8 @@ ireturn = function(df, iface, .prune=FALSE) {
 #' 
 #' This function is called by `ivalidate` and is not generally intended to be
 #' used directly by the end user. It may be helpful in debugging during package 
-#' development to interactive test a `iface` spec.
+#' development to interactive test a `iface` spec. `iconvert` is an interactive 
+#' version of `ivalidate`.
 #' 
 #' @concept interface
 #'
@@ -187,11 +191,15 @@ ireturn = function(df, iface, .prune=FALSE) {
 #'   color = enum(D,E,F,G,H,I,J,extra) ~ "the colour", 
 #'   price = integer ~ "the price"
 #' )
+#' 
 #' iconvert(ggplot2::diamonds, i_diamonds,.prune = TRUE)
+#' 
+#' 
 iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>", .fname="<unknown>", .has_dots = TRUE, .prune = FALSE, .env = rlang::current_env()) {
   
   #TODO cache this?
   
+  #TODO: consider deprecating `.imap`
   # apply any imap 
   dots = .imap
   dots = dots[names(dots) %in% .spec_cols(iface)]
@@ -209,9 +217,9 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
   if (length(missing) > 0) {
     if (.dname == "nested") stop("missing columns: ",.none(missing,","), call. = FALSE)
     stop(
-      sprintf("missing columns in the `%s` parameter of %s(..).\nmissing: %s\n", .dname, .fname, .none(missing,",")),
-      sprintf("consider renaming / creating missing columns before calling `%s`(...)\n", .fname),
-      if (.has_dots) sprintf("or by adding `.imap = interfacer::imapper(%s)` to your function call.\n", .none(missing, ", ", fmt_item="`%s`=...")) else "",
+      sprintf("missing columns in the `%s` parameter of `%s(...)`.\nmissing: %s\n", .dname, .fname, .none(missing,",")),
+      sprintf("consider renaming / creating missing columns before calling `%s(...)`\n", .fname),
+      # if (.has_dots) sprintf("or by adding `.imap = interfacer::imapper(%s)` to your function call.\n", .none(missing, ", ", fmt_item="`%s`=...")) else "",
       call. = FALSE
     )
   }
@@ -225,10 +233,10 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
     fmt_exp_grp = .none(exp_grps, collapse = ",", none = "%>% ungroup()", fmt = "%%>%% group_by(%s)")
     fmt_diff_grp = .none(allowed_grps, collapse = ",", none = "%>% ungroup()", fmt = "%%>%% group_by(%s)")
     stop(
-      sprintf("unexpected additional groups in `%s` parameter of %s(...)\nadditional: %s\n", .dname, .fname, .none(allowed_grps,"+")),
-      sprintf("consider regrouping your data before calling function `%s`, e.g.:\n",.fname),
+      sprintf("unexpected additional groups in `%s` parameter of `%s(...)`\nadditional: %s\n", .dname, .fname, .none(allowed_grps,"+")),
+      sprintf("consider regrouping your data before calling function `%s(...)`, e.g.:\n",.fname),
       sprintf("`df %s %%>%% %s(...)`\n", fmt_exp_grp, .fname),
-      sprintf("or calling function `%s` using a group_modify, e.g.:\n",.fname),
+      sprintf("or calling function `%s(...)` using a group_modify, e.g.:\n",.fname),
       sprintf("`df %s %%>%% group_modify(%s, ...)`", fmt_diff_grp, .fname),
       call. = FALSE
     )
@@ -239,8 +247,8 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
     if (.dname == "nested") stop("missing groups: ",.none(missing_grps,","), call. = FALSE)
     fmt_exp_grp = .none(c(allowed_grps,exp_grps), collapse = ",", none = "%>% ungroup()", fmt = "%%>%% group_by(%s)")
     stop(
-      sprintf("missing grouping in `%s` parameter of %s(...):\nmissing: %s\n", .dname, .fname, .none(missing_grps,"+")),
-      sprintf("consider regrouping your data before calling function `%s`, e.g.:\n",.fname),
+      sprintf("missing grouping in `%s` parameter of `%s(...)`:\nmissing: %s\n", .dname, .fname, .none(missing_grps,"+")),
+      sprintf("consider regrouping your data before calling function `%s(...)`, e.g.:\n",.fname),
       sprintf("`df %s %%>%% %s(...)`\n", fmt_exp_grp, .fname),
       call. = FALSE
     )

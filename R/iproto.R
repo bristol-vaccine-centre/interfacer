@@ -1,4 +1,10 @@
-#' Generate a zero length tibble conforming to a spec
+#' Generate a zero length tibble conforming to an `iface` specification
+#' 
+#' This function is used internally for default values for a dataframe
+#' parameter. It generates a zero length dataframe that conforms to a `iface`
+#' specification, in terms of column names, data types and groupings. Such a
+#' dataframe is not guaranteed to be fully conformant to the `iface`
+#' specification if, for example, completeness constraints are applied.
 #'
 #' @param iface the specification
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/imapper.R
 \name{imapper}
 \alias{imapper}
-\title{Specify mappings that can make dataframes compatible with an interface}
+\title{Specify mappings that can make dataframes compatible with an \code{iface} specfication}
 \usage{
 imapper(...)
 }
@@ -14,8 +14,20 @@ a dataframe will rename or otherwise fix missing columns}
 a set of mappings
 }
 \description{
-This function is expected to be used only in a \code{.imap = imappper(...)} context
-to overcome some mapping issues
+When a function uses \code{ivalidate} internally to check a dataframe conforms to
+the input it can attempt to rescue an incorrectly formatted dataframe.
+This is a pretty advanced idea and is not generally recommended.
+}
+\details{
+This function is expected to be used only in the context of a \code{.imap = imapper(...)}
+parameter to an \code{ivalidate} call to make sure that certain columns are present
+or are a set value. Anything provided here will overwrite existing
+dataframe columns and its use is likely to make function behaviour obtuse.
+It may be deprecated in the future. The \code{...} input expressions should almost certainly
+check for the values already existing before overwriting them.
+
+If you are considering using this for replacing missing values check using
+the \code{default(...)} \code{iface} type definition instead.
 }
 \examples{
 x = function(df = iface(col1 = integer ~ "an integer column" ), ...) {

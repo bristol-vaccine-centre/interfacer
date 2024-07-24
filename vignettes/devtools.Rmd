@@ -1,0 +1,70 @@
+---
+title: "Tools to work with `interfacer`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tools to work with `interfacer`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Automating `iface` specifications
+
+Adopting `interfacer` for package functions can go hand in hand with developing
+test data for the project. In this scenario a function that relies on 
+a specific dataframe format, can be defined using the test data as a prototype
+to help generate the `iface` specification.
+
+This is the role of `iclip` and `use_iface`. Suppose we wish to develop a 
+function that supports datasets in the same format as `mtcars` we can use the 
+`mtcars` dataset as a prototype by calling `iclip(mtcars)`. This writes a 
+`iface` specification to the clipboard. Pasting it gives us:
+
+```R
+i_mtcars = interfacer::iface(
+	mpg = numeric ~ "the mpg column",
+	cyl = numeric ~ "the cyl column",
+	disp = numeric ~ "the disp column",
+	hp = numeric ~ "the hp column",
+	drat = numeric ~ "the drat column",
+	wt = numeric ~ "the wt column",
+	qsec = numeric ~ "the qsec column",
+	vs = numeric ~ "the vs column",
+	am = numeric ~ "the am column",
+	gear = numeric ~ "the gear column",
+	carb = numeric ~ "the carb column",
+	.groups = NULL
+)
+```
+
+If we instead called `use_iface(mtcars)` this definition would be written to 
+the file `R/interfaces.R` (or the definition updated if it is already present).
+`iface` specifications can be anywhere in the package hierarchy but it does make
+some sense to keep them all in one file. Interface specifications do not need to
+be exported from a package to function (although they can be).
+
+In both cases as the developer you will want to update the default column 
+description, if the `use_iface` function was used, care must be taken to ensure 
+changes you make will not be over written if `use_iface` is called again. This is 
+a question of removing the relevant comment in `R/interfaces.R`
+
+# Dataframe documentation
+
+When using `usethis::use_data` to embed data in a package there is inevitably a
+reminder to document your data. When you are embedding a dataframe `interfacer`
+can inspect your dataframe and generate a template data documentation into
+`R/data.R` at the same this as embedding the data.
+
+This is triggered with a call to, for example, `interfacer::use_dataframe(mtcars)`
+which will create an entry in `R/data.R` for your dataframe documentation.
+
+This function uses the `interfacer` framework to generate the documentation but 
+does not need it afterwards.
+
+# Roxygen documentation
+
+`@iparam <name> <description>` tags can be used in the roxygen documentation
+of an `interfacer` enabled function. This enables `devtools::document()` to 
+automatically write the documentation for dataframe parameters. It may require
+that you call `library(interfacer)` before running `devtools::document()`.
+
+

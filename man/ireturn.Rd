@@ -15,16 +15,18 @@ function is assumed to be a dataframe.}
 \item{.prune}{get rid of excess columns that are not in the spec.}
 }
 \value{
-a dataframe based on df with validity checks passed and \code{.imap}
-mappings applied if present
+a dataframe based on df with validity checks passed,
+datatypes coerced, and correct grouping applied to conform to \code{iface}
 }
 \description{
 This is intended to be used within a function to check the validity of a data
 frame being returned from a function against an \code{ispec} which is provided.
 }
 \examples{
+
 input = iface(col_in = integer ~ "an integer column" )
 output = iface(col_out = integer ~ "an integer column" )
+
 x = function(df = input, ...) {
   df = ivalidate(...)
   tmp = df \%>\% dplyr::rename(col_out = col_in)
@@ -32,5 +34,6 @@ x = function(df = input, ...) {
 }
 x(tibble::tibble(col_in = c(1,2,3)))
 output
+
 }
 \concept{interface}

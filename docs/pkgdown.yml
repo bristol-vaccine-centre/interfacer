@@ -1,7 +1,10 @@
-pandoc: 3.1.1
+pandoc: 3.1.13
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
+  devtools: devtools.html
+  dispatch: dispatch.html
   interfacer: interfacer.html
-last_built: 2024-04-26T12:36Z
+  nesting: nesting.html
+last_built: 2024-07-24T16:00Z
 

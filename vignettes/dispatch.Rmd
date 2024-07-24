@@ -1,0 +1,274 @@
+---
+title: "Multiple dispatch based on dataframes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multiple dispatch based on dataframes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(interfacer)
+```
+
+# Rationale
+
+The S3 type system allows for dispatch based on the first argument of
+a function. In the situation where we are developing functions that use dataframes
+as input selecting a dispatch function needs to be based on the structure of
+the input rather than its class. `interfacer` can use `iface` specifications to
+associate 
+
+# Dispatch
+
+Dispatching to one of a number of functions based on the nature of a dataframe
+input is enabled by `idispatch(...)`. This emulates the behaviour of `S3`
+classes but for dataframes, based on their columns and also their grouping. 
+Consider the following `iface` specifications:
+
+```{r}
+i_test = iface(
+  id = integer ~ "an integer ID",
+  test = logical ~ "the test result"
+)
+
+# Extends the i_test to include an additional column
+i_test_extn = iface(
+  i_test,
+  extra = character ~ "a new value",
+  .groups = FALSE
+)
+```
+
+We can create specific handlers for each type of data and decide which function 
+to dispatch to at runtime based on the input dataframe.
+
+```{r}
+
+# The generic function
+disp_example = function(x, ...) {
+  idispatch(x,
+    disp_example.extn = i_test_extn,
+    disp_example.no_extn = i_test
+  )
+}
+
+# The handler for extended input dataframe types
+disp_example.extn = function(x = i_test_extn, ...) {
+  message("extended data function")
+  return(colnames(x))
+}
+
+# The handler for non-extended input dataframe types
+disp_example.no_extn = function(x = i_test, ...) {
+  message("not extended data function")
+  return(colnames(x))
+}
+```
+
+If we call `disp_example()` with data that matches the `i_test_extn` specification
+we get one type of behaviour:
+
+```{r}
+
+tmp = tibble::tibble(
+    id=c("1","2","3"),
+    test = c(TRUE,FALSE,TRUE),
+    extra = 1.1
+)
+
+tmp %>% disp_example()
+```
+
+But if we call `disp_example()` with data that only matches the `i_test` specification
+we get different behaviour:
+
+```{r}
+# this matches the i_test_extn specification:
+tmp2 = tibble::tibble(
+    id=c("1","2","3"),
+    test = c(TRUE,FALSE,TRUE)
+)
+
+tmp2 %>% disp_example()
+```
+
+I've used this mechanism, for example, to configure how plots are produced
+depending on the input.
+
+## Recursive dispatch
+
+The order of the rules is important. In general the more detailed specifications 
+needing to be provided first, and the more generic specifications last. We can leverage this to create a recursive functional pattern of 
+dataframe processing that allows multiple inputs to converge on a single output, this
+also demonstrates the use of `itest()` which simply checks an input conforms to 
+an `iface` specification:
+
+```{r}
+
+# generic type 1 input
+i_input_1 = iface(
+  x = integer ~ "the positives",
+  n = default(100) + integer ~ "the total"
+)
+
+# generic type 2 input
+i_input_2 = iface(
+  p = proportion ~ "the proportion",
+  n = default(100) + integer ~ "the total"
+)
+
+# more detailed combined type 1 and 2 input
+i_interim = iface(
+  i_input_1,
+  i_input_2
+)
+
+# most detailed input format
+i_final = iface(
+  i_interim,
+  lower = double ~ "wilson lower CI",
+  upper = double ~ "wilson lower CI",
+  mean = double ~ "wilson mean"
+)
+
+# final target output format
+i_target = iface(
+  i_final,
+  label = character ~ "a printable label"
+)
+
+# processes input of type 1 and 
+process.input_1 = function(x = i_input_1,...) {
+  message("process input 1")
+  ireturn(x %>% dplyr::mutate(p = x/n), iface = i_interim)
+}
+
+process.input_2 = function(x = i_input_2,...) {
+  message("process input 2")
+  ireturn(x %>% dplyr::mutate(x = floor(p*n)), iface = i_interim)
+}
+
+process.interim = function(x) {
+  message("process interim")
+  ireturn(x %>% dplyr::mutate(binom::binom.wilson(x,n)), iface = i_final)
+}
+
+process.final = function(x) {
+  message("process final")
+  ireturn(x %>% dplyr::mutate(label = sprintf("%1.1f%% [%1.1f%% - %1.1f%%] (%d/%d)", 
+    mean*100, lower*100, upper*100, x, n)), iface = i_target)
+}
+
+process = function(x,...) {
+  # this test must be at the front to prevent infinite recursion
+  if (itest(x, i_target)) return(x)
+  out = idispatch(x,
+    process.final = i_final,
+    process.interim = i_interim,
+    process.input_2 = i_input_2,
+    process.input_1 = i_input_1
+  )
+  return(process(out))
+}
+
+```
+
+
+Processing an input of `type 1` results in one path through the data pipeline:
+
+```{r}
+# tibble::tibble(x=c(10,30), n=c(NA,50)) %>% itest(i_input_1)
+process(tibble::tibble(x=c(10,30), n=c(NA,50))) %>% dplyr::glimpse()
+```
+
+Processing an input of `type 2`, results in a different path through the data
+pipeline, but the same outcome:
+
+```{r}
+# tibble::tibble(p=0.15,n=1000) %>% itest(i_input_2)
+process(tibble::tibble(p=0.15,n=1000)) %>% dplyr::glimpse()
+```
+Care must be taken though in this pattern, particularly if you are re-using
+column names,as datatype coercion could result in some column types being
+switched backwards and forwards, and other infinite loop problems.
+
+## Grouping based dispatch
+
+It is often useful to have a function that can expects a specific grouping but
+can handle additional groups. One way of handling these is to use `purrr` and
+nest columns extensively. Nesting data in the unexpected groups and repeatedly
+applying the function you want. An alternative `dplyr` solution is to use a
+`group_modify`. `interfacer` leverages this second option to automatically
+determine a grouping necessary for a pipeline function from the stated grouping
+requirements and automatically handle them without additional coding in the
+package.
+
+For example if we have the following `iface` the input for a function must be 
+grouped only by the `color` column:
+
+```{r}
+i_diamond_price = interfacer::iface(
+  color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
+  price = integer ~ "the price column",
+  .groups = ~ color
+)
+```
+
+A package developer writing a pipeline function may use this fact to handle 
+possible additional grouping by using a `igroup_process(df, ...)` 
+
+```{r}
+ # exported function in package
+ # at param can use `r idocument(ex_mean, df)` for documentation
+ ex_mean = function(df = i_diamond_price, extra_param = ".") {
+
+   # dispatch based on groupings:
+   igroup_process(df,
+
+     # the real work of this function is provided as an anonymous inner
+     # function (but can be any other function e.g. package private function)
+     # or a purrr style lambda.
+
+     function(df, extra_param) {
+       message(extra_param, appendLF = FALSE)
+       return(df %>% dplyr::summarise(mean_price = mean(price)))
+     }
+
+   )
+ }
+```
+
+If we pass this to correctly grouped data conforming to `i_diamond_price` the
+inner function is executed once transparently, after the input has been validated:
+
+```{r}
+# The correctly grouped dataframe
+ggplot2::diamonds %>%
+  dplyr::group_by(color) %>%
+  ex_mean(extra_param = "without additional groups...") %>%
+  dplyr::glimpse()
+```
+
+If on the other hand additional groups are present the inner function is 
+executed once for each of the additional groups. Data validation happens once
+per group, which affects interpretation of uniqueness.
+
+```{r}
+# The incorrectly grouped dataframe
+ggplot2::diamonds %>%
+  dplyr::group_by(cut, color) %>%
+  ex_mean() %>%
+  dplyr::glimpse()
+
+```
+
+The output of this is actually grouped by `cut` as the
+`color` column grouping is consumed by the nested function in `igroup_process`.

@@ -17,7 +17,28 @@ automatically included in Roxygen documentation.
 
 ## Installation
 
-This package is hosted in the [Bristol Vaccine Centre
+You can install the released version of `interfacer` from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("interfacer")
+```
+
+Most likely though you will be including this in another package via a
+DESCRIPTION file:
+
+```yaml
+...
+Imports: 
+    tidyverse,
+    interfacer
+Suggests: 
+    knitr,
+    rmarkdown
+...
+```
+
+This development versions of the package are hosted in the [Bristol Vaccine Centre
 r-universe](https://https://bristol-vaccine-centre.r-universe.dev/).
 Installation from there is as follows:
 
@@ -30,15 +51,7 @@ options(repos = c(
 install.packages("interfacer")
 ```
 
-You can install the development version of interfacer from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("bristol-vaccine-centre/interfacer")
-```
-
-More likely though you will be including this in another package via a
-DESCRIPTION file:
+Or via a DESCRIPTION file:
 
 ```yaml
 ...
@@ -52,16 +65,25 @@ Suggests:
 ...
 ```
 
+You can also install the development version of interfacer from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("bristol-vaccine-centre/interfacer")
+```
+
 ## Example
 
-`interfacer` is used then within a function definition in a new package to 
-constrain the input of a function to be a particular shape.
+`interfacer` is used within a function definition in a package to 
+constrain the input of a function to be a particular shape. The `@iparam`
+annotation will generate documentation which explains the expected dataframe 
+format.
 
 ```r
 #' An example function
 #'
-#' @param mydata `r interfacer::idocument(example_fn, mydata)`
-#' @param another an example   
+#' @iparam mydata a test dataframe input parameter
+#' @param another an example other input parameter  
 #' @param ... not used
 #'
 #' @return ... something not yet defined ...
@@ -69,19 +91,30 @@ constrain the input of a function to be a particular shape.
 example_fn = function(
   
   # this parameter will be a dataframe with id and test columns
+  # id will be a unique integer, and test a logical value
   mydata = interfacer::iface(
     id = integer + group_unique ~ "an integer ID",
-    test = logical ~ "the test result"
+    test = logical + default(FALSE) ~ "the test result"
   ),
   
   another = "value",
   ...
   
 ) {
+  
   # this line enforces the `iface` rules for the dataframe, coercing columns
   # if possible and throwing helpful errors if not.
   mydata = interfacer::ivalidate(mydata, ...)
-  # rest of function body ...
+  
+  # rest of function body can use `mydata` in the certain knowledge that
+  # id is a unique integer and test is a logical value...
 }
 ```
 
+When calling this function, column name, data type and grouping structure checks
+are made on the input and informative errors thrown if the input is incorrectly
+specified.
+
+`interfacer` also includes tools to help developers adopt `iface` specifications
+by generating them from example data, and for documenting dataframes bundled in
+a package.

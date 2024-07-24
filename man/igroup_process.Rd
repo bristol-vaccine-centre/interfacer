@@ -32,22 +32,28 @@ have an \code{iface} specified for that dataframe.
 This function detects when the grouping of the input has additional groups
 over and above those in the specification and intercepts them, regrouping
 the dataframe and applying \code{fn} groupwise using an equivalent of a
-group_modify. The parameters provided to the enclosing function will be
+\code{dplyr::group_modify}. The parameters provided to the enclosing function will be
 passed to \code{fn} and they should have compatible method signatures.
 }
 \examples{
 
+# This specification requires that the dataframe is grouped only by the color
+# column
 i_diamond_price = interfacer::iface(
   color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
   price = integer ~ "the price column",
   .groups = ~ color
 )
 
-# exported function in package
-# at param can use `r idocument(ex_mean, df)` for documentation
+# An example function which would be exported in a package
+# The specification implies that only 
 ex_mean = function(df = i_diamond_price, extra_param = ".") {
   
-  # dispatch based on groupings:
+  # However this function call allows a more permissive grouping to be
+  # accomodated. This will regroup the dataframe according to the structure 
+  # defined for `i_diamond_price` and apply the inner function to each group
+  # after first calling `ivalidate` on each group.
+  
   igroup_process(df, 
     
     # the real work of this function is provided as an anonymous inner
@@ -62,17 +68,20 @@ ex_mean = function(df = i_diamond_price, extra_param = ".") {
   )
 }
 
-# The correctly grouped dataframe
+# The correctly grouped dataframe. The `ex_mean` function calculates the mean
+# price for each `color` group.
 ggplot2::diamonds \%>\% 
   dplyr::group_by(color) \%>\% 
   ex_mean(extra_param = "without additional groups...") \%>\% 
   dplyr::glimpse()
   
-# The incorrectly grouped dataframe
+# The incorrectly grouped dataframe is still processed. The `ex_mean` function calculates the mean
+# price for each `cut`,`clarity`, and `color` combination.
 ggplot2::diamonds \%>\% 
   dplyr::group_by(cut, color, clarity) \%>\% 
   ex_mean() \%>\% 
   dplyr::glimpse()
+  
 # The output of this is actually grouped by cut then clarity as
 # color is consumed by the igroup_dispatch summarise.
 

@@ -38,13 +38,17 @@ the conformant dataframe
 \description{
 This function is called by \code{ivalidate} and is not generally intended to be
 used directly by the end user. It may be helpful in debugging during package
-development to interactive test a \code{iface} spec.
+development to interactive test a \code{iface} spec. \code{iconvert} is an interactive
+version of \code{ivalidate}.
 }
 \examples{
 i_diamonds = iface( 
   color = enum(D,E,F,G,H,I,J,extra) ~ "the colour", 
   price = integer ~ "the price"
 )
+
 iconvert(ggplot2::diamonds, i_diamonds,.prune = TRUE)
+
+
 }
 \concept{interface}

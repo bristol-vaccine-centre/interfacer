@@ -1,10 +1,13 @@
 
 #' Dispatch to a named function based on the characteristics of a dataframe
 #' 
+#' This provides a dataframe analogy to S3 dispatch.
+#' 
 #' If multiple possible dataframe formats are possible for a function, each with
-#' different processing requirements the decision can be made based on a validation
-#' of the input against a set of rules. The first matching rule is used to 
-#' process the function. 
+#' different processing requirements, then the choice of function can be made 
+#' based on matching the input dataframe to a set of `iface` specifications.
+#' The first matching `iface` specification determines which function is used 
+#' for dispatch. 
 #'
 #' @param x a dataframe
 #' @param ... a set of `function name`=`interfacer::iface` pairs
@@ -22,7 +25,8 @@
 #' i1 = iface( col1 = integer ~ "An integer column" )
 #' i2 = iface( col2 = integer ~ "A different integer column" )
 #' 
-#' # this is the structure for the function that woudl be exported
+#' # this is an example function that would typically be inside a package, and
+#' # is exported from the package.
 #' extract_mean = function(df, ...) {
 #'   idispatch(df,
 #'     extract_mean.i1 = i1,
@@ -34,24 +38,28 @@
 #' # the naming convention here is based on S3 but it is not required
 #' extract_mean.i1 = function(df = i1, ...) {
 #'   message("using i1")
-#'   # validation is not strictly required in this as it will already have been 
-#'   # done unless this is an exported function
-#'   df = ivalidate(df)
+#'   # input validation is not required in functions that are being called using
+#'   # `idispatch` as the validation occurs during dispatch. 
 #'   mean(df$col1)
 #' }
 #' 
 #' extract_mean.i2 = function(df = i2, uplift = 1, ...) {
 #'   message("using i2")
-#'   df = ivalidate(df)
 #'   mean(df$col2)+uplift
 #' }
 #' 
+#' # this input matches `i1` and the `extract_mean` call is dispatched 
+#' # via `extract_mean.i1`
 #' test = tibble::tibble( col2 = 1:10 )
 #' extract_mean(test, uplift = 50)
 #' 
+#' # this input matches `i2` and the `extract_mean` call is dispatched 
+#' # via `extract_mean.i2`
 #' test2 = tibble::tibble( col1 = 1:10 )
 #' extract_mean(test2, uplift = 50)
 #' 
+#' # This input does not match any of the allowable input specifications and 
+#' # generates an error.
 #' test3 = tibble::tibble( wrong_col = 1:10 )
 #' try(extract_mean(test3, uplift = 50))
 idispatch = function(x, ..., .default = NULL) {

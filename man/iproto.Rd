@@ -2,7 +2,7 @@
 % Please edit documentation in R/iproto.R
 \name{iproto}
 \alias{iproto}
-\title{Generate a zero length tibble conforming to a spec}
+\title{Generate a zero length tibble conforming to an \code{iface} specification}
 \usage{
 iproto(iface)
 }
@@ -13,7 +13,11 @@ iproto(iface)
 a tibble conforming to \code{iface}
 }
 \description{
-Generate a zero length tibble conforming to a spec
+This function is used internally for default values for a dataframe
+parameter. It generates a zero length dataframe that conforms to a \code{iface}
+specification, in terms of column names, data types and groupings. Such a
+dataframe is not guaranteed to be fully conformant to the \code{iface}
+specification if, for example, completeness constraints are applied.
 }
 \examples{
 i = interfacer::iface(

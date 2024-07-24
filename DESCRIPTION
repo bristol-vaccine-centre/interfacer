@@ -1,17 +1,21 @@
 Package: interfacer
 Title: Define and Enforce Interface Contracts for Dataframes
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person("Rob", "Challen", , "rob.challen@bristol.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5504-7768"))
-Description: Allow a specification for a dataframe to be used in function 
-  definitions and documentation. Performs default checks that column names and 
-  datatypes are as expected, and provide a generic way to rename adapt different 
-  dataframes to an interface contract.
+Description: A dataframe validation framework for package builders who use dataframes
+  as function parameters. It performs checks on column names, coerces
+  datatypes, and checks grouping to make sure inputs conform to a specification. 
+  It provides a mechanism for package authors to document expected 
+  dataframe input formats and selectively dispatch to functions depending on the 
+  format of a dataframe much like S3 does for classes. It also contains some
+  developer tools to make working with and documenting dataframe specifications
+  easier.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: 
     dplyr,
     glue,
@@ -42,3 +46,6 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
 LazyData: true
+URL: https://bristol-vaccine-centre.github.io/interfacer/,
+	https://github.com/bristol-vaccine-centre/interfacer
+BugReports: https://github.com/bristol-vaccine-centre/interfacer/issues

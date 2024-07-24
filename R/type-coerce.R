@@ -199,8 +199,10 @@ type.enum = function(..., .drop = FALSE, .ordered = FALSE) {
 #' 
 #' `iface(test_col = integer + in_range(-10,10) ~ "An integer from -10 to 10")`
 #'
-#' @param min the lower limit (inclusive)
-#' @param max the upper limit (inclusive)
+#' @param min the lower limit
+#' @param max the upper limit
+#' @param include.min is lower limit open (default TRUE)
+#' @param include.max is upper limit open (default TRUE)
 #'
 #' @concept rules
 #'
@@ -209,20 +211,45 @@ type.enum = function(..., .drop = FALSE, .ordered = FALSE) {
 #' @export
 #'
 #' @examples
-#' type.in_range(0,100)(1:99)
+#' type.in_range(0,10,TRUE,TRUE)(0:10)
+#' try(type.in_range(0,10,TRUE,FALSE)(0:10))
+#' try(type.in_range(0,10,FALSE)(0:10))
+#' type.in_range(0,10,FALSE,TRUE)(1:10)
+#' type.in_range(0,10,TRUE,FALSE)(0:9)
+#' type.in_range(0,Inf,FALSE,FALSE)(1:9)
 #' try(type.in_range(0,10)(1:99))
-type.in_range = function(min, max) {
+type.in_range = function(min, max, include.min = TRUE, include.max = TRUE) {
   if (!is.numeric(min) || !is.numeric(max) || length(min) != 1 || length(max) != 1 || min >= max )
     stop("in_range: `min` and `max` must be single numbers and min < max", call. = FALSE)
+  lbl = paste0(
+    format(min),
+    if (include.min) " \u2264 " else " < ",
+    "x",
+    if (include.max) " \u2264 " else " < ",
+    format(max)
+  )
   return(function(x) {
     x= as.numeric(x)
-    if (any(stats::na.omit(x<min | x>max))) stop("values not in range: ",min,"-",max, call. = FALSE)
+    if (include.min) {
+      # LHS open
+      if (any(stats::na.omit(x<min))) stop("values not in range: ",lbl, call. = FALSE)
+    } else {
+      # LHS closed
+      if (any(stats::na.omit(x<=min))) stop("values not in range: ",lbl, call. = FALSE)
+    }
+    if (include.max) {
+      # RHS open
+      if (any(stats::na.omit(x>max))) stop("values not in range: ",lbl, call. = FALSE)
+    } else {
+      # RHS closed
+      if (any(stats::na.omit(x>=max))) stop("values not in range: ",lbl, call. = FALSE)
+    }
     x
   })
 }
 
 
-#' Coerce a unspecified type
+#' Coerce to an unspecified type
 #'
 #' @param x any vector
 #'
@@ -260,7 +287,7 @@ type.integer = function(x) {
 type.positive_integer = function(x) {
     x = as.numeric(x)
     if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input", call. = FALSE) 
-    if (!all(stats::na.omit(x >= 0))) stop("positive integer smaller than zero", call. = FALSE)
+    if (!all(stats::na.omit(x >= 0))) stop("negative number detected where none allowed", call. = FALSE)
     return(as.integer(x))
 }
 
@@ -294,7 +321,7 @@ type.proportion = function(x) {
 #' @export
 type.positive_double = function(x) {
     x = as.double(x)
-    if (!all(stats::na.omit(x >= 0))) stop("positive double smaller than zero", call. = FALSE)
+    if (!all(stats::na.omit(x >= 0))) stop("negative number detected where none allowed", call. = FALSE)
     return(x)
 }
 
@@ -360,7 +387,7 @@ type.character = as.character
 #' @export
 type.group_unique = function(x) {
     if (is.null(x)) return(character())
-    if (!all(!duplicated(stats::na.omit(x)))) stop("values are not unique within each group", call. = FALSE)
+    if (!all(!duplicated(stats::na.omit(x)))) stop("values are not unique within each group; check grouping is correct", call. = FALSE)
     x
 }
 
@@ -378,14 +405,20 @@ type.group_unique = function(x) {
 #' @export
 type.complete = function(x) {
   if (is.null(x) || length(x)==0) return(x)
-  if (is.factor(x) & !(all(levels(x) %in% as.character(x)))) stop("not all factor levels represented", call. = FALSE)
   if (all(is.na(x))) stop("only missing values found when checking for completeness", call. = FALSE)
-  if (is.numeric(x)) {
+  
+  if (is.factor(x)) {
+    if (!(all(levels(x) %in% as.character(x)))) stop("not all factor levels represented", call. = FALSE)
+    else return(x)
+  } else if (is.numeric(x)) {
     tmp = sort(unique(as.numeric(x)))
     comp = seq(min(tmp,na.rm = TRUE), max(tmp,na.rm = TRUE), .step(tmp))
     if (length(tmp) != length(comp)) stop("full range of numeric values not present", call. = FALSE)
     if (any(abs(tmp-comp) > .Machine$double.eps ^ 0.5)) stop("full range of numeric values not present", call. = FALSE)
+  } else {
+    stop("`complete` constraint used with unsupported column type: ",class(x))
   }
+  
   x    
 }
 
@@ -441,6 +474,33 @@ type.finite = function(x) {
   if (any(!is.finite(x))) stop("non-finite values where none allowed", call. = FALSE)
   return(x)
 }
+
+
+#' Check for a given class
+#' 
+#' Any values of the wrong class will cause failure of validation. This is 
+#' particularly useful for custom vectors of for list types (e.g. `list(of_type(lm))`)
+#'
+#' @param type the class of the type we are checking as a symbol
+#' @param .not_null are NULL values allowed (for list column entries only)
+#' @return a function that can check the input is of the correct type.
+#' @export
+#'
+#' @concept rules
+type.of_type = function(type, .not_null = FALSE) {
+  type = rlang::as_label(rlang::ensym(type))
+  return(
+    function(x) {
+      if (is.null(x)) {
+        if (.not_null) stop(sprintf("NULL values not allowed"), call. = FALSE)
+        return(NULL)
+      }
+      if (!inherits(x,type)) stop(sprintf("incorrect type, should be a `%s`",type), call. = FALSE)
+      return(x)
+    }
+  )
+}
+
 
 # The smallest interval in a vector
 .step = function(x) {

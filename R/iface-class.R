@@ -1,22 +1,28 @@
-#' Define an interface
+#' Construct an interface specification
 #' 
-#' The `iface` function allows us to define the structure of a dataframe in
-#' terms of the columns and column types. An `iface` specification is used to
-#' define the type of a formal parameter in a function, by being the parameters
-#' default value. This definition is picked up by `ivalidate(...)` when used
-#' within that function to ensure the input is correctly formatted. An interface
-#' spec may also be used in `ireturn(...)` to enforce that the output of a
-#' function is correct.
+#' An `iface` specification defines the expected structure of a dataframe, in
+#' terms of the column names, column types, grouping structure and uniqueness
+#' constraints that the dataframe must conform to. A dataframe can be tested
+#' for conformance to an `iface` specification using `iconvert`.
+#' 
+#' An `iface` specification is designed to be used to define the type of a
+#' parameter in a function. This is done by using the `iface` specification as
+#' the default value of the parameter in the function definition. The definition
+#' can then be validated at runtime by a call to `ivalidate(...)` inside the
+#' function.
+#' 
+#' When developing a function output an `iface` specification may also be used
+#' in `ireturn(...)` to enforce that the output of a function is correct.
 #' 
 #' `iface` definitions can be printed and included in `roxygen` documentation
 #' and help us to document input dataframe parameters and dataframe return
-#' values in a standardised way.
+#' values in a standardised way by using the `@iparam` roxygen tag.
 #' 
-#' The specification is in the form of a named list of formulae with the
-#' structure `name = type ~ "documentation"`.
+#' `iface` specifications are defined in the form of a named list of formulae with the
+#' structure `column_name = type ~ "documentation"`.
 #' 
 #' `type` can be one of `r .converters()` (e.g. `enum(level1,level2,...)`,
-#' `in_range(min,max)`) or anything that resolves to a function e.g.
+#' `in_range(min,max)`) or alternatively anything that resolves to a function e.g.
 #' `as.ordered`.
 #'  
 #' If `type` is a function name, then the function must take a single vector
@@ -59,6 +65,8 @@
 #' print(my_iface)
 #' 
 #' # the function x defines a formal `df` with default value of `my_iface`
+#' # this default value is used to validate the structure of the user supplied
+#' # value when the function is called.
 #' x = function(df = my_iface, ...) {
 #'   df = ivalidate(df,...)
 #'   return(df)

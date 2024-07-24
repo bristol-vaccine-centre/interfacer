@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,10 +24,27 @@
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/devtools.html">Tools to work with `interfacer`</a>
+    <a class="dropdown-item" href="../articles/dispatch.html">Multiple dispatch based on dataframes</a>
+    <a class="dropdown-item" href="../articles/nesting.html">Nested dataframes and `purrr` style list columns</a>
+  </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/bristol-vaccine-centre/interfacer/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -35,7 +52,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Support for <code>@iparam</code> tags</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/bristol-vaccine-centre/interfacer/blob/HEAD/R/devtools.R" class="external-link"><code>R/devtools.R</code></a></small>
       <div class="d-none name"><code>roxy_tag_rd.roxy_tag_iparam.Rd</code></div>
     </div>
 
@@ -67,7 +84,8 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="st">"</span></span></span>
+<span class="r-in"><span><span class="co"># An example function definition:</span></span></span>
+<span class="r-in"><span><span class="va">fn_definition</span> <span class="op">&lt;-</span> <span class="st">"</span></span></span>
 <span class="r-in"><span><span class="st">#' This is a title</span></span></span>
 <span class="r-in"><span><span class="st">#' </span></span></span>
 <span class="r-in"><span><span class="st">#' This is the description.</span></span></span>
@@ -83,8 +101,39 @@
 <span class="r-in"><span><span class="st">}</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># tmp = roxygen2::parse_text(text)</span></span></span>
-<span class="r-in"><span><span class="co"># tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())</span></span></span>
+<span class="r-in"><span><span class="co"># For this example we manually parse the function specification in fn_definition</span></span></span>
+<span class="r-in"><span><span class="co"># creating a .Rd block</span></span></span>
+<span class="r-in"><span><span class="va">tmp</span> <span class="op">=</span> <span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/parse_package.html" class="external-link">parse_text</a></span><span class="op">(</span><span class="va">fn_definition</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tmp2</span> <span class="op">=</span> <span class="fu">roxygen2</span><span class="fu">:::</span><span class="fu">block_to_rd.roxy_block</span><span class="op">(</span><span class="va">tmp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,<span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">current_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tmp2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> % Generated by roxygen2: do not edit by hand</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> % Please edit documentation in ./&lt;text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \name{f}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \alias{f}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \title{This is a title}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \usage{</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   df = interfacer::iface(id = integer ~ "an integer `ID`", test = logical ~</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     "the test result")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \arguments{</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \item{df}{the input</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A dataframe containing the following columns: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \itemize{</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \item id (integer) - an integer `ID`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \item test (logical) - the test result</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No mandatory groupings.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No default value.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> \description{</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> This is the description.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

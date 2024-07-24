@@ -18,7 +18,8 @@ Support for \verb{@iparam} tags
 }
 \examples{
 
-text <- "
+# An example function definition:
+fn_definition <- "
 #' This is a title
 #' 
 #' This is the description.
@@ -34,8 +35,11 @@ f <- function(df = interfacer::iface(
 }
 "
 
-# tmp = roxygen2::parse_text(text)
-# tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())
+# For this example we manually parse the function specification in fn_definition
+# creating a .Rd block
+tmp = roxygen2::parse_text(fn_definition)
+tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())
+print(tmp2)
 
 }
 \concept{document}

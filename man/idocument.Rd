@@ -18,7 +18,8 @@ a markdown snippet
 \description{
 This function is expected to be called within the documentation of a function
 as inline code in the parameter documentation of the function. It details the
-expected columns that the input dataframe should possess.
+expected columns that the input dataframe should possess. This has mostly
+been superceded by the \verb{@iparam} roxygen tag which does this automatically.
 }
 \examples{
 #' @param df `r idocument(x, df)`

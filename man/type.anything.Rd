@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-coerce.R
 \name{type.anything}
 \alias{type.anything}
-\title{Coerce a unspecified type}
+\title{Coerce to an unspecified type}
 \usage{
 type.anything(x)
 }
@@ -13,6 +13,6 @@ type.anything(x)
 the input (unless x is \code{NULL} in which case a \code{character()})
 }
 \description{
-Coerce a unspecified type
+Coerce to an unspecified type
 }
 \concept{rules}

@@ -16,9 +16,9 @@ use_iface(
 \item{df}{the data frame to use}
 
 \item{name}{the name of the variable you wish to use (defaults to whatever
-the function is called with)}
+the dataframe was called)}
 
-\item{output}{where to write data documentation code (defaults to \code{R/data.R})}
+\item{output}{where to write data documentation code (defaults to \code{R/interfaces.R})}
 
 \item{use_as_default}{if this is set to true the current dataframe is saved
 as package data and the \code{interfacer::iface} specification is created
@@ -35,5 +35,13 @@ Generating and documenting an \code{iface} for a given dataframe would be time
 consuming and annoying if you can't do it automatically. In this case as you
 interactively develop a package any given dataframe's structure can be
 explicitly documented and made into a specific contract within the package.
+By default all the interface contracts are named and
+}
+\examples{
+# example code
+if (FALSE) {
+  # This is not run as it is designed for interactive use only
+  use_iface(iris) 
+}
 }
 \concept{document}
