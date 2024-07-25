@@ -121,7 +121,9 @@ iclip = function(df, df_name=deparse(substitute(df))) {
 #' This function is expected to be called within the documentation of a function
 #' as inline code in the parameter documentation of the function. It details the
 #' expected columns that the input dataframe should possess. This has mostly
-#' been superceded by the `@iparam` roxygen tag which does this automatically.
+#' been superceded by the `@iparam <name> <description>` roxygen tag which does 
+#' this automatically, however in some circumstances (particularly muliple 
+#' dispatch) you may want to assemble dataframe documentation manually.
 #'
 #' @param fn the function that you are documenting
 #' @param param the parameter you are documenting (optional. if missing defaults
@@ -152,8 +154,8 @@ idocument = function(fn, param = NULL) {
 
 #' Parser for `@iparam` tags
 #' 
-#' The `@iparam` tag can be used in roxygen documentation of a function to
-#' describe a dataframe parameter. The function must be using
+#' The `@iparam <name> <description>` tag can be used in roxygen documentation
+#' of a function to describe a dataframe parameter. The function must be using
 #' `interfacer::iface` to define the input dataframe parameter format. The
 #' `@iparam` tag will then generate documentation about the type of dataframe
 #' the function is expecting.
@@ -163,11 +165,20 @@ idocument = function(fn, param = NULL) {
 #' 
 #' @importFrom roxygen2 roxy_tag_parse
 #' @export
+#' @examples
+#' # This provides support to Roxygen and only gets executed in the context
+#' # of `devtools::document()`. There is no interactive use of this function.
 roxy_tag_parse.roxy_tag_iparam <- function(x) {
   roxygen2::tag_two_part(x,"param","description")
 }
 
 #' Support for `@iparam` tags
+#' 
+#' The `@iparam <name> <description>` tag can be used in roxygen documentation
+#' of a function to describe a dataframe parameter. The function must be using
+#' `interfacer::iface` to define the input dataframe parameter format. The
+#' `@iparam` tag will then generate documentation about the type of dataframe
+#' the function is expecting.
 #' 
 #' @inheritParams roxygen2::roxy_tag_rd
 #' 
@@ -194,8 +205,11 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' }
 #' "
 #' 
-#' # For this example we manually parse the function specification in fn_definition
-#' # creating a .Rd block
+#' # For this example we manually parse the function specification in `fn_definition`
+#' # creating a .Rd block - normally this is done by Roxygen hence the use of 
+#' # an internal Roxygen function here. There is no interactive use of this 
+#' # function outside of a call to `devtools::document`.
+#' 
 #' tmp = roxygen2::parse_text(fn_definition)
 #' tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())
 #' print(tmp2)
@@ -282,11 +296,21 @@ A dataframe containing the following columns:
 #' @param pkg the package (defaults to current)
 #'
 #' @concept document
-#' @return nothing 
+#' @return nothing, used for side effects.
 #' @export
+#' @examples
+#' # example code
+#' if (interactive()) {
+#'   # This is not run as it is designed for interactive use only and will
+#'   # write to the userspace after checking that is what the user wants.
+#'   use_dataframe(iris) 
+#' }
 use_dataframe = function(df, name = deparse(substitute(df)), output = "R/data.R", pkg=".") {
   if (!interactive()) stop("This function can only be used interactively.")
-  if (!utils::askYesNo(glue::glue("This function will write dataframe documentation into `{output}`. Do you want to continue?"))) stop("Operation cancelled.")
+  if (!utils::askYesNo(glue::glue("This function will write dataframe documentation into `{output}`. Do you want to continue?"))) {
+    warning("Operation cancelled.")
+    return(invisible(NULL))
+  }
   pkg = devtools::as.package(pkg)
   tmp = list()
   tmp[[name]] = df
@@ -303,15 +327,18 @@ use_dataframe = function(df, name = deparse(substitute(df)), output = "R/data.R"
 #' Generate interfacer code for a dataframe
 #' 
 #' Generating and documenting an `iface` for a given dataframe would be time
-#' consuming and annoying if you can't do it automatically. In this case as you
-#' interactively develop a package any given dataframe's structure can be
-#' explicitly documented and made into a specific contract within the package.
-#' By default all the interface contracts are named and 
+#' consuming and annoying if you could not do it automatically. In this case as
+#' you interactively develop a package using a test dataframe, the structure of
+#' which can be explicitly documented and made into a specific contract within
+#' the package. This supports development using test dataframes as a prototype
+#' for function ensuring future user input conforms to the same expectations as
+#' the test data.
 #'
 #' @param df the data frame to use
 #' @param name the name of the variable you wish to use (defaults to whatever
 #'   the dataframe was called)
-#' @param output where to write data documentation code (defaults to `R/interfaces.R`)
+#' @param output where within the current package to write data documentation
+#'   code (defaults to `R/interfaces.R`)
 #' @param pkg the package (defaults to current)
 #' @param use_as_default if this is set to true the current dataframe is saved
 #'   as package data and the `interfacer::iface` specification is created
@@ -319,17 +346,21 @@ use_dataframe = function(df, name = deparse(substitute(df)), output = "R/data.R"
 #'   value.
 #'   
 #' @concept document
-#' @return nothing
+#' @return nothing, used for side effects.
 #' @export
 #' @examples
 #' # example code
-#' if (FALSE) {
-#'   # This is not run as it is designed for interactive use only
+#' if (interactive()) {
+#'   # This is not run as it is designed for interactive use only and will
+#'   # write to the userspace after checking that is what the user wants.
 #'   use_iface(iris) 
 #' }
 use_iface = function(df, name = deparse(substitute(df)), output = "R/interfaces.R", use_as_default = FALSE, pkg=".") {
   if (!interactive()) stop("This function can only be used interactively.")
-  if (!utils::askYesNo(glue::glue("This function will write an interface specification into `{output}`. Do you want to continue?"))) stop("Operation cancelled.")
+  if (!utils::askYesNo(glue::glue("This function will write an interface specification into `{output}`. Do you want to continue?"))) {
+    warning("Operation cancelled.")
+    return(invisible(NULL))
+  }
   pkg = devtools::as.package(pkg)
   if (use_as_default) {
     tmp = list()

@@ -14,7 +14,11 @@
 \item{env}{Environment in which to evaluate code (if needed)}
 }
 \description{
-Support for \verb{@iparam} tags
+The \verb{@iparam <name> <description>} tag can be used in roxygen documentation
+of a function to describe a dataframe parameter. The function must be using
+\code{interfacer::iface} to define the input dataframe parameter format. The
+\verb{@iparam} tag will then generate documentation about the type of dataframe
+the function is expecting.
 }
 \examples{
 
@@ -35,8 +39,11 @@ f <- function(df = interfacer::iface(
 }
 "
 
-# For this example we manually parse the function specification in fn_definition
-# creating a .Rd block
+# For this example we manually parse the function specification in `fn_definition`
+# creating a .Rd block - normally this is done by Roxygen hence the use of 
+# an internal Roxygen function here. There is no interactive use of this 
+# function outside of a call to `devtools::document`.
+
 tmp = roxygen2::parse_text(fn_definition)
 tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())
 print(tmp2)

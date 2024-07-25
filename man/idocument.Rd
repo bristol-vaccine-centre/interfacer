@@ -19,7 +19,9 @@ a markdown snippet
 This function is expected to be called within the documentation of a function
 as inline code in the parameter documentation of the function. It details the
 expected columns that the input dataframe should possess. This has mostly
-been superceded by the \verb{@iparam} roxygen tag which does this automatically.
+been superceded by the \verb{@iparam <name> <description>} roxygen tag which does
+this automatically, however in some circumstances (particularly muliple
+dispatch) you may want to assemble dataframe documentation manually.
 }
 \examples{
 #' @param df `r idocument(x, df)`

@@ -347,7 +347,8 @@ listed by searching the help system with `??interfacer::type.` at the console.
 ```{r echo=FALSE}
 tmp = help.search(package = "interfacer", pattern = "type\\..*")
 tmp$matches %>% 
-  dplyr::transmute(Topic = stringr::str_remove(Topic, "type\\."), Title)
+  dplyr::transmute(Topic = stringr::str_remove(Topic, "type\\."), Title) %>%
+  knitr::kable()
   
 ```
 
@@ -355,7 +356,7 @@ The individual help files for these functions explain their use but in an `iface
 specification they are used on the left hand side of a formula and can be composed
 to allow multiple constraints. For example:
 
-```{r}
+```{r eval=FALSE}
 iface(
   col1 = double + finite ~ "A finite double",
   col2 = integer + in_range(0,100) ~ "an integer in the range 0 to 100 inclusive",
@@ -370,7 +371,9 @@ iface(
 
 Column wise default values can be supplied with the `default(...)` pseudo-function
 and ranges with `in_range(...)`. Their documentation is available in 
-`?interfacer::type.default` and `?interfacer::type.in_range`.
+`?interfacer::type.default` and `?interfacer::type.in_range`. It can be noted 
+that although the internal functions are all prefixed with `type.XXX`, the prefix
+is not needed in the `iface` specification.
 
 It is also theoretically possible to supply your own checks in this specification.
 These must be in the form of a function that accepts one vector as input and 

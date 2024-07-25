@@ -381,7 +381,7 @@ type.character = as.character
 #'
 #' @param x any vector
 #'
-#' @return the input, error if any of x is not unique.
+#' @return the input or error if any of x is not unique.
 #' 
 #' @concept rules
 #' @export
@@ -392,12 +392,15 @@ type.group_unique = function(x) {
 }
 
 #' Coerce to a complete set of values.
+#' 
+#' This test checks either for factors that all factor levels are present in the
+#' input, or for numerics if the sequence from minimum to maximum by the
+#' smallest difference are not all (approximately) present. Empty values are
+#' ignored.
 #'
 #' @param x any vector, factor or numeric
 #'
-#' @return the input, error if not all factor levels are present, of for numerics if
-#'   the sequence from minimum to maximum by the smallest difference are not all
-#'   approximately present. Empty values or  are ignored.
+#' @return the input or error if not complete
 #' 
 #' @concept rules
 #' 
@@ -449,7 +452,7 @@ type.default = function(value) {
 #' Any NA values will cause failure of validation. 
 #'
 #' @param x any vector, factor or numeric
-#' @return `x` if no missing values detected
+#' @return the input if no missing values detected, otherwise an error
 #' @export
 #'
 #' @concept rules
@@ -464,7 +467,8 @@ type.not_missing = function(x) {
 #' Any non finite values will cause failure of validation. 
 #'
 #' @param x any vector that can be coerced to numeric
-#' @return the numeric value of `x` if all finite values detected
+#' @return the input coerced to a numeric value, or an error if any non-finite
+#'   values detected
 #' @export
 #'
 #' @concept rules

@@ -10,7 +10,7 @@ type.not_missing(x)
 \item{x}{any vector, factor or numeric}
 }
 \value{
-\code{x} if no missing values detected
+the input if no missing values detected, otherwise an error
 }
 \description{
 Any NA values will cause failure of validation.

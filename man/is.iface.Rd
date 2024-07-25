@@ -2,12 +2,12 @@
 % Please edit documentation in R/iface-class.R
 \name{is.iface}
 \alias{is.iface}
-\title{Check if an object is an interface spec}
+\title{Check if an object is an interface specification}
 \usage{
 is.iface(x, ...)
 }
 \arguments{
-\item{x}{the parameter to check}
+\item{x}{the object to check}
 
 \item{...}{ignored}
 }
@@ -15,6 +15,6 @@ is.iface(x, ...)
 a boolean.
 }
 \description{
-Check if an object is an interface spec
+Check if an object is an interface specification
 }
 \concept{interface}

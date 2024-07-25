@@ -8,7 +8,7 @@
 badge](https://bristol-vaccine-centre.r-universe.dev/badges/interfacer)](https://bristol-vaccine-centre.r-universe.dev)
 <!-- badges: end -->
 
-`Interfacer` is primarily aimed at R package developers. It provides a framework
+`interfacer` is primarily aimed at R package developers. It provides a framework
 for specifying the structure of dataframes as parameters for user functions and
 checking that user supplied dataframes conform to expectations. Missing columns
 or incorrectly typed columns can be identified and useful error messages

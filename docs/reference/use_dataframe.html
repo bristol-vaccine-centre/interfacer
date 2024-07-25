@@ -98,7 +98,7 @@ in the correct format into the right place.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>nothing</p>
+<p>nothing, used for side effects.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -107,12 +107,22 @@ to import <code>interfacer</code> in your package, as none of the generated code
 depend on it.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># example code</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="co"># This is not run as it is designed for interactive use only and will</span></span></span>
+<span class="r-in"><span>  <span class="co"># write to the userspace after checking that is what the user wants.</span></span></span>
+<span class="r-in"><span>  <span class="fu">use_dataframe</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Rob Challen.</p>
+  <p>Developed by Robert Challen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

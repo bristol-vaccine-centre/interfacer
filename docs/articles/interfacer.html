@@ -369,9 +369,10 @@ essentially it inserts the following block into the documentation when
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
-<span><span class="co">#&gt; - id (integer) - an integer ID</span></span>
-<span><span class="co">#&gt; - test (logical) - the test result</span></span>
-<span><span class="co">#&gt; - extra (character) - a new value</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
+<span><span class="co">#&gt; * test (logical) - the test result</span></span>
+<span><span class="co">#&gt; * extra (character) - a new value</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Ungrouped.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -447,51 +448,101 @@ to allow conformance to a subset of factor values.</p>
 however more complex constraints are also available provided in
 <code>interfacer</code>. These can be listed by searching the help
 system with <code>??interfacer::type.</code> at the console.</p>
-<pre><code><span><span class="co">#&gt;               Topic</span></span>
-<span><span class="co">#&gt; 1          anything</span></span>
-<span><span class="co">#&gt; 2         character</span></span>
-<span><span class="co">#&gt; 3          complete</span></span>
-<span><span class="co">#&gt; 4              date</span></span>
-<span><span class="co">#&gt; 5           default</span></span>
-<span><span class="co">#&gt; 6            double</span></span>
-<span><span class="co">#&gt; 7              enum</span></span>
-<span><span class="co">#&gt; 8            factor</span></span>
-<span><span class="co">#&gt; 9            finite</span></span>
-<span><span class="co">#&gt; 10     group_unique</span></span>
-<span><span class="co">#&gt; 11         in_range</span></span>
-<span><span class="co">#&gt; 12          integer</span></span>
-<span><span class="co">#&gt; 13          logical</span></span>
-<span><span class="co">#&gt; 14      not_missing</span></span>
-<span><span class="co">#&gt; 15          numeric</span></span>
-<span><span class="co">#&gt; 16          of_type</span></span>
-<span><span class="co">#&gt; 17  positive_double</span></span>
-<span><span class="co">#&gt; 18 positive_integer</span></span>
-<span><span class="co">#&gt; 19       proportion</span></span>
-<span><span class="co">#&gt;                                                                    Title</span></span>
-<span><span class="co">#&gt; 1                                          Coerce to an unspecified type</span></span>
-<span><span class="co">#&gt; 2                                                 Coerce to a character.</span></span>
-<span><span class="co">#&gt; 3                                    Coerce to a complete set of values.</span></span>
-<span><span class="co">#&gt; 4                                                      Coerce to a Date.</span></span>
-<span><span class="co">#&gt; 5                                       Set a default value for a column</span></span>
-<span><span class="co">#&gt; 6                                                    Coerce to a double.</span></span>
-<span><span class="co">#&gt; 7      Define a conformance rule to match a factor with specific levels.</span></span>
-<span><span class="co">#&gt; 8                                                    Coerce to a factor.</span></span>
-<span><span class="co">#&gt; 9                                            Check for non-finite values</span></span>
-<span><span class="co">#&gt; 10                                             Coerce to a unique value.</span></span>
-<span><span class="co">#&gt; 11 Define a conformance rule to confirm that a numeric is in a set range</span></span>
-<span><span class="co">#&gt; 12                                                     Coerce to integer</span></span>
-<span><span class="co">#&gt; 13                                                   Coerce to a logical</span></span>
-<span><span class="co">#&gt; 14                                              Check for missing values</span></span>
-<span><span class="co">#&gt; 15                                                  Coerce to a numeric.</span></span>
-<span><span class="co">#&gt; 16                                               Check for a given class</span></span>
-<span><span class="co">#&gt; 17                                          Coerce to a positive double.</span></span>
-<span><span class="co">#&gt; 18                                         Coerce to a positive integer.</span></span>
-<span><span class="co">#&gt; 19                                    Coerce to a number between 0 and 1</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="19%">
+<col width="80%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Topic</th>
+<th align="left">Title</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">anything</td>
+<td align="left">Coerce to an unspecified type</td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">Coerce to a character.</td>
+</tr>
+<tr class="odd">
+<td align="left">complete</td>
+<td align="left">Coerce to a complete set of values.</td>
+</tr>
+<tr class="even">
+<td align="left">date</td>
+<td align="left">Coerce to a Date.</td>
+</tr>
+<tr class="odd">
+<td align="left">default</td>
+<td align="left">Set a default value for a column</td>
+</tr>
+<tr class="even">
+<td align="left">double</td>
+<td align="left">Coerce to a double.</td>
+</tr>
+<tr class="odd">
+<td align="left">enum</td>
+<td align="left">Define a conformance rule to match a factor with
+specific levels.</td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">Coerce to a factor.</td>
+</tr>
+<tr class="odd">
+<td align="left">finite</td>
+<td align="left">Check for non-finite values</td>
+</tr>
+<tr class="even">
+<td align="left">group_unique</td>
+<td align="left">Coerce to a unique value.</td>
+</tr>
+<tr class="odd">
+<td align="left">in_range</td>
+<td align="left">Define a conformance rule to confirm that a numeric is
+in a set range</td>
+</tr>
+<tr class="even">
+<td align="left">integer</td>
+<td align="left">Coerce to integer</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">Coerce to a logical</td>
+</tr>
+<tr class="even">
+<td align="left">not_missing</td>
+<td align="left">Check for missing values</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">Coerce to a numeric.</td>
+</tr>
+<tr class="even">
+<td align="left">of_type</td>
+<td align="left">Check for a given class</td>
+</tr>
+<tr class="odd">
+<td align="left">positive_double</td>
+<td align="left">Coerce to a positive double.</td>
+</tr>
+<tr class="even">
+<td align="left">positive_integer</td>
+<td align="left">Coerce to a positive integer.</td>
+</tr>
+<tr class="odd">
+<td align="left">proportion</td>
+<td align="left">Coerce to a number between 0 and 1</td>
+</tr>
+</tbody>
+</table>
 <p>The individual help files for these functions explain their use but
 in an <code>iface</code> specification they are used on the left hand
 side of a formula and can be composed to allow multiple constraints. For
 example:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
 <span>  col1 <span class="op">=</span> <span class="va">double</span> <span class="op">+</span> <span class="va">finite</span> <span class="op">~</span> <span class="st">"A finite double"</span>,</span>
 <span>  col2 <span class="op">=</span> <span class="va">integer</span> <span class="op">+</span> <span class="fu">in_range</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span> <span class="op">~</span> <span class="st">"an integer in the range 0 to 100 inclusive"</span>,</span>
@@ -502,26 +553,18 @@ example:</p>
 <span>  col7 <span class="op">=</span> <span class="va">factor</span> <span class="op">~</span> <span class="st">"Any factor"</span>,</span>
 <span>  col8 <span class="op">=</span> <span class="fu">enum</span><span class="op">(</span><span class="va">`A`</span>,<span class="va">`B`</span>,<span class="va">`C`</span><span class="op">)</span> <span class="op">+</span> <span class="va">not_missing</span> <span class="op">~</span> <span class="st">"A factor with exactly 3 levels A, B and C and no NA values"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>A dataframe containing the following columns: - col1 (double +
-finite) - A finite double - col2 (integer + in_range(0, 100)) - an
-integer in the range 0 to 100 inclusive - col3 (numeric + in_range(0,
-10, include.max = FALSE)) - a numeric 0 &lt;= x &lt; 10 - col4 (date) -
-A date - col5 (logical + not_missing) - A non-NA logical - col6 (logical
-+ default(TRUE)) - A logical with missing (i.e. NA) values coerced to
-TRUE - col7 (factor) - Any factor - col8 (enum(A, B, C) + not_missing) -
-A factor with exactly 3 levels A, B and C and no NA values</p>
-<p>No mandatory groupings.</p>
-<p>No default value.</p>
 <p>Column wise default values can be supplied with the
 <code>default(...)</code> pseudo-function and ranges with
 <code>in_range(...)</code>. Their documentation is available in
 <code><a href="../reference/type.default.html">?interfacer::type.default</a></code> and
-<code><a href="../reference/type.in_range.html">?interfacer::type.in_range</a></code>.</p>
+<code><a href="../reference/type.in_range.html">?interfacer::type.in_range</a></code>. It can be noted that although
+the internal functions are all prefixed with <code>type.XXX</code>, the
+prefix is not needed in the <code>iface</code> specification.</p>
 <p>It is also theoretically possible to supply your own checks in this
 specification. These must be in the form of a function that accepts one
 vector as input and produces one vector as output, or throws an error as
 in this example.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uppercase</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">x</span> <span class="op">!=</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"not upper case input"</span>,call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -549,7 +592,7 @@ be exported and may need to be referred to with package prefix.</p>
 condition. In this example we define a column as a <code>POSIXct</code>
 type, and a second column is defined as a <code>ts</code> class
 vector:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Coerce the `date_col` to a POSIXct and </span></span>
 <span><span class="va">custom_eg_2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span> <span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
@@ -583,7 +626,7 @@ frame supplied at the time of function execution.</p>
 <p>To get a zero length dataframe as the default the value of
 <code>TRUE</code> is passed to the <code>.default</code> value of
 <code>iface</code>:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">i_iris</span> <span class="op">=</span> <span class="fu">interfacer</span><span class="fu">::</span><span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
 <span>    Sepal.Length <span class="op">=</span> <span class="va">numeric</span> <span class="op">~</span> <span class="st">"the Sepal.Length column"</span>,</span>
@@ -613,7 +656,7 @@ frame supplied at the time of function execution.</p>
 <span><span class="co">#&gt; $ Species      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span></span></code></pre></div>
 <p>In this second example the default value is specified during the
 interface specification.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">i_iris_2</span> <span class="op">=</span> <span class="fu">interfacer</span><span class="fu">::</span><span class="fu"><a href="../reference/iface.html">iface</a></span><span class="op">(</span></span>
 <span>    Sepal.Length <span class="op">=</span> <span class="va">numeric</span> <span class="op">~</span> <span class="st">"the Sepal.Length column"</span>,</span>
@@ -642,7 +685,7 @@ interface specification.</p>
 <p>In this third example we override the default on a per function basis
 by supplying a default to <code>ivalidate</code> within the function
 body. In this case the default is just the first 5 rows:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">test_fn_3</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span> <span class="op">=</span> <span class="va">i_iris_2</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">i</span> <span class="op">=</span> <span class="fu"><a href="../reference/ivalidate.html">ivalidate</a></span><span class="op">(</span><span class="va">i</span>, .default <span class="op">=</span> <span class="va">iris</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
@@ -678,7 +721,7 @@ of tools to help developers.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Rob Challen.</p>
+  <p>Developed by Robert Challen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

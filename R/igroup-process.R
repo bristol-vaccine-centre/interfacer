@@ -16,7 +16,7 @@
 #'   may not have been correctly supplied.
 #' @param fn a function to call with the correctly grouped dataframe as specified
 #'   by the `iface` in the enclosing function.
-#' @param ... passed onto `iconvert` this could be used to supply `.imap` or
+#' @param ... passed onto `iconvert` this could be used to supply 
 #'   `.prune` parameters. triple dot parameters in the enclosing function will
 #'   be separately handled and automatically passed to `fn` so in general should
 #'   not be passed to `igroup_process` as an intermediary although it probably
@@ -25,7 +25,7 @@
 #'
 #' @concept interface
 #'
-#' @return the result of calling `fn(df, ...)` 
+#' @return the result of calling `fn(df, ...)` on each unexpected group
 #' @export
 #'
 #' @examples
@@ -39,11 +39,10 @@
 #' )
 #' 
 #' # An example function which would be exported in a package
-#' # The specification implies that only 
 #' ex_mean = function(df = i_diamond_price, extra_param = ".") {
 #'   
-#'   # However this function call allows a more permissive grouping to be
-#'   # accomodated. This will regroup the dataframe according to the structure 
+#'   # When called with a dataframe with extra groups `igroup_process` will 
+#'   # regroup the dataframe according to the structure 
 #'   # defined for `i_diamond_price` and apply the inner function to each group
 #'   # after first calling `ivalidate` on each group.
 #'   
@@ -68,8 +67,10 @@
 #'   ex_mean(extra_param = "without additional groups...") %>% 
 #'   dplyr::glimpse()
 #'   
-#' # The incorrectly grouped dataframe is still processed. The `ex_mean` function calculates the mean
-#' # price for each `cut`,`clarity`, and `color` combination.
+#' # If an additionally grouped dataframe is provided by the user. The `ex_mean` 
+#' # function calculates the mean price for each `cut`,`clarity`, and `color` 
+#' # combination.
+#' 
 #' ggplot2::diamonds %>% 
 #'   dplyr::group_by(cut, color, clarity) %>% 
 #'   ex_mean() %>% 

@@ -10,7 +10,7 @@ type.group_unique(x)
 \item{x}{any vector}
 }
 \value{
-the input, error if any of x is not unique.
+the input or error if any of x is not unique.
 }
 \description{
 Coerce to a unique value.

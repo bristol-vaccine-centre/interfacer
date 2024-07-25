@@ -10,10 +10,14 @@
 \item{x}{A tag}
 }
 \description{
-The \verb{@iparam} tag can be used in roxygen documentation of a function to
-describe a dataframe parameter. The function must be using
+The \verb{@iparam <name> <description>} tag can be used in roxygen documentation
+of a function to describe a dataframe parameter. The function must be using
 \code{interfacer::iface} to define the input dataframe parameter format. The
 \verb{@iparam} tag will then generate documentation about the type of dataframe
 the function is expecting.
+}
+\examples{
+# This provides support to Roxygen and only gets executed in the context
+# of `devtools::document()`. There is no interactive use of this function.
 }
 \concept{document}

@@ -197,14 +197,14 @@ iface = function(..., .groups = NULL, .default = NULL) {
   })
 }
 
-#' Check if an object is an interface spec
-#'
-#' @param x the parameter to check
+#' Check if an object is an interface specification
+#' 
+#' @param x the object to check
 #' @param ... ignored
 #'
 #' @concept interface 
 #'
-#' @return a boolean.
+#' @return a boolean. 
 #' @export
 is.iface = function(x, ...) {
   return(inherits(x,"iface"))
@@ -212,7 +212,8 @@ is.iface = function(x, ...) {
 
 #' Format an `iface` specification for printing
 #' 
-#' @inheritParams base::format
+#' @param x an `iface` specification
+#' @param ... not used.
 #' @exportS3Method base::format iface
 #' @examples
 #' my_iface = iface( 
@@ -239,23 +240,25 @@ format.iface = function(x, ...) {
   
   paste0(c(
     "A dataframe containing the following columns: ",
+    "",
     glue::glue_data(x, "* {name} ({type}) - {doc}"),
+    "",
     g,
+    "",
     opt
   ),collapse="\n")
 }
 
+#' @inherit format.iface
 #' @exportS3Method base::print iface
 print.iface = function(x,...) {
-  cat(format.iface(x))
+  cat(format.iface(x) %>% stringr::str_replace_all("\\n\\n","\n"))
 }
 
+#' @inherit format.iface
 #' @exportS3Method knitr::knit_print iface
 knit_print.iface = function(x,...) {
   tmp = format.iface(x)
-  tmp = tmp %>% 
-    stringr::str_replace_all("\\n","\n\n") %>%
-    stringr::str_replace_all("\\n\\n\\*","\n-")
   return(structure(tmp,class="knit_asis"))
 }
 

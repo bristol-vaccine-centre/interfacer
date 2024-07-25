@@ -21,7 +21,7 @@ use_dataframe(
 \item{pkg}{the package (defaults to current)}
 }
 \value{
-nothing
+nothing, used for side effects.
 }
 \description{
 Using the interfacer framework you can document data during development.
@@ -32,5 +32,13 @@ in the correct format into the right place.
 If this is your only use case for \code{interfacer} then you will not need
 to import \code{interfacer} in your package, as none of the generated code will
 depend on it.
+}
+\examples{
+# example code
+if (interactive()) {
+  # This is not run as it is designed for interactive use only and will
+  # write to the userspace after checking that is what the user wants.
+  use_dataframe(iris) 
+}
 }
 \concept{document}

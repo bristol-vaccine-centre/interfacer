@@ -183,7 +183,8 @@ ireturn = function(df, iface, .prune=FALSE) {
 #' @param .prune do you want to remove non matching columns?
 #' @param .env internal use only
 #'
-#' @return the conformant dataframe
+#' @return the input dataframe coerced to be conformant to the `iface`
+#'   specification, or an informative error is thrown.
 #' @export
 #'
 #' @examples

@@ -10,7 +10,8 @@ type.finite(x)
 \item{x}{any vector that can be coerced to numeric}
 }
 \value{
-the numeric value of \code{x} if all finite values detected
+the input coerced to a numeric value, or an error if any non-finite
+values detected
 }
 \description{
 Any non finite values will cause failure of validation.

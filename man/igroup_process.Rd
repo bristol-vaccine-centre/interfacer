@@ -13,7 +13,7 @@ may not have been correctly supplied.}
 \item{fn}{a function to call with the correctly grouped dataframe as specified
 by the \code{iface} in the enclosing function.}
 
-\item{...}{passed onto \code{iconvert} this could be used to supply \code{.imap} or
+\item{...}{passed onto \code{iconvert} this could be used to supply
 \code{.prune} parameters. triple dot parameters in the enclosing function will
 be separately handled and automatically passed to \code{fn} so in general should
 not be passed to \code{igroup_process} as an intermediary although it probably
@@ -21,7 +21,7 @@ won't hurt. This behaviour is similar to \code{NextMethod} in S3 method
 dispatch.}
 }
 \value{
-the result of calling \code{fn(df, ...)}
+the result of calling \code{fn(df, ...)} on each unexpected group
 }
 \description{
 This function is designed to be used by a package author within an enclosing
@@ -46,11 +46,10 @@ i_diamond_price = interfacer::iface(
 )
 
 # An example function which would be exported in a package
-# The specification implies that only 
 ex_mean = function(df = i_diamond_price, extra_param = ".") {
   
-  # However this function call allows a more permissive grouping to be
-  # accomodated. This will regroup the dataframe according to the structure 
+  # When called with a dataframe with extra groups `igroup_process` will 
+  # regroup the dataframe according to the structure 
   # defined for `i_diamond_price` and apply the inner function to each group
   # after first calling `ivalidate` on each group.
   
@@ -75,8 +74,10 @@ ggplot2::diamonds \%>\%
   ex_mean(extra_param = "without additional groups...") \%>\% 
   dplyr::glimpse()
   
-# The incorrectly grouped dataframe is still processed. The `ex_mean` function calculates the mean
-# price for each `cut`,`clarity`, and `color` combination.
+# If an additionally grouped dataframe is provided by the user. The `ex_mean` 
+# function calculates the mean price for each `cut`,`clarity`, and `color` 
+# combination.
+
 ggplot2::diamonds \%>\% 
   dplyr::group_by(cut, color, clarity) \%>\% 
   ex_mean() \%>\% 

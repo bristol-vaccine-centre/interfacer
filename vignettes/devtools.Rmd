@@ -62,9 +62,85 @@ does not need it afterwards.
 
 # Roxygen documentation
 
-`@iparam <name> <description>` tags can be used in the roxygen documentation
-of an `interfacer` enabled function. This enables `devtools::document()` to 
+`@iparam <name> <description>` tags can be used in the roxygen documentation of
+an `interfacer` enabled function. This enables `devtools::document()` to
 automatically write the documentation for dataframe parameters. It may require
-that you call `library(interfacer)` before running `devtools::document()`.
+that you call `library(interfacer)` before running `devtools::document()`. In
+this example, the `@iparam` tag will be expanded to include the documentation of
+the expected input as defined in the `iface` specification of the `df`
+parameter:
+
+```{r eval=FALSE}
+#' A function
+#' 
+#' @iparam df An input dataframe
+#' @return ... something ...
+test_function = function(df = interfacer::iface(col1 = integer ~ "An integer value")) {
+  df = interfacer::ivalidate(df)
+  # ... main function body ...
+}
+```
+
+The `@iparam` tag picks the `iface` specification from the current function and 
+parameter. A more flexible alternative is provided by `idocument()` which allows
+you to specify the function and parameter you wish to document. This is useful 
+if documenting a generic function that may dispatch to multiple functions based
+on the dataframe structures. 
+
+```{r eval=FALSE}
+
+# This may be defined in the file R/interfaces.R
+i_type1 = interfacer::iface(col1 = integer ~ "An integer value")
+i_type2 = interfacer::iface(col1 = date ~ "A date value")
+
+#' A mulitple dispatch function
+#' 
+#' @param df An input dataframe conforming to one of:
+#' `r interfacer::idocument(test_function.type1, df)`
+#' or
+#' `r interfacer::idocument(test_function.type2, df)` 
+#'
+#' @return ... something ...
+test_function = function(df) {
+  interfacer::idispatch(df,
+    test_function.type1 = i_type1,
+    test_function.type2 = i_type2
+  )
+}
+
+test_function.type1 = function(df = i_type1) {
+  # ... deal with integer input ...
+}
+
+test_function.type1 = function(df = i_type2) {
+  # ... deal with date input ...
+}
+
+```
+
+If, as in the previous example, the `iface` definitions are defined as package
+local variables it is also possible to refer directly to these variables
+in the documentation where they will be expanded to their definition. This is
+also the recommended way to document return values:
+
+```{r eval=FALSE}
+
+# This may be defined in the file R/interfaces.R
+i_input_type = interfacer::iface(col1 = integer ~ "An integer value")
+i_return_type = interfacer::iface(output = date ~ "A date value")
+
+#' An example function
+#' 
+#' @param df An input dataframe conforming to:
+#' `r i_input_type` 
+#'
+#' @return a dataframe of the following format: 
+#' `r i_return_type`
+test_function = function(df = i_input_type) {
+  df = interfacer::ivalidate(df)
+  # ... main function body ...
+  interfacer::ireturn( ...output... , i_return_type)
+}
 
 
+```

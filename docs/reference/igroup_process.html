@@ -84,7 +84,7 @@ by the <code>iface</code> in the enclosing function.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>passed onto <code>iconvert</code> this could be used to supply <code>.imap</code> or
+<dd><p>passed onto <code>iconvert</code> this could be used to supply
 <code>.prune</code> parameters. triple dot parameters in the enclosing function will
 be separately handled and automatically passed to <code>fn</code> so in general should
 not be passed to <code>igroup_process</code> as an intermediary although it probably
@@ -96,9 +96,7 @@ dispatch.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>the result of calling <code>fn(df, ...)</code></p>
-
-
+<p>the result of calling <code>fn(df, ...)</code> on each unexpected group</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -121,11 +119,10 @@ passed to <code>fn</code> and they should have compatible method signatures.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># An example function which would be exported in a package</span></span></span>
-<span class="r-in"><span><span class="co"># The specification implies that only </span></span></span>
 <span class="r-in"><span><span class="va">ex_mean</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span> <span class="op">=</span> <span class="va">i_diamond_price</span>, <span class="va">extra_param</span> <span class="op">=</span> <span class="st">"."</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  </span></span>
-<span class="r-in"><span>  <span class="co"># However this function call allows a more permissive grouping to be</span></span></span>
-<span class="r-in"><span>  <span class="co"># accomodated. This will regroup the dataframe according to the structure </span></span></span>
+<span class="r-in"><span>  <span class="co"># When called with a dataframe with extra groups `igroup_process` will </span></span></span>
+<span class="r-in"><span>  <span class="co"># regroup the dataframe according to the structure </span></span></span>
 <span class="r-in"><span>  <span class="co"># defined for `i_diamond_price` and apply the inner function to each group</span></span></span>
 <span class="r-in"><span>  <span class="co"># after first calling `ivalidate` on each group.</span></span></span>
 <span class="r-in"><span>  </span></span>
@@ -155,8 +152,10 @@ passed to <code>fn</code> and they should have compatible method signatures.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ color      <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> D, E, F, G, H, I, J</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ mean_price <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3169.954, 3076.752, 3724.886, 3999.136, 4486.669, 5091.875,…</span>
 <span class="r-in"><span>  </span></span>
-<span class="r-in"><span><span class="co"># The incorrectly grouped dataframe is still processed. The `ex_mean` function calculates the mean</span></span></span>
-<span class="r-in"><span><span class="co"># price for each `cut`,`clarity`, and `color` combination.</span></span></span>
+<span class="r-in"><span><span class="co"># If an additionally grouped dataframe is provided by the user. The `ex_mean` </span></span></span>
+<span class="r-in"><span><span class="co"># function calculates the mean price for each `cut`,`clarity`, and `color` </span></span></span>
+<span class="r-in"><span><span class="co"># combination.</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/diamonds.html" class="external-link">diamonds</a></span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">color</span>, <span class="va">clarity</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">ex_mean</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
@@ -219,7 +218,7 @@ passed to <code>fn</code> and they should have compatible method signatures.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Rob Challen.</p>
+  <p>Developed by Robert Challen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

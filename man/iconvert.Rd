@@ -33,7 +33,8 @@ iconvert(
 \item{.env}{internal use only}
 }
 \value{
-the conformant dataframe
+the input dataframe coerced to be conformant to the \code{iface}
+specification, or an informative error is thrown.
 }
 \description{
 This function is called by \code{ivalidate} and is not generally intended to be
