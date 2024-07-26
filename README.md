@@ -39,12 +39,12 @@ Suggests:
 ```
 
 This development versions of the package are hosted in the [Bristol Vaccine Centre
-r-universe](https://https://bristol-vaccine-centre.r-universe.dev/).
+r-universe](https://bristol-vaccine-centre.r-universe.dev/).
 Installation from there is as follows:
 
 ``` r
 options(repos = c(
-  "bristol-vaccine-centre" = 'https://https://bristol-vaccine-centre.r-universe.dev/',
+  "bristol-vaccine-centre" = 'https://bristol-vaccine-centre.r-universe.dev/',
   CRAN = 'https://cloud.r-project.org'))
 
 # Download and install interfacer in R

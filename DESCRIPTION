@@ -1,6 +1,6 @@
 Package: interfacer
 Title: Define and Enforce Contracts for Dataframes as Function Parameters
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: 
     person("Robert", "Challen", , "rob.challen@bristol.ac.uk", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5504-7768"))
@@ -12,7 +12,7 @@ Description: A dataframe validation framework for package builders who use
   selectively dispatch to functions depending on the format of a dataframe much 
   like S3 does for classes. It also contains some developer tools to make 
   working with and documenting dataframe specifications easier. It helps package 
-  developers to improve their domcumentation and simplifies parameter validation 
+  developers to improve their documentation and simplifies parameter validation 
   where dataframes are used as function parameters.
 License: MIT + file LICENSE
 Encoding: UTF-8

@@ -11,5 +11,8 @@ please see https://github.com/bristol-vaccine-centre/interfacer/actions/workflow
 
 0 errors | 0 warnings | 1 note
 
+* This is a resubmission to fix a URL issue in README.md and a typo in 
+DESCRIPTION as identified by submission team (sorry).
 * This is a new release.
-* There are no references describing the methods in this package
+* There are no references describing the methods in this package.
+
