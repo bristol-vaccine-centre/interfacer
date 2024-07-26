@@ -5,4 +5,5 @@
 
 # interfacer 0.2.2
 
-* Fixed README.md URL issue and DESCRIPTION typo.
+* Fixed `README.md` URL issue and DESCRIPTION typo.
+* automated spell test
