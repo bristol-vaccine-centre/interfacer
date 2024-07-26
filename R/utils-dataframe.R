@@ -39,9 +39,9 @@ is_col_present = function(df, ...) {
 #'
 #' @param df a dataframe
 #' @param col a column name
-#' @param if_present a purrr style function to execute on the dataframe if the
+#' @param if_present a `purrr` style function to execute on the dataframe if the
 #'   column is present (or a plain value)
-#' @param if_missing a purrr style function to execute on the dataframe if the
+#' @param if_missing a `purrr` style function to execute on the dataframe if the
 #'   column is missing (or a plain value)
 #'
 #' @return either the value of `if_present`/`if_absent` or the result of calling
@@ -52,7 +52,7 @@ is_col_present = function(df, ...) {
 #' iris %>% if_col_present(Species, ~ .x %>% dplyr::rename(new = Species)) %>%
 #'   colnames()
 #' 
-#' # in contrast to purrr absolute values are not interpreted as function names  
+#' # in contrast to `purrr` absolute values are not interpreted as function names  
 #' iris %>% if_col_present(Species2, "Yes", "No")
 #' 
 if_col_present = function(df, col, if_present, if_missing = ~ .x) {
@@ -79,7 +79,7 @@ if_col_present = function(df, col, if_present, if_missing = ~ .x) {
 #'   `.x` as the single parameter
 #'
 #' @return the result of applying `purrr function` to `.x` in the case where
-#'   `predicate` evaluates to true. bothe predicate and function can refer to 
+#'   `predicate` evaluates to true. Both predicate and function can refer to 
 #'   the pipeline dataframe using `.x`
 #' @export
 #'

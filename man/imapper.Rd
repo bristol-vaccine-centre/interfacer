@@ -2,7 +2,7 @@
 % Please edit documentation in R/imapper.R
 \name{imapper}
 \alias{imapper}
-\title{Specify mappings that can make dataframes compatible with an \code{iface} specfication}
+\title{Specify mappings that can make dataframes compatible with an \code{iface} specification}
 \usage{
 imapper(...)
 }

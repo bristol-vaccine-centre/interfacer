@@ -142,13 +142,15 @@ entry in <code>R/data.R</code> for your dataframe documentation.</p>
 the documentation but does not need it afterwards.</p>
 </div>
 <div class="section level2">
-<h2 id="roxygen-documentation">Roxygen documentation<a class="anchor" aria-label="anchor" href="#roxygen-documentation"></a>
+<h2 id="roxygen2-documentation">
+<code>roxygen2</code> documentation<a class="anchor" aria-label="anchor" href="#roxygen2-documentation"></a>
 </h2>
 <p><code>@iparam &lt;name&gt; &lt;description&gt;</code> tags can be
-used in the roxygen documentation of an <code>interfacer</code> enabled
-function. This enables <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to
-automatically write the documentation for dataframe parameters. It may
-require that you call <code><a href="https://bristol-vaccine-centre.github.io/interfacer/" class="external-link">library(interfacer)</a></code> before running
+used in the <code>roxygen2</code> documentation of an
+<code>interfacer</code> enabled function. This enables
+<code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> to automatically write the
+documentation for dataframe parameters. It may require that you call
+<code><a href="https://bristol-vaccine-centre.github.io/interfacer/" class="external-link">library(interfacer)</a></code> before running
 <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code>. In this example, the
 <code>@iparam</code> tag will be expanded to include the documentation
 of the expected input as defined in the <code>iface</code> specification

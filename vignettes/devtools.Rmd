@@ -60,9 +60,9 @@ which will create an entry in `R/data.R` for your dataframe documentation.
 This function uses the `interfacer` framework to generate the documentation but 
 does not need it afterwards.
 
-# Roxygen documentation
+# `roxygen2` documentation
 
-`@iparam <name> <description>` tags can be used in the roxygen documentation of
+`@iparam <name> <description>` tags can be used in the `roxygen2` documentation of
 an `interfacer` enabled function. This enables `devtools::document()` to
 automatically write the documentation for dataframe parameters. It may require
 that you call `library(interfacer)` before running `devtools::document()`. In

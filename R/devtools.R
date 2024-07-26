@@ -116,13 +116,13 @@ iclip = function(df, df_name=deparse(substitute(df))) {
   return(paste0("as.",tmp))
 } 
 
-#' Document an interface contract for inserting into `roxygen`
+#' Document an interface contract for inserting into `roxygen2`
 #'
 #' This function is expected to be called within the documentation of a function
 #' as inline code in the parameter documentation of the function. It details the
 #' expected columns that the input dataframe should possess. This has mostly
-#' been superceded by the `@iparam <name> <description>` roxygen tag which does 
-#' this automatically, however in some circumstances (particularly muliple 
+#' been superseded by the `@iparam <name> <description>` `roxygen2` tag which does 
+#' this automatically, however in some circumstances (particularly multiple 
 #' dispatch) you may want to assemble dataframe documentation manually.
 #'
 #' @param fn the function that you are documenting
@@ -154,7 +154,7 @@ idocument = function(fn, param = NULL) {
 
 #' Parser for `@iparam` tags
 #' 
-#' The `@iparam <name> <description>` tag can be used in roxygen documentation
+#' The `@iparam <name> <description>` tag can be used in `roxygen2` documentation
 #' of a function to describe a dataframe parameter. The function must be using
 #' `interfacer::iface` to define the input dataframe parameter format. The
 #' `@iparam` tag will then generate documentation about the type of dataframe
@@ -166,7 +166,7 @@ idocument = function(fn, param = NULL) {
 #' @importFrom roxygen2 roxy_tag_parse
 #' @export
 #' @examples
-#' # This provides support to Roxygen and only gets executed in the context
+#' # This provides support to `roxygen2` and only gets executed in the context
 #' # of `devtools::document()`. There is no interactive use of this function.
 roxy_tag_parse.roxy_tag_iparam <- function(x) {
   roxygen2::tag_two_part(x,"param","description")
@@ -174,7 +174,7 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 
 #' Support for `@iparam` tags
 #' 
-#' The `@iparam <name> <description>` tag can be used in roxygen documentation
+#' The `@iparam <name> <description>` tag can be used in `roxygen2` documentation
 #' of a function to describe a dataframe parameter. The function must be using
 #' `interfacer::iface` to define the input dataframe parameter format. The
 #' `@iparam` tag will then generate documentation about the type of dataframe
@@ -206,8 +206,8 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' "
 #' 
 #' # For this example we manually parse the function specification in `fn_definition`
-#' # creating a .Rd block - normally this is done by Roxygen hence the use of 
-#' # an internal Roxygen function here. There is no interactive use of this 
+#' # creating a .Rd block - normally this is done by `roxygen2` hence the use of 
+#' # an internal `roxygen2` function here. There is no interactive use of this 
 #' # function outside of a call to `devtools::document`.
 #' 
 #' tmp = roxygen2::parse_text(fn_definition)

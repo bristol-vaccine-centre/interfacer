@@ -76,12 +76,12 @@
 
 
 <dt>if_present</dt>
-<dd><p>a purrr style function to execute on the dataframe if the
+<dd><p>a <code>purrr</code> style function to execute on the dataframe if the
 column is present (or a plain value)</p></dd>
 
 
 <dt>if_missing</dt>
-<dd><p>a purrr style function to execute on the dataframe if the
+<dd><p>a <code>purrr</code> style function to execute on the dataframe if the
 column is missing (or a plain value)</p></dd>
 
 </dl></div>
@@ -99,7 +99,7 @@ column is missing (or a plain value)</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"  "new"         </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># in contrast to purrr absolute values are not interpreted as function names  </span></span></span>
+<span class="r-in"><span><span class="co"># in contrast to `purrr` absolute values are not interpreted as function names  </span></span></span>
 <span class="r-in"><span><span class="va">iris</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">if_col_present</span><span class="op">(</span><span class="va">Species2</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "No"</span>
 <span class="r-in"><span></span></span>

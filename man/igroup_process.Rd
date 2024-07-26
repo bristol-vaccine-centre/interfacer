@@ -31,7 +31,7 @@ have an \code{iface} specified for that dataframe.
 \details{
 This function detects when the grouping of the input has additional groups
 over and above those in the specification and intercepts them, regrouping
-the dataframe and applying \code{fn} groupwise using an equivalent of a
+the dataframe and applying \code{fn} group-wise using an equivalent of a
 \code{dplyr::group_modify}. The parameters provided to the enclosing function will be
 passed to \code{fn} and they should have compatible method signatures.
 }

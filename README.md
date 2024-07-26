@@ -13,7 +13,7 @@ for specifying the structure of dataframes as parameters for user functions and
 checking that user supplied dataframes conform to expectations. Missing columns
 or incorrectly typed columns can be identified and useful error messages
 returned. Specifying structure is part of the function definition and can be
-automatically included in Roxygen documentation.
+automatically included in `roxygen2` documentation.
 
 ## Installation
 

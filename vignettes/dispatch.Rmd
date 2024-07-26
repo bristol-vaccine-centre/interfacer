@@ -197,7 +197,7 @@ pipeline, but the same outcome:
 process(tibble::tibble(p=0.15,n=1000)) %>% dplyr::glimpse()
 ```
 Care must be taken though in this pattern, particularly if you are re-using
-column names,as datatype coercion could result in some column types being
+column names,as data-type coercion could result in some column types being
 switched backwards and forwards, and other infinite loop problems.
 
 ## Grouping based dispatch

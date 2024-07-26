@@ -1,4 +1,4 @@
-#' Generate a zero length tibble conforming to an `iface` specification
+#' Generate a zero length dataframe conforming to an `iface` specification
 #' 
 #' This function is used internally for default values for a dataframe
 #' parameter. It generates a zero length dataframe that conforms to a `iface`
@@ -8,7 +8,7 @@
 #'
 #' @param iface the specification
 #'
-#' @return a tibble conforming to `iface`
+#' @return a dataframe conforming to `iface`
 #' @export
 #'
 #' @concept interface 

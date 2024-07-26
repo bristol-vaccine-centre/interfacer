@@ -1,6 +1,7 @@
 
 
-#' Perform interface checks on dataframe by looking at enclosing function formals
+#' Perform interface checks on dataframe inputs using enclosing function formal
+#'  parameter definitions
 #'
 #' `ivalidate(...)` is intended to be used within a function to check the validity of a data
 #' frame parameter (usually the first parameter) against an `ispec` which is 
@@ -15,7 +16,7 @@
 #' @param .default a default dataframe conforming to the specification. This
 #'   overrides any defaults defined in the interface specification
 #'
-#' @return a dataframe based on df with validity checks passed and `.imap`
+#' @return a dataframe based on `df` with validity checks passed and `.imap`
 #'   mappings applied if present
 #' @export
 #' 
@@ -76,8 +77,8 @@ ivalidate = function(df = NULL, ..., .imap=imapper(), .prune=FALSE, .default = N
 #' @param iface the interface specification that `df` should conform to.
 #' @param .prune get rid of excess columns that are not in the spec.
 #'
-#' @return a dataframe based on df with validity checks passed,
-#'   datatypes coerced, and correct grouping applied to conform to `iface`
+#' @return a dataframe based on `df` with validity checks passed,
+#'   data-types coerced, and correct grouping applied to conform to `iface`
 #' @export
 #' 
 #' @concept interface 

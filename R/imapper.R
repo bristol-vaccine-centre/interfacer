@@ -1,4 +1,4 @@
-#' Specify mappings that can make dataframes compatible with an `iface` specfication
+#' Specify mappings that can make dataframes compatible with an `iface` specification
 #' 
 #' When a function uses `ivalidate` internally to check a dataframe conforms to 
 #' the input it can attempt to rescue an incorrectly formatted dataframe.

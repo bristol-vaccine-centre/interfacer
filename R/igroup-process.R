@@ -8,7 +8,7 @@
 #' 
 #' This function detects when the grouping of the input has additional groups
 #' over and above those in the specification and intercepts them, regrouping
-#' the dataframe and applying `fn` groupwise using an equivalent of a 
+#' the dataframe and applying `fn` group-wise using an equivalent of a 
 #' `dplyr::group_modify`. The parameters provided to the enclosing function will be 
 #' passed to `fn` and they should have compatible method signatures.
 #'

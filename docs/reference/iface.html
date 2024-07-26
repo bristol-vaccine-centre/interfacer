@@ -86,15 +86,15 @@ for conformance to an <code>iface</code> specification using <code>iconvert</cod
 <code>~ var1 + var2 + ...</code> which defines what columns must be grouped in the dataframe
 (and in which order). If <code>NULL</code> (the default) then any grouping is permitted.
 If the formula contains a dot e.g. <code>~ . + var1 + var2</code> then the grouping
-must include var1 and var2 but other groups are also allowed.</p></dd>
+must include <code>var1</code> and <code>var2</code> but other groups are also allowed.</p></dd>
 
 
 <dt>.default</dt>
 <dd><p>a default value to supply if there is nothing given in a
 function parameter using the <code>iface</code> as a formal. This is either <code>NULL</code> in
 which case there is no default, <code>TRUE</code> in which case the default is a zero
-row tibble conforming to the spec, or a provided dataframe, which is checked to
-conform, and used as the default.</p></dd>
+row dataframe conforming to the specification, or a provided dataframe,
+which is checked to conform, and used as the default.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -112,9 +112,9 @@ can then be validated at runtime by a call to <code>ivalidate(...)</code> inside
 function.</p>
 <p>When developing a function output an <code>iface</code> specification may also be used
 in <code>ireturn(...)</code> to enforce that the output of a function is correct.</p>
-<p><code>iface</code> definitions can be printed and included in <code>roxygen</code> documentation
+<p><code>iface</code> definitions can be printed and included in <code>roxygen2</code> documentation
 and help us to document input dataframe parameters and dataframe return
-values in a standardised way by using the <code>@iparam</code> roxygen tag.</p>
+values in a standardised way by using the <code>@iparam</code> <code>roxygen2</code> tag.</p>
 <p><code>iface</code> specifications are defined in the form of a named list of formulae with the
 structure <code>column_name = type ~ "documentation"</code>.</p>
 <p><code>type</code> can be one of <code>anything</code>, <code>character</code>, <code>complete</code>, <code>date</code>, <code>default</code>, <code>double</code>, <code>enum</code>, <code>factor</code>, <code>finite</code>, <code>group_unique</code>, <code>in_range</code>, <code>integer</code>, <code>logical</code>, <code>not_missing</code>, <code>numeric</code>, <code>of_type</code>, <code>positive_double</code>, <code>positive_integer</code>, <code>proportion</code> (e.g. <code>enum(level1,level2,...)</code>,

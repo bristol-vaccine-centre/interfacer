@@ -2,7 +2,7 @@
 % Please edit documentation in R/devtools.R
 \name{idocument}
 \alias{idocument}
-\title{Document an interface contract for inserting into \code{roxygen}}
+\title{Document an interface contract for inserting into \code{roxygen2}}
 \usage{
 idocument(fn, param = NULL)
 }
@@ -19,8 +19,8 @@ a markdown snippet
 This function is expected to be called within the documentation of a function
 as inline code in the parameter documentation of the function. It details the
 expected columns that the input dataframe should possess. This has mostly
-been superceded by the \verb{@iparam <name> <description>} roxygen tag which does
-this automatically, however in some circumstances (particularly muliple
+been superseded by the \verb{@iparam <name> <description>} \code{roxygen2} tag which does
+this automatically, however in some circumstances (particularly multiple
 dispatch) you may want to assemble dataframe documentation manually.
 }
 \examples{

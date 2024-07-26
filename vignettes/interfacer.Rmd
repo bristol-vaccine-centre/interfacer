@@ -30,7 +30,7 @@ input dataframes.
 
 `interfacer` provides a mechanism for simply specifying input dataframe
 constraints as an `iface` specification, a one liner for validating input, and
-an roxygen tag for automating documentation of dataframe inputs. This is not
+an `roxygen2` tag for automating documentation of dataframe inputs. This is not
 dissimilar conceptually to the definition of a table in a relational database,
 or the specification of an XML schema.
 
@@ -59,8 +59,8 @@ cat(print(i_test))
 An `iface` specification is associated with a specific function parameter by
 being set as the default value for that parameter. This is a dummy default value
 but when combined with `ivalidate` in the function body a user supplied
-dataframe is validated to ensure it is of the right shape. We can use 
-`@iparam <param> <description>` in the Roxygen skeleton to document the dataframe
+dataframe is validated to ensure it is of the right shape. We can use `@iparam
+<param> <description>` in the `roxygen2` documentation to describe the dataframe
 constraints.
 
 ```{r}
@@ -270,9 +270,9 @@ which is an interactive for of `ivalidate`.
 
 # Documentation
 
-The roxygen block of documentation for this second interface is determined by
+The `roxygen2` block of documentation for this second interface is determined by
 the `#' @iparam` block, which uses the underlying function `idocument`. 
-Demonstrating the behaviour of the `@iparam` roxygen tag is hard in a vignette
+Demonstrating the behaviour of the `@iparam` `roxygen2` tag is hard in a vignette
 but essentially it inserts the following block into the documentation when
 `devtools::document` is called:
 
@@ -285,7 +285,7 @@ cat(idocument(example_fn2))
 `interfacer` does not implement a rigid type system, but rather a permissive one. 
 If the provided data can be coerced to the specified type without major loss then 
 this is automatically done, as long as it can proceed with no warnings. In this 
-example `id` (expected to be an int) is provided as a `character` and `extra` 
+example `id` (expected to be an integer) is provided as a `character` and `extra` 
 (expected to be a character) is coerced from the provided numeric.
 
 ```{r}
@@ -340,7 +340,7 @@ if (rlang::is_installed("ggplot2")) {
 
 # More complex type constraints
 
-The type of a dataframe column can be defined as a basic datatype, however more
+The type of a dataframe column can be defined as a basic data-type, however more
 complex constraints are also available provided in `interfacer`. These can be 
 listed by searching the help system with `??interfacer::type.` at the console.
 
@@ -505,11 +505,11 @@ test_fn_3() %>% dplyr::glimpse()
 # Conclusion
 
 This vignette covers the primary validation functions of `interfacer`, including
-missing columns, datatype checks and enforcing grouping structure. Automation
+missing columns, data-type checks and enforcing grouping structure. Automation
 of documentation and interface composition is also covered.
 
 Please see the other vignettes for topics such as function dispatch based on 
-`iface` specifications, automatically handling grouped input, nesting and purrr
+`iface` specifications, automatically handling grouped input, nesting and `purrr`
 style list columns, and a quick summary of tools to help developers.
 
 

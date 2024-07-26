@@ -15,8 +15,8 @@ function is assumed to be a dataframe.}
 \item{.prune}{get rid of excess columns that are not in the spec.}
 }
 \value{
-a dataframe based on df with validity checks passed,
-datatypes coerced, and correct grouping applied to conform to \code{iface}
+a dataframe based on \code{df} with validity checks passed,
+data-types coerced, and correct grouping applied to conform to \code{iface}
 }
 \description{
 This is intended to be used within a function to check the validity of a data

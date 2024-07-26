@@ -2,7 +2,8 @@
 % Please edit documentation in R/interfacer.R
 \name{ivalidate}
 \alias{ivalidate}
-\title{Perform interface checks on dataframe by looking at enclosing function formals}
+\title{Perform interface checks on dataframe inputs using enclosing function formal
+parameter definitions}
 \usage{
 ivalidate(df = NULL, ..., .imap = imapper(), .prune = FALSE, .default = NULL)
 }
@@ -21,7 +22,7 @@ function is assumed to be a dataframe.}
 overrides any defaults defined in the interface specification}
 }
 \value{
-a dataframe based on df with validity checks passed and \code{.imap}
+a dataframe based on \code{df} with validity checks passed and \code{.imap}
 mappings applied if present
 }
 \description{

@@ -14,13 +14,13 @@ iface(..., .groups = NULL, .default = NULL)
 \code{~ var1 + var2 + ...} which defines what columns must be grouped in the dataframe
 (and in which order). If \code{NULL} (the default) then any grouping is permitted.
 If the formula contains a dot e.g. \code{~ . + var1 + var2} then the grouping
-must include var1 and var2 but other groups are also allowed.}
+must include \code{var1} and \code{var2} but other groups are also allowed.}
 
 \item{.default}{a default value to supply if there is nothing given in a
 function parameter using the \code{iface} as a formal. This is either \code{NULL} in
 which case there is no default, \code{TRUE} in which case the default is a zero
-row tibble conforming to the spec, or a provided dataframe, which is checked to
-conform, and used as the default.}
+row dataframe conforming to the specification, or a provided dataframe,
+which is checked to conform, and used as the default.}
 }
 \value{
 the definition of an interface as a \code{iface} object
@@ -41,9 +41,9 @@ function.
 When developing a function output an \code{iface} specification may also be used
 in \code{ireturn(...)} to enforce that the output of a function is correct.
 
-\code{iface} definitions can be printed and included in \code{roxygen} documentation
+\code{iface} definitions can be printed and included in \code{roxygen2} documentation
 and help us to document input dataframe parameters and dataframe return
-values in a standardised way by using the \verb{@iparam} roxygen tag.
+values in a standardised way by using the \verb{@iparam} \code{roxygen2} tag.
 
 \code{iface} specifications are defined in the form of a named list of formulae with the
 structure \code{column_name = type ~ "documentation"}.

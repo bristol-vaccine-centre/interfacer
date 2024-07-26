@@ -6,7 +6,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-5504-7768"))
 Description: A dataframe validation framework for package builders who use 
   dataframes as function parameters. It performs checks on column names, coerces
-  datatypes, and checks grouping to make sure user inputs conform to a 
+  data-types, and checks grouping to make sure user inputs conform to a 
   specification provided by the package author. It provides a mechanism for 
   package authors to automatically document supported dataframe inputs and 
   selectively dispatch to functions depending on the format of a dataframe much 
@@ -18,6 +18,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Language: en-GB
 Imports: 
     dplyr,
     glue,
@@ -42,7 +43,8 @@ Suggests:
     whisker,
     clipr,
     tidyr,
-    binom
+    binom,
+    spelling
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Depends: 

@@ -14,7 +14,7 @@ switch_pipeline(.x, ...)
 }
 \value{
 the result of applying \verb{purrr function} to \code{.x} in the case where
-\code{predicate} evaluates to true. bothe predicate and function can refer to
+\code{predicate} evaluates to true. Both predicate and function can refer to
 the pipeline dataframe using \code{.x}
 }
 \description{

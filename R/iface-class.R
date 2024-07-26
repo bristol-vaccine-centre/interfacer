@@ -14,9 +14,9 @@
 #' When developing a function output an `iface` specification may also be used
 #' in `ireturn(...)` to enforce that the output of a function is correct.
 #' 
-#' `iface` definitions can be printed and included in `roxygen` documentation
+#' `iface` definitions can be printed and included in `roxygen2` documentation
 #' and help us to document input dataframe parameters and dataframe return
-#' values in a standardised way by using the `@iparam` roxygen tag.
+#' values in a standardised way by using the `@iparam` `roxygen2` tag.
 #' 
 #' `iface` specifications are defined in the form of a named list of formulae with the
 #' structure `column_name = type ~ "documentation"`.
@@ -38,12 +38,12 @@
 #'   `~ var1 + var2 + ...` which defines what columns must be grouped in the dataframe
 #'   (and in which order). If `NULL` (the default) then any grouping is permitted.
 #'   If the formula contains a dot e.g. `~ . + var1 + var2` then the grouping
-#'   must include var1 and var2 but other groups are also allowed.
-#' @param .default a default value to supply if there is nothing given in a 
-#'   function parameter using the `iface` as a formal. This is either `NULL` in 
+#'   must include `var1` and `var2` but other groups are also allowed.
+#' @param .default a default value to supply if there is nothing given in a
+#'   function parameter using the `iface` as a formal. This is either `NULL` in
 #'   which case there is no default, `TRUE` in which case the default is a zero
-#'   row tibble conforming to the spec, or a provided dataframe, which is checked to 
-#'   conform, and used as the default.
+#'   row dataframe conforming to the specification, or a provided dataframe,
+#'   which is checked to conform, and used as the default.
 #'
 #' @concept interface 
 #'

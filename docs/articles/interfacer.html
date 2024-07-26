@@ -100,10 +100,10 @@ detailed documentation about the nature of accepted input
 dataframes.</p>
 <p><code>interfacer</code> provides a mechanism for simply specifying
 input dataframe constraints as an <code>iface</code> specification, a
-one liner for validating input, and an roxygen tag for automating
-documentation of dataframe inputs. This is not dissimilar conceptually
-to the definition of a table in a relational database, or the
-specification of an XML schema.</p>
+one liner for validating input, and an <code>roxygen2</code> tag for
+automating documentation of dataframe inputs. This is not dissimilar
+conceptually to the definition of a table in a relational database, or
+the specification of an XML schema.</p>
 <p><code>interfacer</code> also provides capabilities that support
 checking dataframe function outputs, dispatching to functions based on
 dataframe input structure, and flexibly handling unexpectedly grouped
@@ -134,8 +134,9 @@ function parameter by being set as the default value for that parameter.
 This is a dummy default value but when combined with
 <code>ivalidate</code> in the function body a user supplied dataframe is
 validated to ensure it is of the right shape. We can use
-<code>@iparam &lt;param&gt; &lt;description&gt;</code> in the Roxygen
-skeleton to document the dataframe constraints.</p>
+<code>@iparam &lt;param&gt; &lt;description&gt;</code> in the
+<code>roxygen2</code> documentation to describe the dataframe
+constraints.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' An example function</span></span>
 <span><span class="co">#'</span></span>
@@ -360,12 +361,12 @@ used <code>iconvert</code> which is an interactive for of
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The roxygen block of documentation for this second interface is
-determined by the <code>#' @iparam</code> block, which uses the
-underlying function <code>idocument</code>. Demonstrating the behaviour
-of the <code>@iparam</code> roxygen tag is hard in a vignette but
-essentially it inserts the following block into the documentation when
-<code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document</a></code> is called:</p>
+<p>The <code>roxygen2</code> block of documentation for this second
+interface is determined by the <code>#' @iparam</code> block, which uses
+the underlying function <code>idocument</code>. Demonstrating the
+behaviour of the <code>@iparam</code> <code>roxygen2</code> tag is hard
+in a vignette but essentially it inserts the following block into the
+documentation when <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document</a></code> is called:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/idocument.html">idocument</a></span><span class="op">(</span><span class="va">example_fn2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
@@ -385,7 +386,7 @@ essentially it inserts the following block into the documentation when
 rather a permissive one. If the provided data can be coerced to the
 specified type without major loss then this is automatically done, as
 long as it can proceed with no warnings. In this example <code>id</code>
-(expected to be an int) is provided as a <code>character</code> and
+(expected to be an integer) is provided as a <code>character</code> and
 <code>extra</code> (expected to be a character) is coerced from the
 provided numeric.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -444,7 +445,7 @@ to allow conformance to a subset of factor values.</p>
 <div class="section level2">
 <h2 id="more-complex-type-constraints">More complex type constraints<a class="anchor" aria-label="anchor" href="#more-complex-type-constraints"></a>
 </h2>
-<p>The type of a dataframe column can be defined as a basic datatype,
+<p>The type of a dataframe column can be defined as a basic data-type,
 however more complex constraints are also available provided in
 <code>interfacer</code>. These can be listed by searching the help
 system with <code>??interfacer::type.</code> at the console.</p>
@@ -706,13 +707,13 @@ body. In this case the default is just the first 5 rows:</p>
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
 <p>This vignette covers the primary validation functions of
-<code>interfacer</code>, including missing columns, datatype checks and
+<code>interfacer</code>, including missing columns, data-type checks and
 enforcing grouping structure. Automation of documentation and interface
 composition is also covered.</p>
 <p>Please see the other vignettes for topics such as function dispatch
 based on <code>iface</code> specifications, automatically handling
-grouped input, nesting and purrr style list columns, and a quick summary
-of tools to help developers.</p>
+grouped input, nesting and <code>purrr</code> style list columns, and a
+quick summary of tools to help developers.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
