@@ -214,6 +214,7 @@ is.iface = function(x, ...) {
 #' 
 #' @param x an `iface` specification
 #' @param ... not used.
+#' @return a formatted string representation of an iface
 #' @exportS3Method base::format iface
 #' @examples
 #' my_iface = iface( 
@@ -269,6 +270,13 @@ knit_print.iface = function(x,...) {
 #' @inheritParams base::as.list
 #' @param flatten get a list of lists representation instead
 #'   of the dataframe column by column list.
+#' @return a list representation of the `iface` input.
+#' @examples
+#' my_iface = iface( 
+#'   col1 = integer + group_unique ~ "an integer column"
+#' )
+#' 
+#' as.list(my_iface, flatten=TRUE)
 as.list.iface = function(x, ..., flatten=FALSE) {
   if (flatten) return(
     return(list(

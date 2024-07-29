@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{A tag}
 }
+\value{
+a roxy_tag object with the val field set to the parsed value
+}
 \description{
 The \verb{@iparam <name> <description>} tag can be used in \code{roxygen2} documentation
 of a function to describe a dataframe parameter. The function must be using

@@ -14,6 +14,16 @@
 \item{flatten}{get a list of lists representation instead
 of the dataframe column by column list.}
 }
+\value{
+a list representation of the \code{iface} input.
+}
 \description{
 Cast an \code{iface} to a plain list.
+}
+\examples{
+my_iface = iface( 
+  col1 = integer + group_unique ~ "an integer column"
+)
+
+as.list(my_iface, flatten=TRUE)
 }

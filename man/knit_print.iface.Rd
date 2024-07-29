@@ -11,6 +11,9 @@ knit_print.iface(x, ...)
 
 \item{...}{not used.}
 }
+\value{
+a formatted string representation of an iface
+}
 \description{
 Format an \code{iface} specification for printing
 }

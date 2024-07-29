@@ -26,6 +26,6 @@ If the dataframe contains one or more list columns with nested dataframes
 the nested dataframes are also defined using a second \code{iface} specification.
 }
 \examples{
-if(FALSE) iclip(iris)
+if (interactive()) iclip(iris)
 }
 \concept{document}

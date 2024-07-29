@@ -11,8 +11,13 @@ please see https://github.com/bristol-vaccine-centre/interfacer/actions/workflow
 
 0 errors | 0 warnings | 1 note
 
-* This is a resubmission to fix a URL issue in README.md and a typo in 
-DESCRIPTION as identified by submission team (sorry).
+* This is a resubmission to fix issues identified in CRAN submission v0.2.2:
+1) additional spaces in DESCRIPTION file. FIXED
+2) functions missing return values. FIXED
+3) example containing unexported method. REMOVED
+4) `if (FALSE)` stanza in examples for function that can only be used interactively. FIXED
+
+
 * This is a new release.
 * There are no references describing the methods in this package.
 

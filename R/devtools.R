@@ -19,8 +19,14 @@
 #' @export
 #'
 #' @examples
-#' if(FALSE) iclip(iris)
+#' if (interactive()) iclip(iris)
 iclip = function(df, df_name=deparse(substitute(df))) {
+  
+  if (!interactive()) stop("`iclip` is only designed to be used interactively.")
+  if (!utils::askYesNo(glue::glue("This function will write an interface specification onto the clipboard replacing current contents. Do you want to continue?"))) {
+    warning("Operation cancelled.")
+    return(invisible(NULL))
+  }
   
   tmp = .infer_nested_structure(df, paste0("i_",df_name))
   
@@ -164,6 +170,7 @@ idocument = function(fn, param = NULL) {
 #' @concept document
 #' 
 #' @importFrom roxygen2 roxy_tag_parse
+#' @return a roxy_tag object with the val field set to the parsed value
 #' @export
 #' @examples
 #' # This provides support to `roxygen2` and only gets executed in the context
@@ -184,6 +191,7 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' 
 #' @importFrom roxygen2 roxy_tag_rd
 #' @concept document
+#' @return an `roxygen2::rd_section` (see roxygen documentation)
 #' @export
 #' 
 #' @examples 
@@ -206,13 +214,12 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' "
 #' 
 #' # For this example we manually parse the function specification in `fn_definition`
-#' # creating a .Rd block - normally this is done by `roxygen2` hence the use of 
-#' # an internal `roxygen2` function here. There is no interactive use of this 
-#' # function outside of a call to `devtools::document`.
+#' # creating a .Rd block - normally this is done by `roxygen2` which then
+#' # writes this to an .Rd file. This function is not intended to be used 
+#' # outside of a call to `devtools::document`.
 #' 
 #' tmp = roxygen2::parse_text(fn_definition)
-#' tmp2 = roxygen2:::block_to_rd.roxy_block(tmp[[1]],tempdir(),rlang::current_env())
-#' print(tmp2)
+#' print(tmp)
 #' 
 roxy_tag_rd.roxy_tag_iparam <- function(x, base_path, env) {
   
