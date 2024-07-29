@@ -14,7 +14,7 @@
 \item{env}{Environment in which to evaluate code (if needed)}
 }
 \value{
-an \code{roxygen2::rd_section} (see roxygen documentation)
+an \code{roxygen2::rd_section} (see \code{roxygen2} documentation)
 }
 \description{
 The \verb{@iparam <name> <description>} tag can be used in \code{roxygen2} documentation

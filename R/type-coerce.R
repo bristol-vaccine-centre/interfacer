@@ -337,6 +337,7 @@ type.numeric = as.numeric
 #'
 #' @inheritParams base::as.Date
 #' @concept rules
+#' @return the input as a `date` vector, error if this would involve data loss.
 #' @export
 type.date = as.Date
 

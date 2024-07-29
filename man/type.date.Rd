@@ -11,6 +11,9 @@ type.date(x, ...)
 
 \item{...}{further arguments to be passed from or to other methods.}
 }
+\value{
+the input as a \code{date} vector, error if this would involve data loss.
+}
 \description{
 Coerce to a Date.
 }

@@ -12,7 +12,7 @@
 \item{...}{not used.}
 }
 \value{
-a formatted string representation of an iface
+a formatted string representation of an \code{iface}
 }
 \description{
 Format an \code{iface} specification for printing

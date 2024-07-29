@@ -170,7 +170,7 @@ idocument = function(fn, param = NULL) {
 #' @concept document
 #' 
 #' @importFrom roxygen2 roxy_tag_parse
-#' @return a roxy_tag object with the val field set to the parsed value
+#' @return a `roxy_tag` object with the `val` field set to the parsed value
 #' @export
 #' @examples
 #' # This provides support to `roxygen2` and only gets executed in the context
@@ -191,7 +191,7 @@ roxy_tag_parse.roxy_tag_iparam <- function(x) {
 #' 
 #' @importFrom roxygen2 roxy_tag_rd
 #' @concept document
-#' @return an `roxygen2::rd_section` (see roxygen documentation)
+#' @return an `roxygen2::rd_section` (see `roxygen2` documentation)
 #' @export
 #' 
 #' @examples 

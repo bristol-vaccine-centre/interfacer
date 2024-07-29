@@ -214,7 +214,7 @@ is.iface = function(x, ...) {
 #' 
 #' @param x an `iface` specification
 #' @param ... not used.
-#' @return a formatted string representation of an iface
+#' @return a formatted string representation of an `iface`
 #' @exportS3Method base::format iface
 #' @examples
 #' my_iface = iface( 
