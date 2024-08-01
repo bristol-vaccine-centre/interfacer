@@ -6,6 +6,7 @@
 [![DOI](https://zenodo.org/badge/667791472.svg)](https://zenodo.org/badge/latestdoi/667791472)
 [![interfacer status
 badge](https://bristol-vaccine-centre.r-universe.dev/badges/interfacer)](https://bristol-vaccine-centre.r-universe.dev)
+[![CRAN status](https://www.r-pkg.org/badges/version/interfacer)](https://CRAN.R-project.org/package=interfacer)
 <!-- badges: end -->
 
 `interfacer` is primarily aimed at R package developers. It provides a framework
