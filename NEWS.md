@@ -14,3 +14,8 @@
 additional spaces in DESCRIPTION file. 2) functions missing return values. 3) 
 example containing unexported method. 4) `if (FALSE)` stanza in examples for 
 function that can only be used interactively.
+
+# interfacer 0.2.4
+
+* Minor enhancement of type coercion to support more consistent behaviour for
+finding custom `type.XX` functions in downstream packages.

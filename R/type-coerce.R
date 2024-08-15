@@ -99,13 +99,16 @@
   # a list specification:
   expr = type
   param = stringr::str_extract(type, "[^\\(]\\((.*)\\)",group = 1)
-  type = stringr::str_extract(type, "^([^\\(]+)",group = 1)
+  pkg = stringr::str_extract(type, "^([^:]+::)",group = 1)
+  if (is.na(pkg)) pkg=""
+  type = stringr::str_extract(type, "^([^:]+::)?([^\\(]+)",group = 2)
   # if not param will be NA.
   
   # first off can we interpret `type` as a function like
   # type.integer as defined in this package?
-  iface_type = sprintf("type.%s", tolower(type))
-  if (exists(iface_type,mode = "function",envir = .env)) {
+  iface_type = sprintf("%stype.%s", pkg, type)
+  f = .stack_eval(iface_type)
+  if (!is.null(f) && is.function(f)) {
     # some of these might be parameterised functions that return functions, 
     # others are not. Either way it should be possible to attempt to evaluate
     # reconstruct expression (t)
@@ -120,7 +123,7 @@
     return(f)
   }
   
-  if (tolower(type) == "list") {
+  if (type == "list") {
     # a list of things
     return(.list_test(param, .fname, .dname, .env))
   }
@@ -136,7 +139,7 @@
   # we will just try and evaluate the expr with 
   # `as.` as a prefix, and then as-is if neither works we halt and catch fire.
   
-  expr2 = sprintf("as.%s",expr)
+  expr2 = sprintf("%sas.%s",pkg, type)
   f = .stack_eval(expr2)
   if (!is.null(f) && is.function(f)) return(f)
   
