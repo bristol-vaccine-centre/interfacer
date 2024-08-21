@@ -19,3 +19,4 @@ function that can only be used interactively.
 
 * Minor enhancement of type coercion to support more consistent behaviour for
 finding custom `type.XX` functions in downstream packages.
+* Funding statement added to README
