@@ -274,8 +274,12 @@ type.anything = function(x) {
 #' @concept rules
 #' @export
 type.integer = function(x) {
-    x = as.numeric(x)
-    if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input", call. = FALSE) 
+    x = tryCatch(
+      as.numeric(x), 
+      error = function(e) stop("error casting to integer: ",e$message, call. = FALSE),
+      warning = function(w) stop("non numeric format", call. = FALSE)
+    )
+    if (any(stats::na.omit(abs(x-round(x)) > .Machine$double.eps^0.5))) stop("rounding detected", call. = FALSE) 
     return(as.integer(x))
 }
 
@@ -288,19 +292,26 @@ type.integer = function(x) {
 #' @concept rules
 #' @export
 type.positive_integer = function(x) {
-    x = as.numeric(x)
-    if (!all(stats::na.omit(abs(x-round(x)) < .Machine$double.eps^0.5))) stop("not a true integer input", call. = FALSE) 
+    x = type.integer(x)
     if (!all(stats::na.omit(x >= 0))) stop("negative number detected where none allowed", call. = FALSE)
-    return(as.integer(x))
+    return(x)
 }
 
 #' Coerce to a double.
 #'
+#' @param x any vector
 #' @return the input as a double, error if this would involve data loss.
 #' 
 #' @concept rules
 #' @export
-type.double = as.double
+type.double = function(x) {
+    x = tryCatch(
+      as.double(x), 
+      error = function(e) stop("error casting to numeric: ",e$message, call. = FALSE),
+      warning = function(w) stop("non numeric format", call. = FALSE)
+    )
+    return(x)
+  }
 
 #' Coerce to a number between 0 and 1
 #'
@@ -330,11 +341,19 @@ type.positive_double = function(x) {
 
 #' Coerce to a numeric.
 #'
+#' @param x any vector
 #' @return the input as a numeric, error if this would involve data loss.
 #' 
 #' @concept rules
 #' @export
-type.numeric = as.numeric
+type.numeric = function(x) {
+  x = tryCatch(
+    as.numeric(x), 
+    error = function(e) stop("error casting to numeric: ",e$message, call. = FALSE),
+    warning = function(w) stop("non numeric format", call. = FALSE)
+  )
+  return(x)
+}
 
 #' Coerce to a Date.
 #'
@@ -342,7 +361,14 @@ type.numeric = as.numeric
 #' @concept rules
 #' @return the input as a `date` vector, error if this would involve data loss.
 #' @export
-type.date = as.Date
+type.date = function(x,...) {
+  x = tryCatch(
+    as.Date(x, ...), 
+    error = function(e) stop("error casting to date: ",e$message, call. = FALSE),
+    warning = function(w) stop("non compatible date format", call. = FALSE)
+  )
+  return(x)
+}
 
 #' Coerce to a logical
 #'
@@ -354,8 +380,10 @@ type.date = as.Date
 #' @export
 type.logical = function(x) {
     if(is.null(x)) return(logical())
-    x = as.numeric(x)
-    if (!all(stats::na.omit(x) %in% c(0,1))) stop("not a true logical input", call. = FALSE)
+    if (is.numeric(x))
+      if (!all(stats::na.omit(as.numeric(x)) %in% c(0,1))) stop("rounding deteced", call. = FALSE)  
+    tmp = as.logical(x)
+    if (any(is.na(tmp) & !is.na(x))) stop("not T/F input", call. = FALSE)
     return(as.logical(x))
 }
 

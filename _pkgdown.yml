@@ -1,16 +1,19 @@
-url: ~
+url: https://bristol-vaccine-centre.github.io/interfacer/
 template:
   bootstrap: 5
 reference:
 - title: Interface specification
 - contents:
   - has_concept("interface")
-- title: Rules
+- title: Type coercion rules
 - contents:
   - has_concept("rules")
-- title: Documentation
+- title: Parameter consistency checks
+- contents:
+  - has_concept("parameter_checks")
+- title: Roxygen documentation
 - contents:
   - has_concept("document")
 - title: Others
 - contents:
-  - lacks_concepts(c("rules","interface","document"))
+  - lacks_concepts(c("rules","interface","document","parameter_checks"))

@@ -271,7 +271,7 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
     tryCatch(
       fn(x),
       error = function(e) {
-        if (.dname == "nested") stop("incorrect type: ",name, call. = FALSE)
+        # if (.dname == "nested") stop("incorrect type: ",name, call. = FALSE)
         stop(
         if (!is.null(.dname)) {
           sprintf("input column `%s` in function parameter `%s(%s = ?)` cannot be coerced ",name,.fname,.dname)

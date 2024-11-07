@@ -298,7 +298,7 @@ as.list.iface = function(x, ..., flatten=FALSE) {
   icall = formals(fn)[[param]]
   if (is.null(icall)) {
     rlang::warn(message=c(
-      "Enclosing function does not define an interface for `",param,"`\n",
+      paste0("Enclosing function does not define an interface for `",param,"`\n"),
       "This may be because you have tried to validate the inner function in an igroup_modify."),
       .frequency = "once",
       .frequency_id = digest::digest(list(fn,param))

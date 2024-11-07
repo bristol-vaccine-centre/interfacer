@@ -24,7 +24,7 @@ The S3 type system allows for dispatch based on the first argument of
 a function. In the situation where we are developing functions that use dataframes
 as input selecting a dispatch function needs to be based on the structure of
 the input rather than its class. `interfacer` can use `iface` specifications to
-associate 
+associate a particular action with a specific input type.
 
 # Dispatch
 

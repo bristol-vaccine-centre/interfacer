@@ -1,0 +1,103 @@
+---
+title: "Parameter consistency checking with interfacer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Parameter consistency checking with interfacer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(interfacer)
+```
+
+Beyond dataframes as parameters `interfacer` is also designed to support R
+package developers by providing functions for handling missing parameters,
+consistency checks, and parametrising per group analyses.
+
+One area where a lot of boiler plate can be avoided is when a function can take
+multiple combinations of optional inputs that resolve to each other, and where
+one or more variables can be recycled.
+
+This can require complex logic to handle missing values when some but not all of
+the parameters are provided and can have inconsistencies if a user provides all
+of the components. Similarly providing lists of different lengths to such
+functions can cause issues.
+
+# Toy example
+
+Suppose we are creating a function that does some mechanics:
+
+```{r}
+
+newton2 = function(f, m = 5, a) {
+  # we want to ensure vectorised parameters provided are the same length
+  recycle(f,m,a)
+  # ensure parameters `f`,`m` and `a` are numeric and coerce them if not.
+  check_numeric(f,m,a)
+  # fill in missing variables using the relationships given.
+  resolve_missing(
+    f = m*a,
+    a = f/m,
+    m = f/a
+  )
+  # do something useful here...
+  return(tibble::tibble(f=f,m=m,a=a))
+}
+```
+
+Inferring the acceleration, including coercion of `f`:
+
+```{r}
+newton2(f="10",m=2) %>% tibble::glimpse()
+```
+
+Inferring the acceleration, when recycling the mass parameter:
+
+```{r}
+newton2(f=1:10, m=2) %>% tibble::glimpse()
+```
+
+A default value for the mass is given in the function. Inferring it therefore
+needs the user to provide an explicit NULL value otherwise the default prevents
+inference and the constraints fail as follows:
+
+```{r}
+try(newton2(f=1:10, a=0.5))
+```
+
+Combining inferring values with specified default values leads to a slightly 
+counter-intuitive behaviour so this pattern is not recommended. It is better not 
+to specify both a default value and constraints for mass.
+
+```{r}
+newton2(f=1:10, m=NULL, a=0.5) %>% tibble::glimpse()
+```
+
+Inferring the force:
+
+```{r}
+newton2(m=2,a=1:10) %>% tibble::glimpse()
+```
+
+If insufficient information is provided to calculate the remaining variables
+an error is thrown:
+
+```{r}
+
+try(newton2(m=2))
+```
+
+If a default value is given then that is used in the inference if it is not
+specified and recycled as needed, but I still think this has the potential to 
+be confusing:
+
+```{r}
+newton2(f=1:10) %>% tibble::glimpse()
+```
+

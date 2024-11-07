@@ -1,10 +1,13 @@
 pandoc: 3.1.13
-pkgdown: 2.0.9
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  consistency: consistency.html
   devtools: devtools.html
   dispatch: dispatch.html
   interfacer: interfacer.html
   nesting: nesting.html
-last_built: 2024-08-15T17:29Z
-
+last_built: 2024-11-07T23:01Z
+urls:
+  reference: https://bristol-vaccine-centre.github.io/interfacer/reference
+  article: https://bristol-vaccine-centre.github.io/interfacer/articles

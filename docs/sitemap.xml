@@ -1,180 +1,72 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/devtools.html</loc>
-  </url>
-  <url>
-    <loc>/articles/dispatch.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/interfacer.html</loc>
-  </url>
-  <url>
-    <loc>/articles/nesting.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.list.iface.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as_vars.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/format.iface.html</loc>
-  </url>
-  <url>
-    <loc>/reference/iclip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/iconvert.html</loc>
-  </url>
-  <url>
-    <loc>/reference/idispatch.html</loc>
-  </url>
-  <url>
-    <loc>/reference/idocument.html</loc>
-  </url>
-  <url>
-    <loc>/reference/if_col_present.html</loc>
-  </url>
-  <url>
-    <loc>/reference/iface.html</loc>
-  </url>
-  <url>
-    <loc>/reference/igroup_process.html</loc>
-  </url>
-  <url>
-    <loc>/reference/imap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/imapper.html</loc>
-  </url>
-  <url>
-    <loc>/reference/in_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/iproto.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ireturn.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.iface.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is_col_present.html</loc>
-  </url>
-  <url>
-    <loc>/reference/itest.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ivalidate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/knit_print.iface.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.iface.html</loc>
-  </url>
-  <url>
-    <loc>/reference/roxy_tag_parse.roxy_tag_iparam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/roxy_tag_rd.roxy_tag_iparam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/switch_pipeline.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.anything.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.character.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.complete.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.date.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.default.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.double.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.enum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.factor.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.finite.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.group_unique.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.in_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.integer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.logical.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.not_missing.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.numeric.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.of_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.positive_double.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.positive_integer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/type.proportion.html</loc>
-  </url>
-  <url>
-    <loc>/reference/use_dataframe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/use_iface.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/404.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/LICENSE-text.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/LICENSE.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/articles/consistency.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/articles/devtools.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/articles/dispatch.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/articles/index.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/articles/interfacer.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/articles/nesting.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/authors.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/index.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/news/index.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/as.list.iface.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/as_vars.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_character.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_consistent.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_date.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_integer.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_logical.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_numeric.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/check_single.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/enum.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/format.iface.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/iclip.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/iconvert.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/idispatch.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/idocument.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/if_col_present.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/iface.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/igroup_process.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/imap.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/imapper.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/in_range.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/index.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/iproto.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/ireturn.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/is.iface.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/is_col_present.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/itest.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/ivalidate.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/knit_print.iface.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/pipe.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/print.iface.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/recycle.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/resolve_missing.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/roxy_tag_parse.roxy_tag_iparam.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/roxy_tag_rd.roxy_tag_iparam.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/switch_pipeline.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.anything.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.character.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.complete.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.date.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.default.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.double.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.enum.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.factor.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.finite.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.group_unique.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.in_range.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.integer.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.logical.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.not_missing.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.numeric.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.of_type.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.positive_double.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.positive_integer.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/type.proportion.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/use_dataframe.html</loc></url>
+<url><loc>https://bristol-vaccine-centre.github.io/interfacer/reference/use_iface.html</loc></url>
 </urlset>
+

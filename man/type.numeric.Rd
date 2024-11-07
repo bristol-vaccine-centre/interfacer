@@ -4,7 +4,10 @@
 \alias{type.numeric}
 \title{Coerce to a numeric.}
 \usage{
-type.numeric()
+type.numeric(x)
+}
+\arguments{
+\item{x}{any vector}
 }
 \value{
 the input as a numeric, error if this would involve data loss.

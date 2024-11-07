@@ -4,7 +4,10 @@
 \alias{type.double}
 \title{Coerce to a double.}
 \usage{
-type.double()
+type.double(x)
+}
+\arguments{
+\item{x}{any vector}
 }
 \value{
 the input as a double, error if this would involve data loss.

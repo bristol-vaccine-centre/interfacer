@@ -7,6 +7,7 @@
 [![interfacer status
 badge](https://bristol-vaccine-centre.r-universe.dev/badges/interfacer)](https://bristol-vaccine-centre.r-universe.dev)
 [![CRAN status](https://www.r-pkg.org/badges/version/interfacer)](https://CRAN.R-project.org/package=interfacer)
+[![metacran downloads](https://cranlogs.r-pkg.org/badges/last-week/interfacer)](https://cran.r-project.org/package=interfacer)
 [![EPSRC badge](https://img.shields.io/badge/EPSRC%20grant-EP%2FY028392%2F1-05acb5)](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/Y028392/1)
 <!-- badges: end -->
 

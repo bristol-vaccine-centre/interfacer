@@ -85,13 +85,23 @@ igroup_process = function(df = NULL, fn, ...) {
   # Get the spec from the enclosing function
   dname = tryCatch(rlang::as_label(rlang::ensym(df)), error = function(e) return(NA))
   fn = rlang::caller_fn()
-  if (is.null(fn)) stop("`igroup_dispatch` must be called from within an enclosing function. did you mean to use `iconvert`?", call. = FALSE)
+  if (is.null(fn)) stop("`igroup_dispatch` must be called from within an enclosing function.", call. = FALSE)
   if (is.na(dname)) {
     df = .get_first_param_value()
     dname = .get_first_param_name()
   }
   fname = .get_fn_name(fn)
   spec = .get_spec(fn, dname)
+  
+  # TODO: the parameter name can be incorrect if the inner function is defined
+  # using a different naming convention or more importantly if the variable is 
+  # renamed:
+  # function(x = iface(...)) {
+  #   x2 = x
+  #   igroup_process(x2, function(y) {...})
+  # }
+  # the logic to find dname finds the wrong name and cant match it to the spec. 
+  # possibly because it is looking at the wrong function...
   
   exp_grps = .spec_grps(spec)
   obs_grps = dplyr::group_vars(df)

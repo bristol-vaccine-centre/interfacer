@@ -1,6 +1,6 @@
 Package: interfacer
 Title: Define and Enforce Contracts for Dataframes as Function Parameters
-Version: 0.2.4
+Version: 0.3.0
 Authors@R: 
     person("Robert", "Challen", , "rob.challen@bristol.ac.uk", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5504-7768"))
@@ -17,7 +17,7 @@ Description: A dataframe validation framework for package builders who use
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2.9003
 Language: en-GB
 Imports: 
     dplyr,
