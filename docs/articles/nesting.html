@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Nested dataframes and `purrr` style list columns • interfacer</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
@@ -59,8 +65,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>Nested dataframes and `purrr` style list columns</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Nested dataframes and `purrr` style list columns</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/bristol-vaccine-centre/interfacer/blob/HEAD/vignettes/nesting.Rmd" class="external-link"><code>vignettes/nesting.Rmd</code></a></small>
@@ -172,7 +177,7 @@ validated individually. This takes a few seconds on my machine.</p>
 <span><span class="co">#&gt; $ clarity <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> SI2, SI1, VS1, VS2, SI2, VVS2, VVS1, SI1, VS2, VS1, SI1, VS1, …</span></span>
 <span><span class="co">#&gt; $ data    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[469 x 7]&gt;], [&lt;tbl_df[614 x 7]&gt;], [&lt;tbl_df[89 x 7]&gt;],…</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   2.808   0.007   2.815</span></span></code></pre></div>
+<span><span class="co">#&gt;   2.836   0.006   2.843</span></span></code></pre></div>
 <p>In this example the price column is removes before nesting. Errors in
 the validation of nested columns are bubbled up to the top level.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
