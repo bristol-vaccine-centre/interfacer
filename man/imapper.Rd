@@ -7,20 +7,20 @@
 imapper(...)
 }
 \arguments{
-\item{...}{a set of \code{dplyr::mutate()} specifications that when applied to
+\item{...}{a set of \code{\link[dplyr:mutate]{dplyr::mutate()}} specifications that when applied to
 a dataframe will rename or otherwise fix missing columns}
 }
 \value{
 a set of mappings
 }
 \description{
-When a function uses \code{ivalidate} internally to check a dataframe conforms to
+When a function uses \code{\link[=ivalidate]{ivalidate()}} internally to check a dataframe conforms to
 the input it can attempt to rescue an incorrectly formatted dataframe.
 This is a pretty advanced idea and is not generally recommended.
 }
 \details{
 This function is expected to be used only in the context of a \code{.imap = imapper(...)}
-parameter to an \code{ivalidate} call to make sure that certain columns are present
+parameter to an \code{\link[=ivalidate]{ivalidate()}} call to make sure that certain columns are present
 or are a set value. Anything provided here will overwrite existing
 dataframe columns and its use is likely to make function behaviour obtuse.
 It may be deprecated in the future. The \code{...} input expressions should almost certainly

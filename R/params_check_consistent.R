@@ -1,4 +1,4 @@
-#' Check function parameters are conform to a set of rules
+#' Check function parameters conform to a set of rules
 #' 
 #' If the parameters of a function are given in some combination but have
 #' an interdependency (e.g. different parametrisations of a probability
@@ -9,7 +9,7 @@
 #' @param ... a set of rules to check either as `x=y+z`, or `x>y`. Single `=`
 #'   assignment is checked for equality using `identical` otherwise the
 #'   expressions are evaluated and checked they all are true. This for
-#'   consistency with `resolve_missing` which only uses assignment, and ignores
+#'   consistency with [resolve_missing()] which only uses assignment, and ignores
 #'   logical expressions.
 #' @param .env the environment to check in 
 #'

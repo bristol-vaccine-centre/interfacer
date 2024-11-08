@@ -20,14 +20,11 @@ matches the rules in \code{...}. Matching is permissive in that the test is
 passed if a dataframe can be coerced to the \code{iface} specified format.
 }
 \description{
-This provides a dataframe analogy to S3 dispatch.
-}
-\details{
-If multiple possible dataframe formats are possible for a function, each with
-different processing requirements, then the choice of function can be made
-based on matching the input dataframe to a set of \code{iface} specifications.
-The first matching \code{iface} specification determines which function is used
-for dispatch.
+This provides a dataframe analogy to S3 dispatch. If multiple possible
+dataframe formats are possible for a function, each with different processing
+requirements, then the choice of function can be made based on matching the
+input dataframe to a set of \code{iface} specifications. The first matching
+\code{iface} specification determines which function is used for dispatch.
 }
 \examples{
 i1 = iface( col1 = integer ~ "An integer column" )

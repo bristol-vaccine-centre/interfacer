@@ -11,24 +11,7 @@ check_date(
 )
 }
 \arguments{
-\item{...}{a list of symbols
-  Named arguments passed on to \code{\link[base:as.Date]{base::as.Date}}\describe{
-    \item{\code{x}}{an object to be converted.}
-\item{\code{format}}{a \code{\link[base]{character}} string.  If not specified when
-    converting from a character representation, it will try
-    \code{tryFormats} one by one on the first non-\code{NA} element, and
-    give an error if none works.  Otherwise, the processing is via
-    \code{\link[base]{strptime}()} whose help page describes available
-    conversion specifications.}
-\item{\code{tryFormats}}{\code{\link[base]{character}} vector of \code{format}
-    strings to try if \code{format} is not specified.}
-\item{\code{optional}}{\code{\link[base]{logical}} indicating to return \code{NA}
-    (instead of signalling an error) if the format guessing does not succeed.}
-\item{\code{origin}}{a \code{Date} object, or something which can be coerced by
-    \code{as.Date(origin, \dots)} to such an object or
-    \code{\link[base]{missing}}.  In that case, \code{"1970-01-01"} is used.}
-\item{\code{tz}}{a time zone name.}
-}}
+\item{...}{a list of symbols}
 
 \item{.message}{a glue specification containing \code{{param}} as the name of the
 parameter and \code{{err}} the cause of the error}

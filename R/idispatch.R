@@ -1,13 +1,11 @@
 
 #' Dispatch to a named function based on the characteristics of a dataframe
 #' 
-#' This provides a dataframe analogy to S3 dispatch.
-#' 
-#' If multiple possible dataframe formats are possible for a function, each with
-#' different processing requirements, then the choice of function can be made 
-#' based on matching the input dataframe to a set of `iface` specifications.
-#' The first matching `iface` specification determines which function is used 
-#' for dispatch. 
+#' This provides a dataframe analogy to S3 dispatch. If multiple possible
+#' dataframe formats are possible for a function, each with different processing
+#' requirements, then the choice of function can be made based on matching the
+#' input dataframe to a set of `iface` specifications. The first matching
+#' `iface` specification determines which function is used for dispatch.
 #'
 #' @param x a dataframe
 #' @param ... a set of `function name`=`interfacer::iface` pairs

@@ -25,3 +25,8 @@ finding custom `type.XX` functions in downstream packages.
 
 * Consistency checking and recycling for non dataframe parameters
 * More consistent `type.XX` function behaviour
+
+# interfacer 0.3.1
+
+* Documentation tidy-up
+* Minor change to formatting of `iface` printing.

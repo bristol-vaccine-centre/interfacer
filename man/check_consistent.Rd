@@ -2,7 +2,7 @@
 % Please edit documentation in R/params_check_consistent.R
 \name{check_consistent}
 \alias{check_consistent}
-\title{Check function parameters are conform to a set of rules}
+\title{Check function parameters conform to a set of rules}
 \usage{
 check_consistent(..., .env = rlang::caller_env())
 }
@@ -10,7 +10,7 @@ check_consistent(..., .env = rlang::caller_env())
 \item{...}{a set of rules to check either as \code{x=y+z}, or \code{x>y}. Single \code{=}
 assignment is checked for equality using \code{identical} otherwise the
 expressions are evaluated and checked they all are true. This for
-consistency with \code{resolve_missing} which only uses assignment, and ignores
+consistency with \code{\link[=resolve_missing]{resolve_missing()}} which only uses assignment, and ignores
 logical expressions.}
 
 \item{.env}{the environment to check in}

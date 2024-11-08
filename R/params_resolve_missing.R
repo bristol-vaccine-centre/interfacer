@@ -7,12 +7,16 @@
 #'
 #' @param ... either a set of relationships as a list of `x=y+z` expressions
 #' @param .env the environment to check in (optional - defaults to `caller_env()`)
-#' @param .eval_null the resolution defined missing variables as those that are not specified
-#'   but we can also fill in values that are explicitly given as `NULL` or default to 
-#'   `NULL` if this is `TRUE`. This is the default.
-#' @param .error a glue spec defining the error message. This can use parameters
-#'   `.missing`, `.constraints`, `.present` and `.call` to construct an error 
-#'   message.
+#' @param .eval_null The default behaviour (when this option is `TRUE`)
+#'   considers missing values to be are either not given, given explicitly as
+#'   `NULL` or given as a `NULL` default value. Sometimes we need to consider
+#'   `NULL` values differently to missing values. If this is set to `FALSE` only
+#'   strictly missing values are resolved, and explicit `NULL` values left as
+#'   is.
+#' @param .error a glue specification defining the error message. This can use
+#'   parameters `.missing`, `.constraints`, `.present` and `.call` to construct
+#'   an error message. If `NULL` a default message is provided that is generally
+#'   sufficient.
 #'
 #' @concept parameter_checks
 #'
@@ -97,7 +101,7 @@ resolve_missing = function(
       # If everything is resolved we can check the results and exit. The
       # function changes the environment in which it was called so returns
       # nothing.  This uses all the rules that were passed including those 
-      # which were predicates rather than assigments.
+      # which were predicates rather than assignments.
       check_consistent(!!!allexprs, .env=env)
       return(invisible(env))
     }

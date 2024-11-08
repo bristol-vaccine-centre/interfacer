@@ -29,17 +29,17 @@ the definition of an interface as a \code{iface} object
 An \code{iface} specification defines the expected structure of a dataframe, in
 terms of the column names, column types, grouping structure and uniqueness
 constraints that the dataframe must conform to. A dataframe can be tested
-for conformance to an \code{iface} specification using \code{iconvert}.
+for conformance to an \code{iface} specification using \code{\link[=ivalidate]{ivalidate()}}.
 }
 \details{
 An \code{iface} specification is designed to be used to define the type of a
 parameter in a function. This is done by using the \code{iface} specification as
 the default value of the parameter in the function definition. The definition
-can then be validated at runtime by a call to \code{ivalidate(...)} inside the
+can then be validated at runtime by a call to \code{\link[=ivalidate]{ivalidate()}} inside the
 function.
 
 When developing a function output an \code{iface} specification may also be used
-in \code{ireturn(...)} to enforce that the output of a function is correct.
+in \code{\link[=ireturn]{ireturn()}} to enforce that the output of a function is correct.
 
 \code{iface} definitions can be printed and included in \code{roxygen2} documentation
 and help us to document input dataframe parameters and dataframe return

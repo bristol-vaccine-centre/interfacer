@@ -168,10 +168,10 @@ ireturn = function(df, iface, .prune=FALSE) {
 
 #' Convert a dataframe to a format compatible with an interface specification
 #' 
-#' This function is called by `ivalidate` and is not generally intended to be
+#' This function is called by [ivalidate()] and is not generally intended to be
 #' used directly by the end user. It may be helpful in debugging during package 
 #' development to interactive test a `iface` spec. `iconvert` is an interactive 
-#' version of `ivalidate`.
+#' version of [ivalidate()].
 #' 
 #' @concept interface
 #'

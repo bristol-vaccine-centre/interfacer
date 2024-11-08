@@ -59,7 +59,6 @@ check_integer = function(..., .message="`{param}` is not an integer ({err}).", .
 #' Checks a set of variables can be coerced to a date and coerces them
 #' 
 #' @inheritParams check_integer
-#' @inheritDotParams base::as.Date
 #' @return nothing. called for side effects. throws error if not all variables can be coerced.
 #' @export
 #' 
@@ -81,10 +80,9 @@ check_date = function(..., .message="`{param}` is not a date: ({err}).", .env = 
 }
 
 
-#' Checks a set of variables can be coerced to a date and coerces them
+#' Checks a set of variables can be coerced to a logical and coerces them
 #' 
 #' @inheritParams check_integer
-#' @inheritDotParams base::as.Date
 #' @return nothing. called for side effects. throws error if not all variables can be coerced.
 #' @export
 #' 
@@ -106,10 +104,9 @@ check_logical = function(..., .message="`{param}` is not a logical: ({err}).", .
 }
 
 
-#' Checks a set of variables can be coerced to a date and coerces them
+#' Checks a set of variables can be coerced to a character and coerces them
 #' 
 #' @inheritParams check_integer
-#' @inheritDotParams base::as.character
 #' @return nothing. called for side effects. throws error if not all variables can be coerced.
 #' @export
 #' 
@@ -128,10 +125,9 @@ check_character = function(..., .message="`{param}` is not a character: ({err}).
 }
 
 
-#' Checks a set of variables can be coerced to a date and coerces them
+#' Checks a set of variables are all of length one
 #' 
 #' @inheritParams check_integer
-#' @inheritDotParams base::as.character
 #' @return nothing. called for side effects. throws error if not all variables can be coerced.
 #' @export
 #' 

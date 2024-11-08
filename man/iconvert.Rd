@@ -37,10 +37,10 @@ the input dataframe coerced to be conformant to the \code{iface}
 specification, or an informative error is thrown.
 }
 \description{
-This function is called by \code{ivalidate} and is not generally intended to be
+This function is called by \code{\link[=ivalidate]{ivalidate()}} and is not generally intended to be
 used directly by the end user. It may be helpful in debugging during package
 development to interactive test a \code{iface} spec. \code{iconvert} is an interactive
-version of \code{ivalidate}.
+version of \code{\link[=ivalidate]{ivalidate()}}.
 }
 \examples{
 i_diamonds = iface( 

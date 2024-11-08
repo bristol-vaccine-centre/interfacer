@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,8 +116,7 @@ documentation about the column.</p>
 <span><span class="co">#&gt; A dataframe containing the following columns: </span></span>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
 <span><span class="co">#&gt; * test (logical) - the test result</span></span>
-<span><span class="co">#&gt; No mandatory groupings.</span></span>
-<span><span class="co">#&gt; No default value.</span></span></code></pre></div>
+<span><span class="co">#&gt; Any grouping allowed.</span></span></code></pre></div>
 <p>An <code>iface</code> specification is associated with a specific
 function parameter by being set as the default value for that parameter.
 This is a dummy default value but when combined with
@@ -223,8 +222,7 @@ created:</p>
 <span><span class="co">#&gt; * id (integer) - an integer ID</span></span>
 <span><span class="co">#&gt; * test (logical) - the test result</span></span>
 <span><span class="co">#&gt; * extra (character) - a new value</span></span>
-<span><span class="co">#&gt; Ungrouped.</span></span>
-<span><span class="co">#&gt; No default value.</span></span></code></pre></div>
+<span><span class="co">#&gt; Ungrouped.</span></span></code></pre></div>
 <p>This extended <code>iface</code> specification adds in the constraint
 for a character column named <code>extra</code> and that there must not
 be any grouping. This is used to constrain the input of another example
@@ -364,9 +362,7 @@ documentation when <code><a href="https://devtools.r-lib.org/reference/document.
 <span><span class="co">#&gt; * test (logical) - the test result</span></span>
 <span><span class="co">#&gt; * extra (character) - a new value</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Ungrouped.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; No default value.</span></span></code></pre></div>
+<span><span class="co">#&gt; Ungrouped.</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="type-coercion">Type coercion<a class="anchor" aria-label="anchor" href="#type-coercion"></a>

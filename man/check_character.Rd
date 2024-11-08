@@ -2,7 +2,7 @@
 % Please edit documentation in R/params_check_types.R
 \name{check_character}
 \alias{check_character}
-\title{Checks a set of variables can be coerced to a date and coerces them}
+\title{Checks a set of variables can be coerced to a character and coerces them}
 \usage{
 check_character(
   ...,
@@ -11,13 +11,7 @@ check_character(
 )
 }
 \arguments{
-\item{...}{a list of symbols
-  Named arguments passed on to \code{\link[base:character]{base::as.character}}\describe{
-    \item{\code{length}}{a non-negative integer specifying the desired length.
-    Double values will be coerced to integer:
-    supplying an argument of length other than one is an error.}
-\item{\code{x}}{object to be coerced or tested.}
-}}
+\item{...}{a list of symbols}
 
 \item{.message}{a glue specification containing \code{{param}} as the name of the
 parameter and \code{{err}} the cause of the error}
@@ -28,7 +22,7 @@ parameter and \code{{err}} the cause of the error}
 nothing. called for side effects. throws error if not all variables can be coerced.
 }
 \description{
-Checks a set of variables can be coerced to a date and coerces them
+Checks a set of variables can be coerced to a character and coerces them
 }
 \examples{
 a = c(Sys.Date()+1:10)

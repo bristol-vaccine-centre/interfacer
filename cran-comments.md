@@ -15,7 +15,7 @@ This release is fully backward compatible with no breaking changes to API. There
 are additional functions included for checking consistency of non-dataframe
 parameters, recycling vector parameters, and inferring values of interdependent
 parameters. These capabilities are described in a new vignette. The package now
-has a logo.
+has a logo. The documentation has been improved.
 
 * There are no reverse dependencies.
 * There are no references describing the methods in this package.

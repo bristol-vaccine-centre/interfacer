@@ -11,7 +11,7 @@ the resulting values will be picked up and an error thrown."><meta property="og:
 
     <a class="navbar-brand me-2" href="../index.html">interfacer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,15 +73,19 @@ the resulting values will be picked up and an error thrown.</p>
 
 
 <dt id="arg--eval-null">.eval_null<a class="anchor" aria-label="anchor" href="#arg--eval-null"></a></dt>
-<dd><p>the resolution defined missing variables as those that are not specified
-but we can also fill in values that are explicitly given as <code>NULL</code> or default to
-<code>NULL</code> if this is <code>TRUE</code>. This is the default.</p></dd>
+<dd><p>The default behaviour (when this option is <code>TRUE</code>)
+considers missing values to be are either not given, given explicitly as
+<code>NULL</code> or given as a <code>NULL</code> default value. Sometimes we need to consider
+<code>NULL</code> values differently to missing values. If this is set to <code>FALSE</code> only
+strictly missing values are resolved, and explicit <code>NULL</code> values left as
+is.</p></dd>
 
 
 <dt id="arg--error">.error<a class="anchor" aria-label="anchor" href="#arg--error"></a></dt>
-<dd><p>a glue spec defining the error message. This can use parameters
-<code>.missing</code>, <code>.constraints</code>, <code>.present</code> and <code>.call</code> to construct an error
-message.</p></dd>
+<dd><p>a glue specification defining the error message. This can use
+parameters <code>.missing</code>, <code>.constraints</code>, <code>.present</code> and <code>.call</code> to construct
+an error message. If <code>NULL</code> a default message is provided that is generally
+sufficient.</p></dd>
 
 </dl></div>
     <div class="section level2">

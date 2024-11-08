@@ -16,13 +16,17 @@ resolve_missing(
 
 \item{.env}{the environment to check in (optional - defaults to \code{caller_env()})}
 
-\item{.eval_null}{the resolution defined missing variables as those that are not specified
-but we can also fill in values that are explicitly given as \code{NULL} or default to
-\code{NULL} if this is \code{TRUE}. This is the default.}
+\item{.eval_null}{The default behaviour (when this option is \code{TRUE})
+considers missing values to be are either not given, given explicitly as
+\code{NULL} or given as a \code{NULL} default value. Sometimes we need to consider
+\code{NULL} values differently to missing values. If this is set to \code{FALSE} only
+strictly missing values are resolved, and explicit \code{NULL} values left as
+is.}
 
-\item{.error}{a glue spec defining the error message. This can use parameters
-\code{.missing}, \code{.constraints}, \code{.present} and \code{.call} to construct an error
-message.}
+\item{.error}{a glue specification defining the error message. This can use
+parameters \code{.missing}, \code{.constraints}, \code{.present} and \code{.call} to construct
+an error message. If \code{NULL} a default message is provided that is generally
+sufficient.}
 }
 \value{
 nothing. Alters the \code{.env} environment to fill in missing values or
