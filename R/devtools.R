@@ -250,12 +250,11 @@ roxy_tag_rd.roxy_tag_iparam <- function(x, base_path, env) {
       allow_other = attr(spec,"allow_other")
       default = attr(spec,"default")
       if (!is.null(default)) opt = "A default value is defined."
-      else  opt = "No default value."
-      
+      else  opt = ""
       
       if (allow_other) {
-        if (length(grps)==0) g = "No mandatory groupings."
-        else g = sprintf("Must be grouped by: %s (and other groupings allowed).",paste0(grps,collapse = " + "))
+        if (length(grps)==0) g = "Any grouping allowed."
+        else g = sprintf("Minimally grouped by: %s (and other groupings allowed).",paste0(grps,collapse = " + "))
       } else {
         if (length(grps)==0) g = "Ungrouped."
         else g = sprintf("Must be grouped by: %s (exactly).",paste0(grps,collapse = " + "))
@@ -276,7 +275,7 @@ A dataframe containing the following columns:
         paste0(glue::glue_data(spec, "\\item {name} ({type}) - {doc}"), collapse = "\n"),
         g,
         opt
-      )
+      ) %>% trimws()
     } else {
       # spec evaluated to something but not an iface spec. We'll 
       out = sprintf("%s - (defaults to \\code{%s})", desc, deparse(spec))
