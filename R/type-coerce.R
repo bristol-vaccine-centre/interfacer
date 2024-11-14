@@ -19,6 +19,7 @@
   
   # get a list of functions that match the string type
   for (type in types) {
+    # Unique key columns have already been checked. They don't have a 
     f = .find_function(type, .fname, .dname, .env)
     fs = c(fs,f)
   }
@@ -88,6 +89,17 @@
   return(paste0("`",expr,"` must evaluate to a function. it is a ",class(g)[[1]]))
 }
 
+.stack_eval_iface = function(expr) {
+  g = NULL
+  for (x in sys.frames()) { 
+    f = tryCatch(eval(str2lang(expr),envir = x),error = function(e) NULL)
+    if (!is.null(f) && is.iface(f)) return(f)
+    if (is.null(g)) g = f
+  }
+  if (is.null(g)) return(NULL)
+  return(paste0("`",expr,"` must evaluate to a iface. it is a ",class(g)[[1]]))
+}
+
 # find a (single) function for a single type spec
 # within function .fname and for parameter .dname
 .find_function = function(type, .fname, .dname, .env=rlang::caller_env()) {
@@ -127,11 +139,12 @@
     # a list of things
     return(.list_test(param, .fname, .dname, .env))
   }
-   
-  if (exists(type, envir = .env) && is.iface(get(type, envir = .env))) {
+  
+  i = .stack_eval_iface(expr)
+  if (!is.null(i) && is.iface(i)) {
     # the type is an interface spec - usually nested in a list column, or
     # can be a tibble column in a tibble.
-    return(.nested_iface(get(type, envir = .env), .fname, .dname, .env))
+    return(.nested_iface(i, .fname, .dname, .env))
   }
   
   # So the type is something unusual. maybe something like `as.POSIXct`
@@ -409,7 +422,7 @@ type.factor = function(x) {
 #' @export
 type.character = as.character
 
-#' Coerce to a unique value.
+#' Coerce to a unique value within the current grouping structure.
 #'
 #' @param x any vector
 #'
@@ -421,6 +434,20 @@ type.group_unique = function(x) {
     if (is.null(x)) return(character())
     if (!all(!duplicated(stats::na.omit(x)))) stop("values are not unique within each group; check grouping is correct", call. = FALSE)
     x
+}
+
+#' A globally unique ids.
+#'
+#' @param x any vector
+#'
+#' @return the input.
+#' 
+#' @concept rules
+#' @export
+type.unique_id = function(x) {
+  # Uniqueness of keys is checked prior to type coercion. This function is here
+  # simply to make sure that the other rules can be applied at the same time.
+  x
 }
 
 #' Coerce to a complete set of values.

@@ -116,6 +116,15 @@ ireturn = function(df, iface, .prune=FALSE) {
   # N.b. this implicitly checks all grouping columns that are mentioned are also
   # present.
   
+  # unique keys.
+  key_cols = spec %>% dplyr::filter(stringr::str_detect(type,"unique_id")) %>% dplyr::pull(name)
+  # TODO: change into an error collector function
+  errors = character()
+  for (col in key_cols) {
+    if (any(duplicated(df[[col]]))) errors = c(errors,sprintf("non unique values detected for unique key column `%s`, in return value of `%s(...)`", col, fname))
+  }
+  if (length(errors) !=0 ) stop(paste0(errors,collapse="/n"),call.=FALSE)
+  
   # Are there allowed additional groups?
   allowed_grps = setdiff(obs_grps, exp_grps)
   if (!.spec_allow_other(spec) && length(allowed_grps) > 0) {
@@ -201,10 +210,10 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
   
   #TODO cache this?
   
-  #TODO: consider deprecating `.imap`
   # apply any imap 
   dots = .imap
   dots = dots[names(dots) %in% .spec_cols(iface)]
+  dots = dots[!names(dots) %in% colnames(df)]
   out = df %>% dplyr::mutate(!!!dots)
   
   spec = iface
@@ -227,6 +236,15 @@ iconvert = function(df, iface, .imap = interfacer::imapper(), .dname="<unknown>"
   }
   # N.b. this implicitly checks all grouping columns that are mentioned are also
   # present.
+  
+  # unique keys.
+  key_cols = spec %>% dplyr::filter(stringr::str_detect(type,"unique_id")) %>% dplyr::pull(name)
+  # TODO: change into an error collector function
+  errors = character()
+  for (col in key_cols) {
+    if (any(duplicated(df[[col]]))) errors = c(errors,sprintf("non unique values detected for unique key column `%s`, in `%s` parameter of `%s(...)`", col, .dname, .fname))
+  }
+  if (length(errors) !=0 ) stop(paste0(errors,collapse="/n"),call.=FALSE)
   
   # Are there allowed additional groups?
   allowed_grps = setdiff(obs_grps, exp_grps)

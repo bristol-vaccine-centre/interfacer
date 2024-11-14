@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-coerce.R
 \name{type.group_unique}
 \alias{type.group_unique}
-\title{Coerce to a unique value.}
+\title{Coerce to a unique value within the current grouping structure.}
 \usage{
 type.group_unique(x)
 }
@@ -13,6 +13,6 @@ type.group_unique(x)
 the input or error if any of x is not unique.
 }
 \description{
-Coerce to a unique value.
+Coerce to a unique value within the current grouping structure.
 }
 \concept{rules}

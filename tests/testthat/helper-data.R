@@ -24,6 +24,7 @@ i_diamonds_data = interfacer::iface(
 )
 
 i_diamonds_cat = interfacer::iface(
+  id = unique_id ~ "unique id",
   cut = enum(`Fair`,`Good`,`Very Good`,`Premium`,`Ideal`, .ordered=TRUE) ~ "the cut column",
   color = enum(`D`,`E`,`F`,`G`,`H`,`I`,`J`, .ordered=TRUE) ~ "the color column",
   clarity = enum(`I1`,`SI2`,`SI1`,`VS2`,`VS1`,`VVS2`,`VVS1`,`IF`, .ordered=TRUE) ~ "the clarity column",
@@ -32,7 +33,8 @@ i_diamonds_cat = interfacer::iface(
 )
 
 nested_diamonds = ggplot2::diamonds %>%
-  tidyr::nest(data = c(-cut,-color,-clarity))
+  tidyr::nest(data = c(-cut,-color,-clarity)) %>%
+  dplyr::mutate(id = dplyr::row_number())
 
 i_iris = interfacer::iface(
   Sepal.Length = numeric ~ "the Sepal.Length column",

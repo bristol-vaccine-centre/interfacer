@@ -19,14 +19,20 @@ function that can only be used interactively.
 
 * Minor enhancement of type coercion to support more consistent behaviour for
 finding custom `type.XX` functions in downstream packages.
-* Funding statement added to README
+* Funding statement added to README.
 
 # interfacer 0.3.0
 
-* Consistency checking and recycling for non dataframe parameters
-* More consistent `type.XX` function behaviour
+* Consistency checking and recycling for non-dataframe parameters API added, 
+with new vignette to explain.
+* More consistent `type.XX` function behaviour.
 
 # interfacer 0.3.1
 
-* Documentation tidy-up
+* Documentation tidy-up.
 * Minor change to formatting of `iface` printing.
+
+# interfacer 0.3.2
+
+* Specific support for `unique_id` columns (ids unique between dataframe grouping).
+* Fix issue with `imapper` defaults always being applied.

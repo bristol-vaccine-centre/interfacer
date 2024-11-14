@@ -48,7 +48,7 @@ values in a standardised way by using the \verb{@iparam} \code{roxygen2} tag.
 \code{iface} specifications are defined in the form of a named list of formulae with the
 structure \code{column_name = type ~ "documentation"}.
 
-\code{type} can be one of \code{anything}, \code{character}, \code{complete}, \code{date}, \code{default}, \code{double}, \code{enum}, \code{factor}, \code{finite}, \code{group_unique}, \code{in_range}, \code{integer}, \code{logical}, \code{not_missing}, \code{numeric}, \code{of_type}, \code{positive_double}, \code{positive_integer}, \code{proportion} (e.g. \code{enum(level1,level2,...)},
+\code{type} can be one of \code{anything}, \code{character}, \code{complete}, \code{date}, \code{default}, \code{double}, \code{enum}, \code{factor}, \code{finite}, \code{group_unique}, \code{in_range}, \code{integer}, \code{logical}, \code{not_missing}, \code{numeric}, \code{of_type}, \code{positive_double}, \code{positive_integer}, \code{proportion}, \code{unique_id} (e.g. \code{enum(level1,level2,...)},
 \code{in_range(min,max)}) or alternatively anything that resolves to a function e.g.
 \code{as.ordered}.
 

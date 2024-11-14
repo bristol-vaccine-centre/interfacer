@@ -49,26 +49,29 @@ test_that("multiple errors reported", {
   
 })
 
+test_that("Nested DF works", {
 
-# TODO: this test works in all situations apart from devtools::check.
-# For some reason in that specific context the environment does not pick up the 
-# definitions in testthat/helper-data.R
-# test_that("Nested DF works", {
-#   
-#   
-#   xfn = function(df = i_diamonds_cat) {
-#     return(ivalidate(df))
-#   }
-#   
-#   expect_no_error(
-#     nested_diamonds %>% xfn()
-#   )
-#   
-#   expect_error(
-#     nested_diamonds %>% 
-#       dplyr::mutate(data = purrr::map(data, ~ .x %>% dplyr::select(-price))) %>%
-#       xfn(),
-#     regexp = "missing"
-#   )
-#   
-# })
+
+  xfn = function(df = i_diamonds_cat) {
+    return(ivalidate(df))
+  }
+
+  expect_no_error(
+    nested_diamonds %>% xfn()
+  )
+
+  expect_error(
+    nested_diamonds %>%
+      dplyr::mutate(data = purrr::map(data, ~ .x %>% dplyr::select(-price))) %>%
+      xfn(),
+    regexp = "missing"
+  )
+  
+  expect_error(
+    nested_diamonds %>%
+      dplyr::mutate(id = 1) %>%
+      xfn(),
+    regexp = "non unique"
+  )
+
+})

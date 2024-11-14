@@ -374,6 +374,7 @@ as.list.iface = function(x, ..., flatten=FALSE) {
     .spec_grps(spec)
   ) %>% paste0(collapse = "+")
   if (out == "") out = "<none>"
+  return(out)
 }
 
 # test a dataframe grouping for conformance to a spec and 
