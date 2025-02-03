@@ -1,5 +1,7 @@
 # interfacer <a href="https://bristol-vaccine-centre.github.io/interfacer/"><img src="man/figures/logo.svg" align="right" height="139" alt="interfacer website" /></a>
 
+THIS REPOSITORY HAS BEEN SUPERCEDED. THE NEW REPOSITORY IS [HERE](https://github.com/ai4ci/interfacer)
+
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bristol-vaccine-centre/interfacer/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://zenodo.org/badge/667791472.svg)](https://zenodo.org/badge/latestdoi/667791472)
